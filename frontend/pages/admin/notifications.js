@@ -38,9 +38,9 @@ export default function Notifications() {
         if (filterType === 'all') {
             filtered = students
         } else if (filterType === 'class') {
-            filtered = students.filter(s => s.classLevel.toString() === filterValue)
+            filtered = students.filter(s => s.classLevel == filterValue)
         } else if (filterType === 'team') {
-            filtered = students.filter(s => s.teamId === filterValue)
+            filtered = students.filter(s => s.teamId == filterValue)
         } else if (filterType === 'individual') {
             // Managed manually via search
             // If switching TO individual, keep existing selection or clear? Let's clear for safety if logic demands, but here we just wait for search.
@@ -109,7 +109,20 @@ export default function Notifications() {
                         <p style={{ color: '#64748b', margin: '5px 0 0 0' }}>Send announcements, reminders, and updates.</p>
                     </div>
 
-                    <div style={{ display: 'grid', gridTemplateColumns: 'minmax(0, 2fr) minmax(0, 1fr)', gap: 30, alignItems: 'start' }}>
+                    <div className="layout-grid">
+                        <style jsx>{`
+                            .layout-grid {
+                                display: grid;
+                                grid-template-columns: 1fr;
+                                gap: 30px;
+                                align-items: start;
+                            }
+                            @media (min-width: 1024px) {
+                                .layout-grid {
+                                    grid-template-columns: 2fr 1fr;
+                                }
+                            }
+                        `}</style>
 
                         {/* Main Interaction Area */}
                         <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
