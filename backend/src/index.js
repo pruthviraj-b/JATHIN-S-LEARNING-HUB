@@ -5,8 +5,17 @@ const { PrismaClient } = require('@prisma/client');
 
 const prisma = new PrismaClient();
 const app = express();
-app.use(cors());
+app.use(cors({
+  origin: '*',
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization']
+}));
 app.use(express.json());
+
+// Debug root route to verify connectivity
+app.get('/api/health-check', (req, res) => {
+  res.send('Backend is Alive!');
+});
 
 const authRoutes = require('./routes/auth');
 const studentsRoutes = require('./routes/students');
@@ -38,6 +47,13 @@ app.get('/api/health', (req, res) => {
 });
 
 const port = process.env.PORT || 4000;
-app.listen(port, () => {
-  console.log(`Backend listening on http://localhost:${port}`);
-});
+
+// Only listen if run directly (local dev)
+if (require.main === module) {
+  app.listen(port, () => {
+    console.log(`Backend listening on http://localhost:${port}`);
+  });
+}
+
+// Export for Vercel
+module.exports = app;
