@@ -12,9 +12,14 @@ app.use(cors({
 }));
 app.use(express.json());
 
-// Debug root route to verify connectivity
-app.get('/api/health-check', (req, res) => {
-  res.send('Backend is Alive!');
+// Debug root route to verify connectivity & DB
+app.get('/api/health-check', async (req, res) => {
+  try {
+    await prisma.$connect();
+    res.json({ status: 'ok', message: 'Backend & DB Alive!' });
+  } catch (error) {
+    res.status(500).json({ status: 'error', message: 'DB Failed', error: error.message });
+  }
 });
 
 const authRoutes = require('./routes/auth');

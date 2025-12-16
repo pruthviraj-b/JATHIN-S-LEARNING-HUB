@@ -165,7 +165,8 @@ export default function Login() {
 
       {/* Footer Text */}
       <div style={{ position: 'fixed', bottom: 20, color: '#94a3b8', fontSize: 12, width: '100%', textAlign: 'center' }}>
-        © {new Date().getFullYear()} Jathin's Learning Hub
+        © {new Date().getFullYear()} Jathin's Learning Hub <br />
+        <span style={{ opacity: 0.5, fontSize: 10 }}>API: {process.env.NEXT_PUBLIC_API_URL || 'Using Localhost'}</span>
       </div>
 
       <style jsx global>{`
