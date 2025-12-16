@@ -9,8 +9,20 @@ const router = express.Router();
 router.get('/me', authMiddleware(['STUDENT']), async (req, res) => {
     try {
         const userId = req.user.id;
+
+        // 1. Get the Student ID linked to this User
+        const user = await prisma.user.findUnique({
+            where: { id: userId },
+            select: { studentId: true }
+        });
+
+        if (!user || !user.studentId) {
+            return res.json([]); // No linked student, return empty
+        }
+
+        // 2. Fetch Attendance for this Student
         const records = await prisma.attendance.findMany({
-            where: { student: { user: { id: userId } } },
+            where: { studentId: user.studentId },
             include: {
                 class: {
                     include: { subject: true }
@@ -18,6 +30,7 @@ router.get('/me', authMiddleware(['STUDENT']), async (req, res) => {
             },
             orderBy: { date: 'desc' }
         });
+
         res.json(records);
     } catch (err) {
         console.error(err);
