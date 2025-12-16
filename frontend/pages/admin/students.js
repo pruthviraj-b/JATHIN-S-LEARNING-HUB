@@ -182,15 +182,6 @@ export default function ManageStudents() {
 
         {error && <div style={{ background: '#fee', color: '#c00', padding: 15, borderRadius: 4, marginBottom: 20 }}>⚠️ {error}</div>}
 
-        {/* DEBUG BOX - TEMPORARY */}
-        <div style={{ background: '#333', color: '#0f0', padding: 10, marginBottom: 20, borderRadius: 8, fontSize: 12, fontFamily: 'monospace' }}>
-          <strong>DEBUG INFO:</strong><br />
-          Loading: {loading ? 'YES' : 'NO'}<br />
-          Students Count: {students ? students.length : 'NULL'}<br />
-          Error: {error || 'NONE'}<br />
-          First Student: {students && students.length > 0 ? JSON.stringify(students[0]) : 'N/A'}
-        </div>
-
 
 
         {showForm && (
