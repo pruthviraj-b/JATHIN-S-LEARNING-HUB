@@ -51,6 +51,7 @@ export default function Notifications() {
         if (filterType !== 'individual') {
             setSelectedStudents(filtered.map(s => s.id))
         }
+        console.log('Filtered Students:', filtered.length)
     }, [filterType, filterValue, students])
 
     const handleSearchAdd = (studentId) => {
@@ -97,6 +98,8 @@ export default function Notifications() {
     ) : []
 
     const previewMessage = message.replace(/{name}/g, "StudentName")
+
+    if (!students) return <AdminLayout><div style={{ padding: 20 }}>Loading student data...</div></AdminLayout>
 
     return (
         <ProtectedRoute requiredRole="ADMIN">
