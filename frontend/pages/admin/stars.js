@@ -67,8 +67,8 @@ export default function ManageStars() {
                     </div>
                 </div>
 
-                <div className="card" style={{ marginBottom: 30, display: 'flex', gap: 20, alignItems: 'end', background: 'white', padding: 24, borderRadius: 16 }}>
-                    <div style={{ flex: 1 }}>
+                <div className="card" style={{ marginBottom: 30, display: 'flex', flexWrap: 'wrap', gap: 20, alignItems: 'end', background: 'white', padding: 24, borderRadius: 16 }}>
+                    <div style={{ flex: '1 1 150px' }}>
                         <label style={{ display: 'block', marginBottom: 8, fontWeight: 600, fontSize: 13, color: '#64748b' }}>POINTS</label>
                         <input
                             type="number"
@@ -78,7 +78,7 @@ export default function ManageStars() {
                             style={{ width: '100%', padding: 12, borderRadius: 8, border: '1px solid #e2e8f0', fontSize: 15 }}
                         />
                     </div>
-                    <div style={{ flex: 2 }}>
+                    <div style={{ flex: '2 1 300px' }}>
                         <label style={{ display: 'block', marginBottom: 8, fontWeight: 600, fontSize: 13, color: '#64748b' }}>REASON / ACTIVITY</label>
                         <input
                             type="text"
@@ -119,8 +119,8 @@ export default function ManageStars() {
 
                 {/* Students View */}
                 {activeTab === 'students' && (
-                    <div className="card" style={{ background: 'white', borderRadius: 16, overflow: 'hidden', border: '1px solid #e2e8f0' }}>
-                        <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 14 }}>
+                    <div className="card" style={{ background: 'white', borderRadius: 16, overflowX: 'auto', border: '1px solid #e2e8f0' }}>
+                        <table style={{ width: '100%', minWidth: 600, borderCollapse: 'collapse', fontSize: 14 }}>
                             <thead style={{ background: '#f8fafc', borderBottom: '1px solid #e2e8f0' }}>
                                 <tr>
                                     <th style={{ padding: 16, textAlign: 'left', color: '#64748b' }}>Student</th>

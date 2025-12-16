@@ -182,7 +182,7 @@ export default function ManageStudents() {
           <div style={{ background: 'white', padding: 24, borderRadius: 12, marginBottom: 30, border: '1px solid #eeffff', boxShadow: '0 0 10px rgba(0,0,0,0.02)' }}>
             <h2 style={{ marginTop: 0, marginBottom: 20 }}>{editingId ? 'Edit Student' : 'Add New Student'}</h2>
             <form onSubmit={handleSubmit}>
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 20 }}>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: 20 }}>
                 <div>
                   <label style={{ display: 'block', marginBottom: 5, fontSize: 13, fontWeight: 600, color: '#666' }}>First Name</label>
                   <input
@@ -247,30 +247,30 @@ export default function ManageStudents() {
                       <option key={t.id} value={t.id}>{t.name}</option>
                     ))}
                   </select>
-                  <div>
-                    <label style={{ display: 'block', marginBottom: 5, fontSize: 13, fontWeight: 600, color: '#666' }}>Date of Birth</label>
-                    <div style={{ position: 'relative' }}>
-                      <span style={{ position: 'absolute', left: 10, top: 10, fontSize: 16 }}>📅</span>
-                      <input
-                        type="date"
-                        value={formData.dob}
-                        onChange={(e) => setFormData({ ...formData, dob: e.target.value })}
-                        style={{ width: '100%', padding: '10px 10px 10px 35px', borderRadius: 6, border: '1px solid #ddd' }}
-                      />
-                    </div>
+                </div>
+                <div>
+                  <label style={{ display: 'block', marginBottom: 5, fontSize: 13, fontWeight: 600, color: '#666' }}>Date of Birth</label>
+                  <div style={{ position: 'relative' }}>
+                    <span style={{ position: 'absolute', left: 10, top: 10, fontSize: 16 }}>📅</span>
+                    <input
+                      type="date"
+                      value={formData.dob}
+                      onChange={(e) => setFormData({ ...formData, dob: e.target.value })}
+                      style={{ width: '100%', padding: '10px 10px 10px 35px', borderRadius: 6, border: '1px solid #ddd' }}
+                    />
                   </div>
-                  <div>
-                    <label style={{ display: 'block', marginBottom: 5, fontSize: 13, fontWeight: 600, color: '#666' }}>Profile Image URL</label>
-                    <div style={{ position: 'relative' }}>
-                      <span style={{ position: 'absolute', left: 10, top: 10, fontSize: 16 }}>🖼️</span>
-                      <input
-                        type="text"
-                        value={formData.profileUrl}
-                        onChange={(e) => setFormData({ ...formData, profileUrl: e.target.value })}
-                        placeholder="https://..."
-                        style={{ width: '100%', padding: '10px 10px 10px 35px', borderRadius: 6, border: '1px solid #ddd' }}
-                      />
-                    </div>
+                </div>
+                <div>
+                  <label style={{ display: 'block', marginBottom: 5, fontSize: 13, fontWeight: 600, color: '#666' }}>Profile Image URL</label>
+                  <div style={{ position: 'relative' }}>
+                    <span style={{ position: 'absolute', left: 10, top: 10, fontSize: 16 }}>🖼️</span>
+                    <input
+                      type="text"
+                      value={formData.profileUrl}
+                      onChange={(e) => setFormData({ ...formData, profileUrl: e.target.value })}
+                      placeholder="https://..."
+                      style={{ width: '100%', padding: '10px 10px 10px 35px', borderRadius: 6, border: '1px solid #ddd' }}
+                    />
                   </div>
                 </div>
               </div>
@@ -286,8 +286,8 @@ export default function ManageStudents() {
         )}
 
         {/* List */}
-        <div style={{ background: 'white', borderRadius: 12, boxShadow: '0 0 20px 0 rgba(76,87,125,0.02)', border: '1px solid #f0f0f0', overflow: 'hidden' }}>
-          <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+        <div style={{ background: 'white', borderRadius: 12, boxShadow: '0 0 20px 0 rgba(76,87,125,0.02)', border: '1px solid #f0f0f0', overflowX: 'auto' }}>
+          <table style={{ width: '100%', minWidth: 800, borderCollapse: 'collapse' }}>
             <thead style={{ background: '#f8f9fa', borderBottom: '1px solid #eee' }}>
               <tr>
                 <th style={{ padding: '15px', textAlign: 'left', color: '#666', fontWeight: 600, fontSize: 13, textTransform: 'uppercase', letterSpacing: 0.5 }}>Rank</th>

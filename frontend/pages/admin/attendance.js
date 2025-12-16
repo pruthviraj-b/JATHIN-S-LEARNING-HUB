@@ -59,9 +59,9 @@ export default function Attendance() {
                     </div>
                 </div>
 
-                <div className="card" style={{ background: '#fff' }}>
+                <div className="card" style={{ background: '#fff', overflowX: 'auto' }}>
                     <div className="table-responsive">
-                        <table>
+                        <table style={{ minWidth: 600 }}>
                             <thead>
                                 <tr>
                                     <th>Student</th>
