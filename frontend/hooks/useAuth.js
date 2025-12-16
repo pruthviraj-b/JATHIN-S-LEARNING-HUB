@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
+import { apiCall } from '../lib/api'
 
 export function useAuth() {
   const router = useRouter()
@@ -21,16 +22,16 @@ export function useAuth() {
   const login = async (email, password) => {
     try {
       console.log('🔐 Attempting login with:', email)
-      const res = await fetch('http://localhost:4000/api/auth/login', {
+
+      // Use apiCall instead of direct fetch to localhost
+      const data = await apiCall('/auth/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, password })
       })
-      
-      const data = await res.json()
-      console.log('📦 Response:', data, 'Status:', res.status)
-      
-      if (!res.ok) throw new Error(data.error || 'Login failed')
+
+      console.log('📦 Response:', data)
+      // apiCall throws error if status is not ok
 
       console.log('✅ Login successful, token:', data.token?.substring(0, 20) + '...')
       localStorage.setItem('token', data.token)
@@ -39,7 +40,6 @@ export function useAuth() {
       setUser({ role: data.role, student: data.student || null })
 
       console.log('🔄 Redirecting to:', data.role === 'ADMIN' ? '/admin' : '/student')
-      // Use window.location for hard redirect
       if (data.role === 'ADMIN') {
         window.location.href = '/admin'
       } else {
