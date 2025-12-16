@@ -8,6 +8,7 @@ export default function StudentAttendance() {
     const [classes, setClasses] = useState([])
     const [loading, setLoading] = useState(true)
     const [currentDate, setCurrentDate] = useState(new Date()) // For Calendar Navigation
+    const [selectedDay, setSelectedDay] = useState(null) // Filter date
 
     useEffect(() => {
         async function load() {
@@ -39,18 +40,22 @@ export default function StudentAttendance() {
 
     const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
 
-    const prevMonth = () => setCurrentDate(new Date(year, month - 1, 1))
-    const nextMonth = () => setCurrentDate(new Date(year, month + 1, 1))
+    const prevMonth = () => { setCurrentDate(new Date(year, month - 1, 1)); setSelectedDay(null); }
+    const nextMonth = () => { setCurrentDate(new Date(year, month + 1, 1)); setSelectedDay(null); }
 
     // Group classes by Date (YYYY-MM-DD local)
     const classesByDate = {}
     classes.forEach(c => {
         const d = new Date(c.scheduledAt)
+
+        // Use local date for grouping to match calendar cells
+        const dLocal = new Date(d.getFullYear(), d.getMonth(), d.getDate())
+        const day = dLocal.getDate()
+
         // Check if same month/year
-        const dateKey = d.getDate() // 1-31
-        if (d.getMonth() === month && d.getFullYear() === year) {
-            if (!classesByDate[dateKey]) classesByDate[dateKey] = []
-            classesByDate[dateKey].push(c)
+        if (dLocal.getMonth() === month && dLocal.getFullYear() === year) {
+            if (!classesByDate[day]) classesByDate[day] = []
+            classesByDate[day].push(c)
         }
     })
 
@@ -64,10 +69,24 @@ export default function StudentAttendance() {
         for (let d = 1; d <= daysInMonth; d++) {
             const daysClasses = classesByDate[d] || []
             const isToday = new Date().getDate() === d && new Date().getMonth() === month && new Date().getFullYear() === year
+            const isSelected = selectedDay === d
 
             days.push(
-                <div key={d} style={{ height: 80, background: 'white', border: '1px solid #eee', padding: 5, position: 'relative', overflow: 'hidden' }}>
-                    <div style={{ fontWeight: isToday ? 'bold' : 'normal', color: isToday ? '#3699ff' : '#333', fontSize: 13 }}>{d}</div>
+                <div
+                    key={d}
+                    onClick={() => setSelectedDay(d === selectedDay ? null : d)}
+                    style={{
+                        height: 80,
+                        background: isSelected ? '#f0f9ff' : 'white',
+                        border: isSelected ? '2px solid #3b82f6' : '1px solid #eee',
+                        padding: 5,
+                        position: 'relative',
+                        overflow: 'hidden',
+                        cursor: 'pointer',
+                        transition: 'all 0.1s'
+                    }}
+                >
+                    <div style={{ fontWeight: (isToday || isSelected) ? 'bold' : 'normal', color: (isToday || isSelected) ? '#3699ff' : '#333', fontSize: 13 }}>{d}</div>
                     <div style={{ display: 'flex', gap: 3, flexWrap: 'wrap', marginTop: 5 }}>
                         {daysClasses.map((c, i) => {
                             const record = c.attendances?.[0]
@@ -75,7 +94,7 @@ export default function StudentAttendance() {
                             const isMarked = !!record
                             const color = isMarked ? (isPresent ? '#22c55e' : '#ef4444') : '#cbd5e1'
                             return (
-                                <div key={c.id} title={`${c.title}: ${isMarked ? (isPresent ? 'Present' : 'Absent') : 'Not Marked'}`} style={{ width: 8, height: 8, borderRadius: '50%', background: color }}></div>
+                                <div key={c.id} style={{ width: 8, height: 8, borderRadius: '50%', background: color }}></div>
                             )
                         })}
                     </div>
@@ -84,6 +103,21 @@ export default function StudentAttendance() {
         }
         return days
     }
+
+    // Filter classes based on both Month AND Selected Day
+    const filteredClasses = classes.filter(c => {
+        const d = new Date(c.scheduledAt)
+        const dLocal = new Date(d.getFullYear(), d.getMonth(), d.getDate())
+
+        // Must be in current view month
+        if (dLocal.getMonth() !== month || dLocal.getFullYear() !== year) return false
+
+        // If specific day selected, match it
+        if (selectedDay) {
+            return dLocal.getDate() === selectedDay
+        }
+        return true
+    }).sort((a, b) => new Date(b.scheduledAt) - new Date(a.scheduledAt))
 
     return (
         <ProtectedRoute requiredRole="STUDENT">
@@ -136,34 +170,30 @@ export default function StudentAttendance() {
 
                 {/* Detailed List for Month */}
                 <div style={{ marginTop: 30 }}>
-                    <h3 style={{ fontSize: 16 }}>Detailed History (This Month)</h3>
-                    {classes
-                        .filter(c => new Date(c.scheduledAt).getMonth() === month && new Date(c.scheduledAt).getFullYear() === year)
-                        .sort((a, b) => new Date(b.scheduledAt) - new Date(a.scheduledAt))
-                        .length === 0 ? <p style={{ color: '#999' }}>No classes this month.</p> : (
+                    <h3 style={{ fontSize: 16 }}>
+                        {selectedDay ? `History for ${monthNames[month]} ${selectedDay}` : `Full History (${monthNames[month]})`}
+                    </h3>
+                    {filteredClasses.length === 0 ? <p style={{ color: '#999' }}>No classes found{selectedDay ? ' for this date' : ''}.</p> : (
                         <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
-                            {classes
-                                .filter(c => new Date(c.scheduledAt).getMonth() === month && new Date(c.scheduledAt).getFullYear() === year)
-                                .sort((a, b) => new Date(b.scheduledAt) - new Date(a.scheduledAt))
-                                .map(c => {
-                                    const record = c.attendances?.[0]
-                                    const isPresent = record?.present
-                                    const isMarked = !!record
-                                    return (
-                                        <div key={c.id} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', background: 'white', padding: 15, borderRadius: 10, borderLeft: `4px solid ${isMarked ? (isPresent ? '#22c55e' : '#ef4444') : '#cbd5e1'}` }}>
-                                            <div>
-                                                <div style={{ fontWeight: 600 }}>{new Date(c.scheduledAt).toLocaleDateString()}</div>
-                                                <div style={{ fontSize: 13, color: '#666' }}>{c.subject?.name} - {c.title}</div>
-                                            </div>
-                                            <div>
-                                                {isMarked ? (
-                                                    isPresent ? <span style={{ color: '#22c55e', fontWeight: 700, display: 'flex', alignItems: 'center', gap: 5 }}>Present <Check size={16} /></span>
-                                                        : <span style={{ color: '#ef4444', fontWeight: 700, display: 'flex', alignItems: 'center', gap: 5 }}>Absent <X size={16} /></span>
-                                                ) : <span style={{ color: '#94a3b8', fontStyle: 'italic' }}>Pending</span>}
-                                            </div>
+                            {filteredClasses.map(c => {
+                                const record = c.attendances?.[0]
+                                const isPresent = record?.present
+                                const isMarked = !!record
+                                return (
+                                    <div key={c.id} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', background: 'white', padding: 15, borderRadius: 10, borderLeft: `4px solid ${isMarked ? (isPresent ? '#22c55e' : '#ef4444') : '#cbd5e1'}` }}>
+                                        <div>
+                                            <div style={{ fontWeight: 600 }}>{new Date(c.scheduledAt).toLocaleDateString()}</div>
+                                            <div style={{ fontSize: 13, color: '#666' }}>{c.subject?.name} - {c.title}</div>
                                         </div>
-                                    )
-                                })}
+                                        <div>
+                                            {isMarked ? (
+                                                isPresent ? <span style={{ color: '#22c55e', fontWeight: 700, display: 'flex', alignItems: 'center', gap: 5 }}>Present <Check size={16} /></span>
+                                                    : <span style={{ color: '#ef4444', fontWeight: 700, display: 'flex', alignItems: 'center', gap: 5 }}>Absent <X size={16} /></span>
+                                            ) : <span style={{ color: '#94a3b8', fontStyle: 'italic' }}>Pending</span>}
+                                        </div>
+                                    </div>
+                                )
+                            })}
                         </div>
                     )}
                 </div>
