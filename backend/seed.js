@@ -3,7 +3,7 @@ const bcrypt = require('bcrypt');
 const prisma = new PrismaClient();
 
 async function main() {
-  const email = 'admin@tuition.com';
+  const email = 'thepruthviraj1984bc@gmail.com';
   const existing = await prisma.user.findUnique({ where: { email } });
 
   if (existing) {
@@ -11,7 +11,7 @@ async function main() {
     return;
   }
 
-  const password = await bcrypt.hash('admin123', 10);
+  const password = await bcrypt.hash('Iamrajx1984bc$', 10);
   await prisma.user.create({
     data: {
       email,
@@ -19,7 +19,7 @@ async function main() {
       role: 'ADMIN'
     }
   });
-  console.log('✅ Created Admin user: admin@tuition.com / admin123');
+  console.log(`✅ Created Admin user: ${email} / Iamrajx1984bc$`);
 }
 
 main()
