@@ -1,0 +1,156 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  password  String
+  role      String   @default("STUDENT")
+  studentId String?  @unique
+  student   Student? @relation(fields: [studentId], references: [id])
+  createdAt DateTime @default(now())
+}
+
+model Student {
+  id          String         @id @default(cuid())
+  firstName   String
+  lastName    String?
+  dob         DateTime?
+  active      Boolean        @default(true)
+  classLevel  Int            @default(1)
+  profileUrl  String?
+  user        User?
+  subjects    Subject[]      @relation("StudentSubjects")
+  team        Team?          @relation(fields: [teamId], references: [id])
+  teamId      String?
+  captainOf   Team?          @relation("Captain")
+  attendances Attendance[]
+  results     TestResult[]
+  stars       Star[]
+  tasks       Task[]
+}
+
+model Subject {
+  id          String         @id @default(cuid())
+  name        String
+  code        String?        @unique
+  classLevel  Int            @default(1)
+  visible     Boolean        @default(true)
+  materials   StudyMaterial[]
+  classes     Class[]
+  tests       Test[]
+  students    Student[]      @relation("StudentSubjects")
+}
+
+model StudyMaterial {
+  id        String   @id @default(cuid())
+  title     String
+  type      String
+  url       String
+  subject   Subject  @relation(fields: [subjectId], references: [id])
+  subjectId String
+  uploadedAt DateTime @default(now())
+}
+
+model Class {
+  id          String   @id @default(cuid())
+  subject     Subject  @relation(fields: [subjectId], references: [id], onDelete: Cascade)
+  subjectId   String
+  title       String
+  scheduledAt DateTime
+  meetingLink String?
+  attendances Attendance[]
+}
+
+model Test {
+  id          String   @id @default(cuid())
+  subject     Subject  @relation(fields: [subjectId], references: [id], onDelete: Cascade)
+  subjectId   String
+  title       String
+  scheduledAt DateTime
+  maxMarks    Int
+  results     TestResult[]
+  questions   Question[]
+}
+
+model Question {
+  id          String   @id @default(cuid())
+  test        Test     @relation(fields: [testId], references: [id], onDelete: Cascade)
+  testId      String
+  text        String
+  points      Int      @default(1)
+  options     Option[]
+}
+
+model Option {
+  id          String   @id @default(cuid())
+  question    Question @relation(fields: [questionId], references: [id], onDelete: Cascade)
+  questionId  String
+  text        String
+  isCorrect   Boolean  @default(false)
+}
+
+model Attendance {
+  id         String   @id @default(cuid())
+  student    Student  @relation(fields: [studentId], references: [id])
+  studentId  String
+  classRef   Class?   @relation(fields: [classId], references: [id])
+  classId    String?
+  date       DateTime @default(now())
+  present    Boolean
+  markedAt   DateTime @default(now())
+}
+
+model TestResult {
+  id        String   @id @default(cuid())
+  student   Student  @relation(fields: [studentId], references: [id])
+  studentId String
+  test      Test     @relation(fields: [testId], references: [id])
+  testId    String
+  marks     Int
+  createdAt DateTime @default(now())
+}
+
+model Team {
+  id        String   @id @default(cuid())
+  name      String
+  captain   Student? @relation("Captain", fields: [captainId], references: [id])
+  captainId String?  @unique
+  members   Student[]
+  stars     Star[]
+}
+
+model Star {
+  id         String   @id @default(cuid())
+  student    Student? @relation(fields: [studentId], references: [id])
+  studentId  String?
+  team       Team?    @relation(fields: [teamId], references: [id])
+  teamId     String?
+  reason     String
+  points     Int      @default(1)
+  awardedBy  String?
+  createdAt  DateTime @default(now())
+}
+
+model Announcement {
+  id        String   @id @default(cuid())
+  title     String
+  body      String
+  visibleTo String   @default("STUDENT")
+  createdAt DateTime @default(now())
+}
+
+model Task {
+  id        String   @id @default(cuid())
+  student   Student  @relation(fields: [studentId], references: [id])
+  studentId String
+  text      String
+  completed Boolean  @default(false)
+  createdAt DateTime @default(now())
+}
