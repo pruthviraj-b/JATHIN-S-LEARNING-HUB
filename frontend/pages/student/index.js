@@ -42,7 +42,9 @@ export default function StudentDashboard() {
 
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: 24, marginBottom: 40 }}>
           <DashCard title="⭐ My Total Stars" value={loading ? '...' : stats.stars} color="#ffa800" icon="✨" />
-          <DashCard title="✅ My Attendance" value={loading ? '...' : stats.attendance} color="#1bc5bd" icon="📅" />
+          <Link href="/student/attendance" style={{ textDecoration: 'none' }}>
+            <DashCard title="✅ My Attendance" value={loading ? '...' : stats.attendance} color="#1bc5bd" icon="📝" />
+          </Link>
           <DashCard title="🏆 Class Rank" value={loading ? '...' : stats.rank} color="#8950fc" icon="🎖️" />
         </div>
 
