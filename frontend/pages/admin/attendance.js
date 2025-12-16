@@ -316,8 +316,7 @@ export default function Attendance() {
                         </table>
                     </div>
                 </div>
-            </div>
-        </AdminLayout>
-    </ProtectedRoute >
+            </AdminLayout>
+        </ProtectedRoute >
     )
 }
