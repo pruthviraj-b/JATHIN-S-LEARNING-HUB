@@ -19,15 +19,18 @@ export default function ManageMaterials() {
     })
     const [submitting, setSubmitting] = useState(false)
 
+    const [filterClass, setFilterClass] = useState('ALL') // Added
+
     useEffect(() => {
         fetchData()
-    }, [])
+    }, [filterClass]) // Refetch when filter changes
 
     const fetchData = async () => {
         try {
             setLoading(true)
+            const query = filterClass !== 'ALL' ? `?classLevel=${filterClass}` : ''
             const [mData, sData] = await Promise.all([
-                apiCall('/materials'),
+                apiCall(`/materials${query}`),
                 apiCall('/subjects/admin/all')
             ])
             setMaterials(mData)
@@ -80,12 +83,23 @@ export default function ManageMaterials() {
 
                 {error && <div style={{ color: 'red', marginBottom: 20 }}>{error}</div>}
 
-                <button
-                    onClick={() => setShowForm(!showForm)}
-                    style={{ marginBottom: 20, padding: '10px 20px', background: '#3699ff', color: 'white', border: 'none', borderRadius: 6, cursor: 'pointer', fontWeight: 500 }}
-                >
-                    {showForm ? 'Cancel' : '+ Add Material'}
-                </button>
+                <div style={{ display: 'flex', gap: 15, alignItems: 'center', marginBottom: 20 }}>
+                    <button
+                        onClick={() => setShowForm(!showForm)}
+                        style={{ padding: '10px 20px', background: '#3699ff', color: 'white', border: 'none', borderRadius: 6, cursor: 'pointer', fontWeight: 500 }}
+                    >
+                        {showForm ? 'Cancel' : '+ Add Material'}
+                    </button>
+
+                    <select
+                        value={filterClass}
+                        onChange={e => setFilterClass(e.target.value)}
+                        style={{ padding: 10, borderRadius: 6, border: '1px solid #ddd', minWidth: 150 }}
+                    >
+                        <option value="ALL">All Classes</option>
+                        {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(c => <option key={c} value={c}>Class {c}</option>)}
+                    </select>
+                </div>
 
                 {showForm && (
                     <div style={{ background: '#f5f5f5', padding: 20, borderRadius: 8, marginBottom: 30 }}>

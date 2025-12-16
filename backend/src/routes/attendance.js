@@ -10,7 +10,7 @@ router.get('/me', authMiddleware(['STUDENT']), async (req, res) => {
     try {
         const userId = req.user.id;
         const records = await prisma.attendance.findMany({
-            where: { student: { userId: userId } },
+            where: { student: { user: { id: userId } } },
             include: {
                 class: {
                     include: { subject: true }

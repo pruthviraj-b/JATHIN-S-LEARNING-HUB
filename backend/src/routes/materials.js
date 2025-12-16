@@ -8,9 +8,14 @@ const router = express.Router();
 // List materials (Public/Student can see visible subjects' materials, Admin sees all)
 router.get('/', authMiddleware(['ADMIN', 'STUDENT']), async (req, res) => {
     try {
-        const { subjectId } = req.query;
+        const { subjectId, classLevel } = req.query;
         const where = {};
         if (subjectId) where.subjectId = subjectId;
+        if (classLevel) {
+            where.subject = {
+                classLevel: parseInt(classLevel)
+            };
+        }
 
         const materials = await prisma.studyMaterial.findMany({
             where,

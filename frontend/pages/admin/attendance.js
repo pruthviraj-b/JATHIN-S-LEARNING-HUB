@@ -23,6 +23,9 @@ export default function Attendance() {
 
     const [loading, setLoading] = useState({})
     const [sending, setSending] = useState(false)
+    const [selectedClass, setSelectedClass] = useState('ALL') // Added
+
+    const filteredStudents = students?.filter(s => selectedClass === 'ALL' || s.classLevel === parseInt(selectedClass)) || []
 
     const getStatus = (studentId) => {
         const record = attendanceData?.find(r => r.studentId === studentId)
@@ -47,6 +50,28 @@ export default function Attendance() {
             alert('Failed to mark attendance')
         } finally {
             setLoading(prev => ({ ...prev, [studentId]: false }))
+        }
+    }
+
+    const markAllPresent = async () => {
+        if (!confirm(`Mark ALL ${filteredStudents.length} displayed students as PRESENT?`)) return
+        setLoading(prev => ({ ...prev, all: true }))
+        try {
+            // We'll just loop for now, parallel reqs are fine for <50 students usually
+            // Ideally backend bulk endpoint, but this is faster to implement without backend changes
+            await Promise.all(filteredStudents.map(s =>
+                apiCall('/attendance', {
+                    method: 'POST',
+                    body: JSON.stringify({ studentId: s.id, date, present: true })
+                })
+            ))
+            mutate()
+            alert('✅ All Marked Present')
+        } catch (err) {
+            console.error(err)
+            alert('Error marking all')
+        } finally {
+            setLoading(prev => ({ ...prev, all: false }))
         }
     }
 
@@ -191,7 +216,28 @@ export default function Attendance() {
 
                     {/* List Section */}
                     <div style={{ background: 'white', borderRadius: 16, border: '1px solid #e2e8f0', padding: 20 }}>
-                        <h3 style={{ margin: 0 }}>{new Date(date).toLocaleDateString(undefined, { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</h3>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 15 }}>
+                            <h3 style={{ margin: 0 }}>{new Date(date).toLocaleDateString(undefined, { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</h3>
+
+                            <div style={{ display: 'flex', gap: 10 }}>
+                                <select
+                                    value={selectedClass}
+                                    onChange={e => setSelectedClass(e.target.value)}
+                                    style={{ padding: 8, borderRadius: 6, border: '1px solid #ddd' }}
+                                >
+                                    <option value="ALL">All Classes</option>
+                                    {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(c => <option key={c} value={c}>Class {c}</option>)}
+                                </select>
+
+                                <button
+                                    onClick={markAllPresent} disabled={loading.all}
+                                    style={{ background: '#10b981', color: 'white', border: 'none', padding: '8px 12px', borderRadius: 6, cursor: 'pointer', fontWeight: 600 }}
+                                >
+                                    {loading.all ? '...' : 'Mark All Present'}
+                                </button>
+                            </div>
+                        </div>
+
                         <button
                             onClick={sendBulkNotification}
                             disabled={sending}
@@ -199,7 +245,8 @@ export default function Attendance() {
                                 background: '#7c3aed', color: 'white', border: 'none',
                                 padding: '8px 16px', borderRadius: 8,
                                 fontWeight: 600, cursor: 'pointer',
-                                display: 'flex', alignItems: 'center', gap: 6
+                                display: 'flex', alignItems: 'center', gap: 6,
+                                width: '100%', justifyContent: 'center'
                             }}
                         >
                             {sending ? 'Sending...' : <><Send size={16} /> Notify Parents</>}
@@ -223,7 +270,7 @@ export default function Attendance() {
                                 </tr>
                             </thead>
                             <tbody>
-                                {students?.map(student => {
+                                {filteredStudents?.map(student => {
                                     const status = getStatus(student.id)
                                     const isPresent = status === 'present'
                                     const isAbsent = status === 'absent'
