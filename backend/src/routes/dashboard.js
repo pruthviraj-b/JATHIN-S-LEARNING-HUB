@@ -110,10 +110,15 @@ router.get('/student', authMiddleware(['STUDENT']), async (req, res) => {
 
         // 5. Recent Announcements
         const announcements = await prisma.announcement.findMany({
-            where: { visibleTo: { in: ['STUDENT', 'ALL'] } }, // Assuming 'ALL' or similar logic, but schema said 'visibleTo' string.
-            // Schema check: visibleTo default 'STUDENT'. 
+            where: { visibleTo: { in: ['STUDENT', 'ALL'] } },
             orderBy: { createdAt: 'desc' },
             take: 3
+        });
+
+        // 6. Subjects (For Class Level) - Added
+        const subjects = await prisma.subject.findMany({
+            where: { classLevel: classLevel, visible: true },
+            select: { id: true, name: true, code: true }
         });
 
         res.json({
@@ -121,7 +126,9 @@ router.get('/student', authMiddleware(['STUDENT']), async (req, res) => {
             rank: myRank,
             attendance: myAttendance,
             classes: upcomingClasses,
-            announcements
+            classes: upcomingClasses,
+            announcements,
+            subjects // Added
         });
 
     } catch (err) {

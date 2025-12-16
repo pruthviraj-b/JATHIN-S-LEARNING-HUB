@@ -12,8 +12,10 @@ export default function StudentDashboard() {
     stars: 0,
     rank: '—',
     attendance: '—',
+    attendance: '—',
     classes: [],
-    announcements: []
+    announcements: [],
+    subjects: [] // Added
   })
   const [loading, setLoading] = useState(true)
 
@@ -46,6 +48,44 @@ export default function StudentDashboard() {
             <DashCard title="✅ My Attendance" value={loading ? '...' : stats.attendance} color="#1bc5bd" icon="📝" />
           </Link>
           <DashCard title="🏆 Class Rank" value={loading ? '...' : stats.rank} color="#8950fc" icon="🎖️" />
+        </div>
+
+        {/* Subjects Grid (New Section) */}
+        <div style={{ marginBottom: 40 }}>
+          <h3 style={{ marginTop: 0, marginBottom: 20 }}>📚 My Subjects (Class {user?.student?.classLevel})</h3>
+          {loading ? <p>Loading subjects...</p> : stats.subjects.length === 0 ? (
+            <p style={{ color: '#999' }}>No subjects assigned for this class yet.</p>
+          ) : (
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(180px, 1fr))', gap: 20 }}>
+              {stats.subjects.map((sub, i) => (
+                // Using random colors for vibrancy from a palette
+                <div key={sub.id} style={{
+                  background: 'white',
+                  padding: 24,
+                  borderRadius: 16,
+                  display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', textAlign: 'center',
+                  boxShadow: '0 4px 15px rgba(0,0,0,0.03)',
+                  border: '1px solid #f0f0f0',
+                  cursor: 'default',
+                  transition: 'transform 0.2s',
+                }}
+                  onMouseEnter={(e) => e.currentTarget.style.transform = 'translateY(-3px)'}
+                  onMouseLeave={(e) => e.currentTarget.style.transform = 'translateY(0)'}
+                >
+                  <div style={{
+                    width: 50, height: 50, borderRadius: 12, marginBottom: 15,
+                    background: ['#e0f2fe', '#dcfce7', '#fef3c7', '#fee2e2', '#f3e8ff'][i % 5],
+                    color: ['#0284c7', '#16a34a', '#d97706', '#dc2626', '#9333ea'][i % 5],
+                    display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 24
+                  }}>
+                    {sub.name.charAt(0)}
+                  </div>
+                  <div style={{ fontWeight: 700, fontSize: 15, color: '#333' }}>{sub.name}</div>
+                  <div style={{ fontSize: 12, color: '#999', marginTop: 4 }}>{sub.code || 'Main'}</div>
+                </div>
+              ))}
+            </div>
+          )}
         </div>
 
         <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gap: 24 }}>
