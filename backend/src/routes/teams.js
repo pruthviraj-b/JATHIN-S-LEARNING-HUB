@@ -8,7 +8,7 @@ const router = express.Router();
 // Public: list teams with members and total stars
 router.get('/', async (req, res) => {
   try {
-    const teams = await prisma.team.findMany({ include: { members: true } });
+    const teams = await prisma.team.findMany({ include: { members: true, captain: true } });
 
     // compute star totals per team
     const starAgg = await prisma.star.groupBy({
