@@ -330,6 +330,7 @@ export default function ManageStudents() {
                       <div>
                         <div style={{ fontWeight: 600, fontSize: 15 }}>{s.firstName} {s.lastName}</div>
                         <div style={{ color: '#999', fontSize: 13 }}>{s.user?.email}</div>
+                        {s.phoneNumber && <div style={{ color: '#666', fontSize: 12, marginTop: 2 }}>📞 {s.phoneNumber}</div>}
                       </div>
                     </div>
                   </td>

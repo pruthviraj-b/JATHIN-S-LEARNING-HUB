@@ -57,7 +57,7 @@ router.get('/:id', authMiddleware(['ADMIN', 'STUDENT']), async (req, res) => {
 // Create student (ADMIN)
 router.post('/', authMiddleware(['ADMIN']), async (req, res) => {
   try {
-    const { firstName, lastName, dob, profileUrl, active, email, password, subjectIds, teamId, classLevel } = req.body;
+    const { firstName, lastName, dob, profileUrl, active, email, password, subjectIds, teamId, classLevel, phoneNumber } = req.body; // Added phoneNumber
 
     // Create student first
     const student = await prisma.student.create({
@@ -68,6 +68,7 @@ router.post('/', authMiddleware(['ADMIN']), async (req, res) => {
         profileUrl,
         active: typeof active === 'boolean' ? active : true,
         classLevel: typeof classLevel === 'number' ? classLevel : undefined,
+        phoneNumber, // Added
         team: teamId ? { connect: { id: teamId } } : undefined,
         subjects: subjectIds && subjectIds.length ? { connect: subjectIds.map(id => ({ id })) } : undefined
       }
@@ -94,14 +95,15 @@ router.put('/profile/me', authMiddleware(['STUDENT']), async (req, res) => {
     const student = await prisma.student.findFirst({ where: { user: { id: req.user.id } } });
     if (!student) return res.status(404).json({ error: 'Student profile not found' });
 
-    const { dob, profileUrl, password } = req.body;
+    const { dob, profileUrl, password, phoneNumber } = req.body; // Added phoneNumber
 
     // Update basic info
     await prisma.student.update({
       where: { id: student.id },
       data: {
         dob: dob ? new Date(dob) : undefined,
-        profileUrl: profileUrl || undefined
+        profileUrl: profileUrl || undefined,
+        phoneNumber // Added allow self-update phone
       }
     });
 
@@ -118,7 +120,7 @@ router.put('/profile/me', authMiddleware(['STUDENT']), async (req, res) => {
 router.put('/:id', authMiddleware(['ADMIN']), async (req, res) => {
   try {
     const { id } = req.params;
-    const { firstName, lastName, dob, profileUrl, active, subjectIds, teamId, classLevel, email, password } = req.body;
+    const { firstName, lastName, dob, profileUrl, active, subjectIds, teamId, classLevel, email, password, phoneNumber } = req.body; // Added phoneNumber
 
     // 1. Update Student Basic Info
     const studentData = {
@@ -127,8 +129,10 @@ router.put('/:id', authMiddleware(['ADMIN']), async (req, res) => {
       dob: dob ? new Date(dob) : undefined,
       profileUrl,
       active: typeof active === 'boolean' ? active : undefined,
-      team: teamId ? { connect: { id: teamId } } : teamId === null ? { disconnect: true } : undefined,
+      // Fix team disconnect logic: Handle "" as disconnect
+      team: teamId ? { connect: { id: teamId } } : (teamId === null || teamId === '') ? { disconnect: true } : undefined,
       classLevel: typeof classLevel === 'number' ? classLevel : undefined,
+      phoneNumber // Added
     };
     Object.keys(studentData).forEach(k => studentData[k] === undefined && delete studentData[k]);
     if (subjectIds) {

@@ -81,7 +81,12 @@ export default function Notifications() {
                 })
             })
             console.log(res)
-            alert(`Sent! Success: ${res.results.filter(r => r.status === 'Sent').length}, Failed: ${res.results.filter(r => r.status !== 'Sent').length}`)
+            const failed = res.results.filter(r => r.status !== 'Sent');
+            if (failed.length > 0) {
+                alert(`⚠️ Sent: ${res.results.length - failed.length}, Failed: ${failed.length}\n\nReason(s):\n${failed.map(f => `${f.name}: ${f.status}`).join('\n')}`)
+            } else {
+                alert(`✅ All ${res.results.length} messages sent successfully!`)
+            }
             mutateHistory()
             setMessage('')
         } catch (err) {

@@ -27,11 +27,26 @@ async function sendNotification(to, body) {
         return { success: true, mock: true };
     }
 
+    // Auto-format for India (+91) if missing
+    let formattedTo = to.trim();
+    if (!formattedTo.startsWith('+')) {
+        // Assume India if 10 digits
+        if (formattedTo.length === 10) {
+            formattedTo = `+91${formattedTo}`;
+        } else {
+            // Or just prepend +91 anyway if it looks like a mobile number? 
+            // safest is to just add it if missing and hope user enters 10 digits
+            // But existing code might have + or not.
+            // Let's stick to the 10 digit rule or just safe prepend if it looks numeric and no plus
+            formattedTo = `+91${formattedTo}`;
+        }
+    }
+
     try {
         const message = await client.messages.create({
             body: body,
             from: senderNumber,
-            to: to
+            to: formattedTo
         });
         console.log(`✅ Notification Sent to ${to}: ${message.sid}`);
         return { success: true, sid: message.sid };

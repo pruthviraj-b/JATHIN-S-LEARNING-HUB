@@ -50,7 +50,7 @@ router.post('/send', async (req, res) => {
             results.push({
                 id: student.id,
                 name: student.firstName,
-                status: result.success ? 'Sent' : `Failed (${result.error || 'Unknown'})`
+                status: result.success ? (result.mock ? 'Sent (Mock - Check Server Console)' : 'Sent') : `Failed (${result.error || 'Unknown'})`
             });
         }
 
