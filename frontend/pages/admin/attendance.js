@@ -256,7 +256,6 @@ export default function Attendance() {
                 <div style={{ marginBottom: 15, fontSize: 13, color: '#64748b' }}>
                     Showing student status for selected date.
                 </div>
-                {/* Existing Table Logic ... */}
 
                 <div className="card" style={{ background: '#fff', overflowX: 'auto' }}>
                     <div className="table-responsive">
