@@ -30,7 +30,7 @@ router.get('/', async (req, res) => {
     res.json(out);
   } catch (err) {
     console.error(err);
-    res.status(500).json({ error: 'server error' });
+    res.status(500).json({ error: err.message });
   }
 });
 
@@ -46,7 +46,7 @@ router.post('/', async (req, res) => {
     res.status(201).json(team);
   } catch (err) {
     console.error(err);
-    res.status(500).json({ error: 'server error' });
+    res.status(500).json({ error: err.message });
   }
 });
 
@@ -59,7 +59,7 @@ router.put('/:id', async (req, res) => {
     res.json(updated);
   } catch (err) {
     console.error(err);
-    res.status(500).json({ error: 'server error' });
+    res.status(500).json({ error: err.message });
   }
 });
 
@@ -72,7 +72,7 @@ router.delete('/:id', async (req, res) => {
     res.json({ ok: true });
   } catch (err) {
     console.error(err);
-    res.status(500).json({ error: 'server error' });
+    res.status(500).json({ error: err.message });
   }
 });
 
@@ -86,7 +86,7 @@ router.post('/:id/add-member', async (req, res) => {
     res.json(student);
   } catch (err) {
     console.error(err);
-    res.status(500).json({ error: 'server error' });
+    res.status(500).json({ error: err.message });
   }
 });
 
@@ -99,7 +99,7 @@ router.post('/:id/remove-member', async (req, res) => {
     res.json(student);
   } catch (err) {
     console.error(err);
-    res.status(500).json({ error: 'server error' });
+    res.status(500).json({ error: err.message });
   }
 });
 
@@ -119,7 +119,7 @@ router.post('/:id/set-captain', async (req, res) => {
     res.json(updated);
   } catch (err) {
     console.error(err);
-    res.status(500).json({ error: 'server error' });
+    res.status(500).json({ error: err.message });
   }
 });
 

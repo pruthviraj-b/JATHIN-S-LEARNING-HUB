@@ -34,7 +34,7 @@ router.get('/', authMiddleware(['ADMIN']), async (req, res) => {
     res.json(withPoints);
   } catch (err) {
     console.error(err);
-    res.status(500).json({ error: 'server error' });
+    res.status(500).json({ error: err.message });
   }
 });
 
@@ -50,7 +50,7 @@ router.get('/:id', authMiddleware(['ADMIN', 'STUDENT']), async (req, res) => {
     res.json(student);
   } catch (err) {
     console.error(err);
-    res.status(500).json({ error: 'server error' });
+    res.status(500).json({ error: err.message });
   }
 });
 
@@ -84,7 +84,7 @@ router.post('/', authMiddleware(['ADMIN']), async (req, res) => {
     res.status(201).json(created);
   } catch (err) {
     console.error(err);
-    res.status(500).json({ error: 'server error' });
+    res.status(500).json({ error: err.message });
   }
 });
 
@@ -110,7 +110,7 @@ router.put('/profile/me', authMiddleware(['STUDENT']), async (req, res) => {
     res.json({ ok: true });
   } catch (err) {
     console.error(err);
-    res.status(500).json({ error: 'server error' });
+    res.status(500).json({ error: err.message });
   }
 });
 
@@ -197,7 +197,7 @@ router.put('/:id', authMiddleware(['ADMIN']), async (req, res) => {
       return res.status(400).json({ error: 'Email already exists' });
     }
     console.error(err);
-    res.status(500).json({ error: 'server error' });
+    res.status(500).json({ error: err.message });
   }
 });
 
@@ -211,7 +211,7 @@ router.delete('/:id', authMiddleware(['ADMIN']), async (req, res) => {
     res.json({ ok: true });
   } catch (err) {
     console.error(err);
-    res.status(500).json({ error: 'server error' });
+    res.status(500).json({ error: err.message });
   }
 });
 
@@ -225,7 +225,7 @@ router.post('/:id/assign-subjects', authMiddleware(['ADMIN']), async (req, res) 
     res.json(updated);
   } catch (err) {
     console.error(err);
-    res.status(500).json({ error: 'server error' });
+    res.status(500).json({ error: err.message });
   }
 });
 
@@ -239,7 +239,7 @@ router.post('/:id/activate', authMiddleware(['ADMIN']), async (req, res) => {
     res.json(updated);
   } catch (err) {
     console.error(err);
-    res.status(500).json({ error: 'server error' });
+    res.status(500).json({ error: err.message });
   }
 });
 

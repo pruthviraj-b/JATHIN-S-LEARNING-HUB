@@ -40,7 +40,7 @@ router.get('/', async (req, res) => {
         res.json(classes);
     } catch (err) {
         console.error(err);
-        res.status(500).json({ error: 'server error' });
+        res.status(500).json({ error: err.message });
     }
 });
 
@@ -81,7 +81,7 @@ router.post('/', adminOnly, async (req, res) => {
         res.status(201).json(newClass);
     } catch (err) {
         console.error(err);
-        res.status(500).json({ error: 'server error' });
+        res.status(500).json({ error: err.message });
     }
 });
 
@@ -93,7 +93,7 @@ router.delete('/:id', adminOnly, async (req, res) => {
         res.json({ ok: true });
     } catch (err) {
         console.error(err);
-        res.status(500).json({ error: 'server error' });
+        res.status(500).json({ error: err.message });
     }
 });
 
@@ -112,7 +112,7 @@ router.get('/:id', async (req, res) => {
         res.json(cls);
     } catch (err) {
         console.error(err);
-        res.status(500).json({ error: 'server error' });
+        res.status(500).json({ error: err.message });
     }
 });
 
