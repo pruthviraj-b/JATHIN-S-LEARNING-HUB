@@ -21,7 +21,10 @@ export default function ManageStudents() {
     profileUrl: '',
     active: true,
     classLevel: 1,
-    teamId: ''
+    active: true,
+    classLevel: 1,
+    teamId: '',
+    phoneNumber: ''
   })
   const [submitting, setSubmitting] = useState(false)
 
@@ -87,7 +90,7 @@ export default function ManageStudents() {
       }
 
       // Reset form but keep credentials modal open if applicable
-      setFormData({ firstName: '', lastName: '', email: '', password: '', dob: '', profileUrl: '', active: true, classLevel: 1, teamId: '' })
+      setFormData({ firstName: '', lastName: '', email: '', password: '', dob: '', profileUrl: '', active: true, classLevel: 1, teamId: '', phoneNumber: '' })
       setShowForm(false)
       await fetchData()
     } catch (err) {
@@ -108,7 +111,10 @@ export default function ManageStudents() {
       profileUrl: student.profileUrl || '',
       active: student.active,
       classLevel: student.classLevel || 1,
-      teamId: student.teamId || ''
+      active: student.active,
+      classLevel: student.classLevel || 1,
+      teamId: student.teamId || '',
+      phoneNumber: student.phoneNumber || ''
     })
     setShowForm(true)
   }
@@ -165,7 +171,7 @@ export default function ManageStudents() {
           <button
             onClick={() => {
               setEditingId(null)
-              setFormData({ firstName: '', lastName: '', email: '', password: '', dob: '', profileUrl: '', active: true, classLevel: 1, teamId: '' })
+              setFormData({ firstName: '', lastName: '', email: '', password: '', dob: '', profileUrl: '', active: true, classLevel: 1, teamId: '', phoneNumber: '' })
               setShowForm(!showForm)
             }}
             style={{ padding: '10px 20px', background: '#3699ff', color: 'white', border: 'none', borderRadius: 6, cursor: 'pointer', fontWeight: 600, display: 'flex', alignItems: 'center', gap: 8 }}
@@ -209,6 +215,16 @@ export default function ManageStudents() {
                     value={formData.email}
                     onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                     required
+                    style={{ width: '100%', padding: 10, borderRadius: 6, border: '1px solid #ddd' }}
+                  />
+                </div>
+                <div>
+                  <label style={{ display: 'block', marginBottom: 5, fontSize: 13, fontWeight: 600, color: '#666' }}>Phone Number</label>
+                  <input
+                    type="tel"
+                    value={formData.phoneNumber}
+                    onChange={(e) => setFormData({ ...formData, phoneNumber: e.target.value })}
+                    placeholder="+91..."
                     style={{ width: '100%', padding: 10, borderRadius: 6, border: '1px solid #ddd' }}
                   />
                 </div>

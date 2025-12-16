@@ -14,9 +14,6 @@ const students = [
     { name: "Harshini", classLevel: 7 },
     { name: "Shamika", classLevel: 7 },
     { name: "Dhayantha", classLevel: 7 },
-    { name: "Varun", classLevel: 9 },
-    { name: "Vedha", classLevel: 9 },
-    { name: "Charan", classLevel: 9 },
     { name: "Lekhan", classLevel: 6 }
 ];
 

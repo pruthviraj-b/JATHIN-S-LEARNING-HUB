@@ -24,6 +24,7 @@ model Student {
   dob         DateTime?
   active      Boolean        @default(true)
   classLevel  Int            @default(1)
+  phoneNumber String?
   profileUrl  String?
   user        User?
   subjects    Subject[]      @relation("StudentSubjects")

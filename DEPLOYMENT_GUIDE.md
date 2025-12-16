@@ -10,7 +10,10 @@ You need to add these **3 variables** one by one.
 
 ### Variable 1 (Database)
 *   **Key**: `DATABASE_URL`
-*   **Value**: `postgresql://postgres:Iamrajx1984bc$@db.xizctbzoqmnmfkhfehbg.supabase.co:5432/postgres`
+### Variable 1 (Database)
+*   **Key**: `DATABASE_URL`
+*   **Value**: `postgresql://postgres.xizctbzoqmnmfkhfehbg:Iamrajx1984bc$@aws-1-ap-south-1.pooler.supabase.com:6543/postgres?pgbouncer=true`
+    *   **Note**: We added `.xizctbzoqmnmfkhfehbg` to the username so Supabase knows which project to connect to.
 
 ### Variable 2 (Security)
 *   **Key**: `JWT_SECRET`

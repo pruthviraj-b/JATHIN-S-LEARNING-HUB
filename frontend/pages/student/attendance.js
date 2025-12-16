@@ -5,16 +5,20 @@ import { apiCall } from '../../lib/api'
 import { ChevronLeft, ChevronRight, Check, X } from 'lucide-react'
 
 export default function StudentAttendance() {
-    const [classes, setClasses] = useState([])
+    // Data State
+    const [attendances, setAttendances] = useState([])
     const [loading, setLoading] = useState(true)
-    const [currentDate, setCurrentDate] = useState(new Date()) // For Calendar Navigation
-    const [selectedDay, setSelectedDay] = useState(null) // Filter date
+
+    // Calendar & Stats State
+    const [currentDate, setCurrentDate] = useState(new Date())
+    const [selectedDay, setSelectedDay] = useState(null)
 
     useEffect(() => {
         async function load() {
             try {
-                const data = await apiCall('/classes')
-                setClasses(data)
+                // Fetch direct attendance records instead of classes
+                const data = await apiCall('/attendance/me')
+                setAttendances(data)
             } catch (err) {
                 console.error(err)
             } finally {
@@ -25,8 +29,10 @@ export default function StudentAttendance() {
     }, [])
 
     // --- Stats ---
-    const total = classes.length
-    const present = classes.filter(c => c.attendances?.length > 0 && c.attendances[0].present).length
+    // Total classes = count of attendance records (assuming records only exist for scheduled classes that passed)
+    // Or we can count based on 'present' vs 'absent' status
+    const total = attendances.length
+    const present = attendances.filter(a => a.present).length
     const percentage = total > 0 ? Math.round((present / total) * 100) : 0
 
     // --- Calendar Logic ---
@@ -43,19 +49,16 @@ export default function StudentAttendance() {
     const prevMonth = () => { setCurrentDate(new Date(year, month - 1, 1)); setSelectedDay(null); }
     const nextMonth = () => { setCurrentDate(new Date(year, month + 1, 1)); setSelectedDay(null); }
 
-    // Group classes by Date (YYYY-MM-DD local)
-    const classesByDate = {}
-    classes.forEach(c => {
-        const d = new Date(c.scheduledAt)
-
-        // Use local date for grouping to match calendar cells
+    // Group records by Date (YYYY-MM-DD local)
+    const recordsByDate = {}
+    attendances.forEach(a => {
+        const d = new Date(a.date) // 'date' from attendance model
         const dLocal = new Date(d.getFullYear(), d.getMonth(), d.getDate())
         const day = dLocal.getDate()
 
-        // Check if same month/year
         if (dLocal.getMonth() === month && dLocal.getFullYear() === year) {
-            if (!classesByDate[day]) classesByDate[day] = []
-            classesByDate[day].push(c)
+            if (!recordsByDate[day]) recordsByDate[day] = []
+            recordsByDate[day].push(a)
         }
     })
 
@@ -67,7 +70,7 @@ export default function StudentAttendance() {
         }
         // Actual days
         for (let d = 1; d <= daysInMonth; d++) {
-            const daysClasses = classesByDate[d] || []
+            const daysRecords = recordsByDate[d] || []
             const isToday = new Date().getDate() === d && new Date().getMonth() === month && new Date().getFullYear() === year
             const isSelected = selectedDay === d
 
@@ -88,13 +91,10 @@ export default function StudentAttendance() {
                 >
                     <div style={{ fontWeight: (isToday || isSelected) ? 'bold' : 'normal', color: (isToday || isSelected) ? '#3699ff' : '#333', fontSize: 13 }}>{d}</div>
                     <div style={{ display: 'flex', gap: 3, flexWrap: 'wrap', marginTop: 5 }}>
-                        {daysClasses.map((c, i) => {
-                            const record = c.attendances?.[0]
-                            const isPresent = record?.present
-                            const isMarked = !!record
-                            const color = isMarked ? (isPresent ? '#22c55e' : '#ef4444') : '#cbd5e1'
+                        {daysRecords.map((a, i) => {
+                            const color = a.present ? '#22c55e' : '#ef4444'
                             return (
-                                <div key={c.id} style={{ width: 8, height: 8, borderRadius: '50%', background: color }}></div>
+                                <div key={a.id} style={{ width: 8, height: 8, borderRadius: '50%', background: color }}></div>
                             )
                         })}
                     </div>
@@ -104,9 +104,9 @@ export default function StudentAttendance() {
         return days
     }
 
-    // Filter classes based on both Month AND Selected Day
-    const filteredClasses = classes.filter(c => {
-        const d = new Date(c.scheduledAt)
+    // Filter records based on both Month AND Selected Day
+    const filteredRecords = attendances.filter(a => {
+        const d = new Date(a.date)
         const dLocal = new Date(d.getFullYear(), d.getMonth(), d.getDate())
 
         // Must be in current view month
@@ -117,7 +117,7 @@ export default function StudentAttendance() {
             return dLocal.getDate() === selectedDay
         }
         return true
-    }).sort((a, b) => new Date(b.scheduledAt) - new Date(a.scheduledAt))
+    }).sort((a, b) => new Date(b.date) - new Date(a.date))
 
     return (
         <ProtectedRoute requiredRole="STUDENT">
@@ -173,23 +173,23 @@ export default function StudentAttendance() {
                     <h3 style={{ fontSize: 16 }}>
                         {selectedDay ? `History for ${monthNames[month]} ${selectedDay}` : `Full History (${monthNames[month]})`}
                     </h3>
-                    {filteredClasses.length === 0 ? <p style={{ color: '#999' }}>No classes found{selectedDay ? ' for this date' : ''}.</p> : (
+                    {filteredRecords.length === 0 ? <p style={{ color: '#999' }}>No records found{selectedDay ? ' for this date' : ''}.</p> : (
                         <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
-                            {filteredClasses.map(c => {
-                                const record = c.attendances?.[0]
-                                const isPresent = record?.present
-                                const isMarked = !!record
+                            {filteredRecords.map(a => {
+                                const isPresent = a.present
                                 return (
-                                    <div key={c.id} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', background: 'white', padding: 15, borderRadius: 10, borderLeft: `4px solid ${isMarked ? (isPresent ? '#22c55e' : '#ef4444') : '#cbd5e1'}` }}>
+                                    <div key={a.id} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', background: 'white', padding: 15, borderRadius: 10, borderLeft: `4px solid ${isPresent ? '#22c55e' : '#ef4444'}` }}>
                                         <div>
-                                            <div style={{ fontWeight: 600 }}>{new Date(c.scheduledAt).toLocaleDateString()}</div>
-                                            <div style={{ fontSize: 13, color: '#666' }}>{c.subject?.name} - {c.title}</div>
+                                            <div style={{ fontWeight: 600 }}>{new Date(a.date).toLocaleDateString()}</div>
+                                            <div style={{ fontSize: 13, color: '#666' }}>
+                                                {a.class?.subject?.name || 'Class'} - {a.class?.title || 'Session'}
+                                            </div>
                                         </div>
                                         <div>
-                                            {isMarked ? (
-                                                isPresent ? <span style={{ color: '#22c55e', fontWeight: 700, display: 'flex', alignItems: 'center', gap: 5 }}>Present <Check size={16} /></span>
-                                                    : <span style={{ color: '#ef4444', fontWeight: 700, display: 'flex', alignItems: 'center', gap: 5 }}>Absent <X size={16} /></span>
-                                            ) : <span style={{ color: '#94a3b8', fontStyle: 'italic' }}>Pending</span>}
+                                            {isPresent ?
+                                                <span style={{ color: '#22c55e', fontWeight: 700, display: 'flex', alignItems: 'center', gap: 5 }}>Present <Check size={16} /></span>
+                                                : <span style={{ color: '#ef4444', fontWeight: 700, display: 'flex', alignItems: 'center', gap: 5 }}>Absent <X size={16} /></span>
+                                            }
                                         </div>
                                     </div>
                                 )

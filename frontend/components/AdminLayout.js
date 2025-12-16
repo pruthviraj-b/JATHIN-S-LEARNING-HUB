@@ -2,7 +2,7 @@ import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { useAuth } from '../hooks/useAuth'
 import { useState } from 'react'
-import { LayoutDashboard, Users, BookOpen, Calendar, ClipboardCheck, Star, Users2, Bell, FolderOpen, LogOut, Menu, X } from 'lucide-react'
+import { LayoutDashboard, Users, BookOpen, Calendar, ClipboardCheck, Star, Users2, Bell, FolderOpen, LogOut, Menu, X, MessageSquare } from 'lucide-react'
 
 export default function AdminLayout({ children }) {
     const router = useRouter()
@@ -19,6 +19,7 @@ export default function AdminLayout({ children }) {
         { label: 'Stars', href: '/admin/stars', icon: Star },
         { label: 'Teams', href: '/admin/teams', icon: Users2 },
         { label: 'Notices', href: '/admin/announcements', icon: Bell },
+        { label: 'Notifications', href: '/admin/notifications', icon: MessageSquare },
         { label: 'Materials', href: '/admin/materials', icon: FolderOpen },
     ]
 
@@ -35,7 +36,7 @@ export default function AdminLayout({ children }) {
 
             {/* Sidebar */}
             <aside
-                className={`sidebar ${sidebarOpen ? 'open' : ''}`}
+                className={`sidebar ${sidebarOpen ? 'open' : ''} `}
                 style={{
                     width: 260,
                     background: '#09090b',
@@ -55,10 +56,10 @@ export default function AdminLayout({ children }) {
             >
                 {/* Desktop Styles Injection */}
                 <style jsx global>{`
-                    @media (min-width: 1024px) {
-                        aside { transform: translateX(0) !important; position: sticky !important; }
-                    }
-                `}</style>
+@media(min-width: 1024px) {
+                        aside { transform: translateX(0)!important; position: sticky!important; }
+}
+`}</style>
 
                 <div style={{ padding: '24px', borderBottom: '1px solid #1f1f23', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
@@ -71,7 +72,7 @@ export default function AdminLayout({ children }) {
                     <button onClick={() => setSidebarOpen(false)} style={{ background: 'transparent', border: 'none', color: 'white', cursor: 'pointer' }} className="lg:hidden">
                         <X size={24} />
                     </button>
-                    <style>{`@media(min-width:1024px){ .lg\\:hidden { display: none !important; } }`}</style>
+                    <style>{`@media(min-width: 1024px) { .lg\\:hidden { display: none!important; } } `}</style>
                 </div>
 
                 <nav style={{ flex: 1, padding: '20px 10px', overflowY: 'auto' }}>
@@ -144,7 +145,7 @@ export default function AdminLayout({ children }) {
                             <span className="breadcrumb-hidden" style={{ display: 'none' }}>Admin / </span>
                             <span style={{ color: '#0f172a', fontWeight: 700, fontSize: 16 }}>{navItems.find(i => i.href === router.pathname)?.label || 'Overview'}</span>
                         </div>
-                        <style>{`@media(min-width:768px){ .breadcrumb-hidden { display: inline !important; } }`}</style>
+                        <style>{`@media(min-width: 768px) { .breadcrumb - hidden { display: inline!important; } } `}</style>
                     </div>
 
                     <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>

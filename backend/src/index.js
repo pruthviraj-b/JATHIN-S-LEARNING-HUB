@@ -32,6 +32,7 @@ const classesRoutes = require('./routes/classes');
 const testsRoutes = require('./routes/tests');
 const announcementsRoutes = require('./routes/announcements');
 const materialsRoutes = require('./routes/materials');
+const notificationsRoutes = require('./routes/notifications');
 
 app.use('/api/auth', authRoutes);
 app.use('/api/students', studentsRoutes);
@@ -43,6 +44,7 @@ app.use('/api/classes', classesRoutes);
 app.use('/api/tests', testsRoutes);
 app.use('/api/announcements', announcementsRoutes);
 app.use('/api/materials', materialsRoutes);
+app.use('/api/notifications', notificationsRoutes);
 app.use('/api/attendance', require('./routes/attendance'));
 app.use('/api/dashboard', require('./routes/dashboard'));
 app.use('/api/tasks', require('./routes/tasks'));

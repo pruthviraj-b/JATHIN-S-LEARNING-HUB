@@ -5,6 +5,26 @@ const { authMiddleware } = require('../middleware/auth');
 const prisma = new PrismaClient();
 const router = express.Router();
 
+// Get attendance for logged-in student
+router.get('/me', authMiddleware(['STUDENT']), async (req, res) => {
+    try {
+        const userId = req.user.id;
+        const records = await prisma.attendance.findMany({
+            where: { student: { userId: userId } },
+            include: {
+                class: {
+                    include: { subject: true }
+                }
+            },
+            orderBy: { date: 'desc' }
+        });
+        res.json(records);
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: 'Server error' });
+    }
+});
+
 // Get attendance for a specific date (Admin)
 router.get('/', authMiddleware(['ADMIN']), async (req, res) => {
     try {
@@ -81,6 +101,37 @@ router.post('/', authMiddleware(['ADMIN']), async (req, res) => {
             return res.json(created);
         }
 
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: 'Server error' });
+    }
+});
+
+const { sendNotification } = require('../services/notification');
+
+// Send bulk attendance notification
+router.post('/notify', authMiddleware(['ADMIN']), async (req, res) => {
+    try {
+        const { students, message } = req.body; // students: [{ id, name, phoneNumber, status }]
+
+        if (!students || !Array.isArray(students)) {
+            return res.status(400).json({ error: 'Invalid students list' });
+        }
+
+        const results = [];
+        for (const s of students) {
+            if (s.phoneNumber) {
+                // Personalize message: "Hi parent, [Name] is present today."
+                // Or use the custom message provided
+                const body = message.replace('{name}', s.name).replace('{status}', s.status);
+                const result = await sendNotification(s.phoneNumber, body);
+                results.push({ student: s.name, success: result.success, error: result.error });
+            } else {
+                results.push({ student: s.name, success: false, error: 'No phone number' });
+            }
+        }
+
+        res.json({ results });
     } catch (err) {
         console.error(err);
         res.status(500).json({ error: 'Server error' });
