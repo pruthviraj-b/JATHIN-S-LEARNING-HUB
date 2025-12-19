@@ -276,48 +276,76 @@ export default function ManageStudents() {
                 </div>
                 <div>
                   <label style={{ display: 'block', marginBottom: 5, fontSize: 13, fontWeight: 600, color: '#666' }}>Profile Image</label>
-                  <div style={{ display: 'flex', gap: 10, alignItems: 'center' }}>
-                    {formData.profileUrl && (
-                      <img src={
-                        formData.profileUrl.startsWith('http://localhost') ? formData.profileUrl.replace('http://localhost:4000', '') : formData.profileUrl
-                      } alt="Preview" style={{ width: 40, height: 40, borderRadius: '50%', objectFit: 'cover' }} />
-                    )}
+
+                  {/* Info Box about External Links - User request for Google Drive etc */}
+                  <div style={{ background: '#e0f2fe', color: '#0c4a6e', padding: '8px 12px', borderRadius: 6, fontSize: 12, marginBottom: 10, border: '1px solid #7dd3fc' }}>
+                    ℹ️ <strong>Note:</strong> You can paste an image link (Google Drive, Cloudinary, etc.) OR upload a file. <br />
+                    Uploading saves the file to this computer (only visible if connected to this network). <br />
+                    <strong>Using a link is recommended for easier mobile access.</strong>
+                  </div>
+
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+                    {/* Manual URL Input */}
                     <input
-                      type="file"
-                      accept="image/*"
-                      onChange={async (e) => {
-                        const file = e.target.files[0];
-                        if (!file) return;
-
-                        const uploadData = new FormData();
-                        uploadData.append('file', file);
-
-                        try {
-                          // Use direct fetch or apiCall if it supports FormData (usually apiCall expects JSON)
-                          // Assuming apiCall wrappers fetch, we might need to bypass it or adjust headers.
-                          // Let's use fetch directly with the 'token' if stored, or just try generic upload since we made it auth-required.
-                          const token = localStorage.getItem('token');
-                          const res = await fetch('http://localhost:4000/api/upload', {
-                            method: 'POST',
-                            headers: {
-                              'Authorization': `Bearer ${token}`
-                            },
-                            body: uploadData
-                          });
-                          const data = await res.json();
-                          if (res.ok) {
-                            setFormData({ ...formData, profileUrl: data.url });
-                          } else {
-                            console.error('Upload Failed Data:', data);
-                            alert(`Upload Failed: ${data.error || 'Unknown error'} \n${data.details || ''}`);
+                      type="text"
+                      placeholder="Paste image URL here (e.g., https://...)"
+                      value={formData.profileUrl}
+                      onChange={(e) => {
+                        let value = e.target.value;
+                        // Auto-fix Google Drive links
+                        if (value.includes('drive.google.com')) {
+                          const match = value.match(/\/d\/(.+?)\/(view|edit)/) || value.match(/id=(.+?)(&|$)/);
+                          if (match && match[1]) {
+                            value = `https://drive.google.com/uc?id=${match[1]}`;
                           }
-                        } catch (err) {
-                          console.error('Upload Catch Error', err);
-                          alert('Upload Failed: ' + err.message);
                         }
+                        setFormData({ ...formData, profileUrl: value });
                       }}
-                      style={{ padding: 10, border: '1px solid #ddd', borderRadius: 6, width: '100%' }}
+                      style={{ width: '100%', padding: 10, borderRadius: 6, border: '1px solid #ddd' }}
                     />
+
+                    <div style={{ textAlign: 'center', fontSize: 12, color: '#999' }}>- OR -</div>
+
+                    <div style={{ display: 'flex', gap: 10, alignItems: 'center' }}>
+                      {formData.profileUrl && (
+                        <img src={
+                          formData.profileUrl.startsWith('http://localhost') ? formData.profileUrl.replace('http://localhost:4000', '') : formData.profileUrl
+                        } alt="Preview" style={{ width: 40, height: 40, borderRadius: '50%', objectFit: 'cover' }} />
+                      )}
+                      <input
+                        type="file"
+                        accept="image/*"
+                        onChange={async (e) => {
+                          const file = e.target.files[0];
+                          if (!file) return;
+
+                          const uploadData = new FormData();
+                          uploadData.append('file', file);
+
+                          try {
+                            const token = localStorage.getItem('token');
+                            const res = await fetch('http://localhost:4000/api/upload', {
+                              method: 'POST',
+                              headers: {
+                                'Authorization': `Bearer ${token}`
+                              },
+                              body: uploadData
+                            });
+                            const data = await res.json();
+                            if (res.ok) {
+                              setFormData({ ...formData, profileUrl: data.url });
+                            } else {
+                              console.error('Upload Failed Data:', data);
+                              alert(`Upload Failed: ${data.error || 'Unknown error'} \n${data.details || ''}`);
+                            }
+                          } catch (err) {
+                            console.error('Upload Catch Error', err);
+                            alert('Upload Failed: ' + err.message);
+                          }
+                        }}
+                        style={{ padding: 10, border: '1px solid #ddd', borderRadius: 6, width: '100%' }}
+                      />
+                    </div>
                   </div>
                 </div>
               </div>
