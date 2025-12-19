@@ -165,7 +165,11 @@ export default function StudentLayout({ children }) {
                     <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
                         {user?.student?.profileUrl ? (
                             <img
-                                src={user.student.profileUrl}
+                                src={
+                                    user.student.profileUrl.startsWith('http://localhost')
+                                        ? user.student.profileUrl.replace('http://localhost:4000', '')
+                                        : user.student.profileUrl
+                                }
                                 alt="User"
                                 style={{ width: 38, height: 38, borderRadius: '50%', objectFit: 'cover', border: '2px solid #fff', boxShadow: '0 2px 5px rgba(0,0,0,0.1)' }}
                             />
@@ -186,21 +190,45 @@ export default function StudentLayout({ children }) {
 }
 
 function InstallPrompt() {
-    const [show, setShow] = useState(false)
+    const [deferredPrompt, setDeferredPrompt] = useState(null);
+    const [show, setShow] = useState(false);
 
     useEffect(() => {
-        // Check if already installed (standalone mode) or dismissed
-        const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone;
-        const dismissed = localStorage.getItem('installPromptDismissed');
+        // PWA Install Prompt Listener
+        const handler = (e) => {
+            // Prevent Chrome 67 and earlier from automatically showing the prompt
+            e.preventDefault();
+            // Stash the event so it can be triggered later.
+            setDeferredPrompt(e);
 
-        // Show after a small delay to not feel intrusive immediately
-        const timer = setTimeout(() => {
+            // Check if already installed or dismissed
+            const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone;
+            const dismissed = localStorage.getItem('installPromptDismissed');
+
             if (!isStandalone && !dismissed) {
                 setShow(true);
             }
-        }, 2000);
-        return () => clearTimeout(timer);
+        };
+
+        window.addEventListener('beforeinstallprompt', handler);
+
+        return () => window.removeEventListener('beforeinstallprompt', handler);
     }, []);
+
+    const handleInstallClick = async () => {
+        if (!deferredPrompt) return;
+
+        // Show the install prompt
+        deferredPrompt.prompt();
+
+        // Wait for the user to respond to the prompt
+        const { outcome } = await deferredPrompt.userChoice;
+        console.log(`User response to the install prompt: ${outcome}`);
+
+        // We've used the prompt, and can't use it again, discard it
+        setDeferredPrompt(null);
+        setShow(false);
+    };
 
     if (!show) return null;
 
@@ -213,13 +241,15 @@ function InstallPrompt() {
             fontSize: 14, fontWeight: 500,
             boxShadow: '0 2px 10px rgba(59,130,246,0.3)',
             zIndex: 100,
-            position: 'sticky', top: 0
-        }}>
+            position: 'sticky', top: 0,
+            cursor: 'pointer'
+        }} onClick={handleInstallClick}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
                 <span>📲 <strong>Install App:</strong> Add to Home Screen for easier access!</span>
             </div>
             <button
-                onClick={() => {
+                onClick={(e) => {
+                    e.stopPropagation(); // Don't trigger install
                     setShow(false);
                     localStorage.setItem('installPromptDismissed', 'true');
                 }}

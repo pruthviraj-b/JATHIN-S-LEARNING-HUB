@@ -102,7 +102,7 @@ router.put('/profile/me', authMiddleware(['STUDENT']), async (req, res) => {
       where: { id: student.id },
       data: {
         dob: dob ? new Date(dob) : undefined,
-        profileUrl: profileUrl || undefined,
+        // profileUrl: profileUrl || undefined, // Restricted: Students cannot change their own photo
         phoneNumber // Added allow self-update phone
       }
     });
@@ -135,6 +135,9 @@ router.put('/:id', authMiddleware(['ADMIN']), async (req, res) => {
       phoneNumber // Added
     };
     Object.keys(studentData).forEach(k => studentData[k] === undefined && delete studentData[k]);
+
+    console.log('Update payload for student:', id, studentData); // DEBUG LOG
+
     if (subjectIds) {
       studentData.subjects = { set: subjectIds.map(id => ({ id })) };
     }
@@ -200,8 +203,8 @@ router.put('/:id', authMiddleware(['ADMIN']), async (req, res) => {
     if (err.meta?.target?.includes('email')) {
       return res.status(400).json({ error: 'Email already exists' });
     }
-    console.error(err);
-    res.status(500).json({ error: err.message });
+    console.error('Update Student Error:', err);
+    res.status(500).json({ error: err.message, details: err });
   }
 });
 

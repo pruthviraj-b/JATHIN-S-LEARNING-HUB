@@ -79,47 +79,65 @@ export default function Leaderboard() {
                                 </tr>
                             </thead>
                             <tbody>
-                                {leaders.map((entry, i) => {
-                                    const isTop3 = i < 3
-                                    const rankIcon = i === 0 ? '👑' : i === 1 ? '🥈' : i === 2 ? '🥉' : `#${i + 1}`
-                                    const rankColor = i === 0 ? '#fbbf24' : i === 1 ? '#94a3b8' : i === 2 ? '#b45309' : '#64748b'
+                                {(() => {
+                                    let currentRank = 1; // Start at rank 1
+                                    let lastPoints = -1;
 
-                                    return (
-                                        <tr key={i} style={{ borderBottom: '1px solid #f1f5f9' }}>
-                                            <td style={{ padding: '16px', fontWeight: 700, color: rankColor, fontSize: 16 }}>
-                                                {rankIcon}
-                                            </td>
-                                            <td style={{ padding: '16px' }}>
-                                                {activeTab === 'students' ? (
-                                                    <div style={{ fontWeight: 600, color: '#0f172a' }}>
-                                                        {entry.student?.firstName} {entry.student?.lastName}
-                                                    </div>
-                                                ) : (
-                                                    <div>
-                                                        <div style={{ fontWeight: 700, color: '#0f172a', fontSize: 16, marginBottom: 4 }}>
-                                                            {entry.team?.name || 'Unknown Team'}
+                                    return leaders.map((entry, i) => {
+                                        // Initialize
+                                        if (i === 0) {
+                                            lastPoints = entry.points;
+                                        }
+
+                                        if (entry.points < lastPoints) {
+                                            currentRank++; // Dense Ranking: Only increment by 1
+                                            lastPoints = entry.points;
+                                        }
+                                        // If points === lastPoints, currentRank stays same.
+
+                                        // Special visual for Top 3 ranks (even if tied)
+                                        const rankIcon = currentRank === 1 ? '👑' : currentRank === 2 ? '🥈' : currentRank === 3 ? '🥉' : `#${currentRank}`
+                                        const rankColor = currentRank === 1 ? '#fbbf24' : currentRank === 2 ? '#94a3b8' : currentRank === 3 ? '#b45309' : '#64748b'
+
+                                        const isTop3 = currentRank <= 3;
+
+                                        return (
+                                            <tr key={i} style={{ borderBottom: '1px solid #f1f5f9' }}>
+                                                <td style={{ padding: '16px', fontWeight: 700, color: rankColor, fontSize: 16 }}>
+                                                    {rankIcon}
+                                                </td>
+                                                <td style={{ padding: '16px' }}>
+                                                    {activeTab === 'students' ? (
+                                                        <div style={{ fontWeight: 600, color: '#0f172a' }}>
+                                                            {entry.student?.firstName} {entry.student?.lastName}
                                                         </div>
-                                                        <div style={{ fontSize: 13, color: '#64748b', lineHeight: 1.4 }}>
-                                                            {entry.team?.members?.length > 0 ? (
-                                                                entry.team.members.map(s => s.firstName).join(', ')
-                                                            ) : 'No members'}
+                                                    ) : (
+                                                        <div>
+                                                            <div style={{ fontWeight: 700, color: '#0f172a', fontSize: 16, marginBottom: 4 }}>
+                                                                {entry.team?.name || 'Unknown Team'}
+                                                            </div>
+                                                            <div style={{ fontSize: 13, color: '#64748b', lineHeight: 1.4 }}>
+                                                                {entry.team?.members?.length > 0 ? (
+                                                                    entry.team.members.map(s => s.firstName).join(', ')
+                                                                ) : 'No members'}
+                                                            </div>
                                                         </div>
+                                                    )}
+                                                </td>
+                                                <td style={{ padding: '16px', textAlign: 'right' }}>
+                                                    <div style={{
+                                                        display: 'inline-flex', alignItems: 'center', gap: 6,
+                                                        background: isTop3 ? '#fffbeb' : '#f1f5f9',
+                                                        color: isTop3 ? '#b45309' : '#475569',
+                                                        padding: '6px 12px', borderRadius: 20, fontWeight: 700
+                                                    }}>
+                                                        <Trophy size={14} /> {entry.points}
                                                     </div>
-                                                )}
-                                            </td>
-                                            <td style={{ padding: '16px', textAlign: 'right' }}>
-                                                <div style={{
-                                                    display: 'inline-flex', alignItems: 'center', gap: 6,
-                                                    background: isTop3 ? '#fffbeb' : '#f1f5f9',
-                                                    color: isTop3 ? '#b45309' : '#475569',
-                                                    padding: '6px 12px', borderRadius: 20, fontWeight: 700
-                                                }}>
-                                                    <Trophy size={14} /> {entry.points}
-                                                </div>
-                                            </td>
-                                        </tr>
-                                    )
-                                })}
+                                                </td>
+                                            </tr>
+                                        )
+                                    })
+                                })()}
                                 {leaders.length === 0 && (
                                     <tr>
                                         <td colSpan={3} style={{ padding: 40, textAlign: 'center', color: '#94a3b8' }}>

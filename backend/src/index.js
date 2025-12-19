@@ -48,9 +48,17 @@ app.use('/api/notifications', notificationsRoutes);
 app.use('/api/attendance', require('./routes/attendance'));
 app.use('/api/dashboard', require('./routes/dashboard'));
 app.use('/api/tasks', require('./routes/tasks'));
+app.use('/api/upload', require('./routes/upload'));
+app.use('/uploads', express.static('uploads'));
 
 app.get('/api/health', (req, res) => {
   res.json({ ok: true, time: new Date() });
+});
+
+// Global Error Handler
+app.use((err, req, res, next) => {
+  console.error('SERVER ERROR:', err);
+  res.status(500).json({ error: 'Internal Server Error', details: err.message });
 });
 
 const port = process.env.PORT || 4000;
