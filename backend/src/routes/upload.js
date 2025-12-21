@@ -39,7 +39,9 @@ router.post('/', authMiddleware(), (req, res) => {
         console.log('Multer/Cloudinary Callback. Error:', err);
         if (err) {
             console.error('Upload Error:', err);
-            return res.status(400).json({ error: err.message });
+            // Ensure we send a string, even if err.message is missing
+            const errorMsg = err.message || (typeof err === 'string' ? err : 'Unknown Upload Error');
+            return res.status(400).json({ error: errorMsg, details: err });
         }
         if (!req.file) {
             return res.status(400).json({ error: 'No file uploaded' });
