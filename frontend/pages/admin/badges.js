@@ -1,141 +1,159 @@
+
 import { useState, useEffect } from 'react';
 import AdminLayout from '../../components/AdminLayout';
-import ProtectedRoute from '../../components/ProtectedRoute';
 import { apiCall } from '../../lib/api';
 import BadgeCard from '../../components/BadgeCard';
+import { Plus, Trash2, UserPlus, Search } from 'lucide-react';
 
 export default function AdminBadges() {
     const [badges, setBadges] = useState([]);
-    const [students, setStudents] = useState([]);
+    const [students, setStudents] = useState([]); // For assignment modal
     const [loading, setLoading] = useState(true);
-    const [form, setForm] = useState({ name: '', description: '', icon: '🏆', tier: 'BRONZE' });
-    const [assign, setAssign] = useState({ studentId: '', badgeId: '' });
+
+    // Create Form
+    const [showCreate, setShowCreate] = useState(false);
+    const [newBadge, setNewBadge] = useState({ name: '', description: '', icon: '🏆', tier: 'BRONZE' });
+
+    // Assign Modal
+    const [assignTarget, setAssignTarget] = useState(null); // badgeId to assign
+    const [searchQuery, setSearchQuery] = useState('');
 
     useEffect(() => {
-        loadData();
+        loadBadges();
+        loadStudents();
     }, []);
 
-    async function loadData() {
+    const loadBadges = async () => {
         try {
-            const [bData, sData] = await Promise.all([
-                apiCall('/badges'),
-                apiCall('/students')
-            ]);
-            setBadges(bData);
-            setStudents(sData);
-        } catch (err) {
-            alert('Failed to load data');
-        } finally {
-            setLoading(false);
-        }
-    }
+            const data = await apiCall('/badges');
+            setBadges(data);
+        } catch (err) { alert(err.message); } finally { setLoading(false); }
+    };
 
-    async function handleCreate(e) {
-        e.preventDefault();
+    const loadStudents = async () => {
         try {
-            await apiCall('/badges', { method: 'POST', body: JSON.stringify(form) });
-            alert('Badge Created!');
-            setForm({ name: '', description: '', icon: '🏆', tier: 'BRONZE' });
-            loadData();
-        } catch (err) {
-            alert(err.message);
-        }
-    }
+            const data = await apiCall('/students?limit=1000'); // Get all for simplicity
+            setStudents(data.students || []);
+        } catch (err) { console.error(err); }
+    };
 
-    async function handleAssign(e) {
-        e.preventDefault();
+    const handleCreate = async () => {
         try {
-            await apiCall('/badges/assign', { method: 'POST', body: JSON.stringify(assign) });
-            alert('Badge Assigned!');
-            setAssign({ studentId: '', badgeId: '' });
-        } catch (err) {
-            alert(err.message);
-        }
-    }
+            await apiCall('/badges', { method: 'POST', body: JSON.stringify(newBadge) });
+            setShowCreate(false);
+            setNewBadge({ name: '', description: '', icon: '🏆', tier: 'BRONZE' });
+            loadBadges();
+        } catch (err) { alert(err.message); }
+    };
 
-    async function handleDelete(id) {
-        if (!confirm('Delete badge?')) return;
+    const handleDelete = async (id) => {
+        if (!confirm('Delete this badge?')) return;
         try {
             await apiCall(`/badges/${id}`, { method: 'DELETE' });
-            loadData();
-        } catch (err) {
-            alert(err.message);
-        }
-    }
+            loadBadges();
+        } catch (err) { alert(err.message); }
+    };
+
+    const handleAssign = async (studentId) => {
+        if (!assignTarget) return;
+        try {
+            await apiCall('/badges/assign', {
+                method: 'POST',
+                body: JSON.stringify({ studentId, badgeId: assignTarget })
+            });
+            alert('Badge Assigned!');
+            setAssignTarget(null);
+        } catch (err) { alert(err.message); }
+    };
+
+    const filteredStudents = students.filter(s =>
+        (s.firstName + ' ' + s.lastName).toLowerCase().includes(searchQuery.toLowerCase())
+    );
 
     return (
-        <ProtectedRoute requiredRole="ADMIN">
-            <AdminLayout>
-                <div style={{ padding: 24 }}>
-                    <h1 style={{ color: 'white', marginBottom: 30 }}>Gamification & Badges</h1>
+        <AdminLayout>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 24 }}>
+                <h1 style={{ fontSize: 24, fontWeight: 700, color: 'var(--text-main)', margin: 0 }}>Badge Management</h1>
+                <button onClick={() => setShowCreate(true)} className="btn btn-primary" style={{ background: 'var(--secondary)', color: 'white', border: 'none' }}>
+                    <Plus size={18} /> Create Badge
+                </button>
+            </div>
 
-                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 30, marginBottom: 40 }}>
-                        {/* Create Badge */}
-                        <div className="card" style={{ background: '#09090B', padding: 24, borderRadius: 16, border: '1px solid #27272A' }}>
-                            <h3 style={{ color: 'white', borderBottom: '1px solid #27272A', paddingBottom: 10, marginBottom: 20 }}>Create New Badge</h3>
-                            <form onSubmit={handleCreate} style={{ display: 'grid', gap: 15 }}>
-                                <input placeholder="Badge Name" value={form.name} onChange={e => setForm({ ...form, name: e.target.value })} style={inputStyle} required />
-                                <input placeholder="Description" value={form.description} onChange={e => setForm({ ...form, description: e.target.value })} style={inputStyle} />
-                                <div style={{ display: 'flex', gap: 10 }}>
-                                    <input placeholder="Icon (Emoji)" value={form.icon} onChange={e => setForm({ ...form, icon: e.target.value })} style={{ ...inputStyle, width: 80 }} />
-                                    <select value={form.tier} onChange={e => setForm({ ...form, tier: e.target.value })} style={{ ...inputStyle, flex: 1 }}>
-                                        <option value="BRONZE">Bronze</option>
-                                        <option value="SILVER">Silver</option>
-                                        <option value="GOLD">Gold</option>
-                                        <option value="PLATINUM">Platinum</option>
-                                    </select>
-                                </div>
-                                <button type="submit" style={btnStyle}>Create Badge</button>
-                            </form>
-                        </div>
-
-                        {/* Assign Badge */}
-                        <div className="card" style={{ background: '#09090B', padding: 24, borderRadius: 16, border: '1px solid #27272A' }}>
-                            <h3 style={{ color: 'white', borderBottom: '1px solid #27272A', paddingBottom: 10, marginBottom: 20 }}>Award Badge to Student</h3>
-                            <form onSubmit={handleAssign} style={{ display: 'grid', gap: 15 }}>
-                                <select value={assign.studentId} onChange={e => setAssign({ ...assign, studentId: e.target.value })} style={inputStyle} required>
-                                    <option value="">Select Student</option>
-                                    {students.map(s => <option key={s.id} value={s.id}>{s.firstName} {s.lastName}</option>)}
-                                </select>
-                                <select value={assign.badgeId} onChange={e => setAssign({ ...assign, badgeId: e.target.value })} style={inputStyle} required>
-                                    <option value="">Select Badge</option>
-                                    {badges.map(b => <option key={b.id} value={b.id}>{b.icon} {b.name}</option>)}
-                                </select>
-                                <button type="submit" style={{ ...btnStyle, background: 'white', color: 'black' }}>Award Badge</button>
-                            </form>
-                        </div>
+            {/* Create Badge Form (Inline for simplicity) */}
+            {showCreate && (
+                <div className="card" style={{ marginBottom: 24, padding: 20 }}>
+                    <h3 style={{ marginBottom: 15 }}>Create New Badge</h3>
+                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 15 }}>
+                        <input className="input-field" placeholder="Badge Name" value={newBadge.name} onChange={e => setNewBadge({ ...newBadge, name: e.target.value })} />
+                        <select className="input-field" value={newBadge.tier} onChange={e => setNewBadge({ ...newBadge, tier: e.target.value })}>
+                            <option value="BRONZE">Bronze</option>
+                            <option value="SILVER">Silver</option>
+                            <option value="GOLD">Gold</option>
+                            <option value="PLATINUM">Platinum</option>
+                        </select>
+                        <input className="input-field" placeholder="Icon (Emoji)" value={newBadge.icon} onChange={e => setNewBadge({ ...newBadge, icon: e.target.value })} />
+                        <input className="input-field" placeholder="Description" value={newBadge.description} onChange={e => setNewBadge({ ...newBadge, description: e.target.value })} />
                     </div>
-
-                    {/* Badge Library */}
-                    <h3 style={{ color: 'white', marginBottom: 20 }}>Badge Library</h3>
-                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: 20 }}>
-                        {badges.map(b => (
-                            <div key={b.id} style={{ position: 'relative' }}>
-                                <BadgeCard badge={b} />
-                                <button
-                                    onClick={() => handleDelete(b.id)}
-                                    style={{
-                                        position: 'absolute', top: -5, right: -5,
-                                        background: 'red', color: 'white', border: 'none',
-                                        borderRadius: '50%', width: 20, height: 20, cursor: 'pointer'
-                                    }}
-                                >×</button>
-                            </div>
-                        ))}
-                        {badges.length === 0 && <p style={{ color: '#666' }}>No badges created yet.</p>}
+                    <div style={{ marginTop: 15, display: 'flex', gap: 10 }}>
+                        <button className="btn btn-primary" onClick={handleCreate}>Save Badge</button>
+                        <button className="btn btn-secondary" onClick={() => setShowCreate(false)}>Cancel</button>
                     </div>
                 </div>
-            </AdminLayout>
-        </ProtectedRoute>
+            )}
+
+            {/* Badges Grid */}
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(250px, 1fr))', gap: 20 }}>
+                {badges.map(badge => (
+                    <div key={badge.id} className="card" style={{ flexDirection: 'row', alignItems: 'center', gap: 15, padding: 15 }}>
+                        <BadgeCard badge={badge} />
+                        <div style={{ flex: 1 }}>
+                            <div style={{ fontWeight: 700, fontSize: 16 }}>{badge.name}</div>
+                            <div style={{ fontSize: 12, color: 'var(--text-muted)' }}>{badge.description}</div>
+                            <div style={{ marginTop: 10, display: 'flex', gap: 8 }}>
+                                <button className="btn btn-secondary" style={{ padding: '6px 10px', fontSize: 12 }} onClick={() => setAssignTarget(badge.id)}>
+                                    <UserPlus size={14} /> Assign
+                                </button>
+                                <button className="btn btn-secondary" style={{ padding: '6px 10px', fontSize: 12, color: 'var(--danger)' }} onClick={() => handleDelete(badge.id)}>
+                                    <Trash2 size={14} />
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                ))}
+            </div>
+
+            {/* Assignment Modal Overhead (Simple Implementation) */}
+            {assignTarget && (
+                <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.5)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 100 }}>
+                    <div className="card" style={{ width: 400, maxHeight: '80vh', display: 'flex', flexDirection: 'column' }}>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 15 }}>
+                            <h3>Assign Badge</h3>
+                            <button onClick={() => setAssignTarget(null)} style={{ background: 'none', border: 'none', cursor: 'pointer' }}>✖</button>
+                        </div>
+
+                        <div style={{ display: 'flex', alignItems: 'center', background: 'var(--bg-body)', borderRadius: 8, padding: '0 10px', marginBottom: 15 }}>
+                            <Search size={16} />
+                            <input
+                                style={{ border: 'none', background: 'transparent', padding: 10, outline: 'none', width: '100%' }}
+                                placeholder="Search student..."
+                                value={searchQuery}
+                                onChange={e => setSearchQuery(e.target.value)}
+                            />
+                        </div>
+
+                        <div style={{ overflowY: 'auto', flex: 1 }}>
+                            {filteredStudents.map(s => (
+                                <div key={s.id} onClick={() => handleAssign(s.id)} style={{ padding: '10px', borderBottom: '1px solid var(--bg-body)', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 10 }}>
+                                    <div style={{ width: 30, height: 30, borderRadius: '50%', background: '#eee', overflow: 'hidden' }}>
+                                        {s.profileUrl ? <img src={s.profileUrl} style={{ width: '100%', height: '100%' }} /> : null}
+                                    </div>
+                                    <div>{s.firstName} {s.lastName}</div>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                </div>
+            )}
+        </AdminLayout>
     );
 }
-
-const inputStyle = {
-    padding: 12, borderRadius: 8, border: '1px solid #27272A',
-    background: '#18181B', color: 'white', outline: 'none'
-};
-
-const btnStyle = {
-    padding: 12, borderRadius: 8, border: 'none',
-    background: '#27272A', color: 'white', fontWeight: 700, cursor: 'pointer'
-};

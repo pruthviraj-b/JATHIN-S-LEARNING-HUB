@@ -1,42 +1,72 @@
+
 import React from 'react';
+import { Award } from 'lucide-react';
 
-export default function BadgeCard({ badge, awardedAt, size = 'medium' }) {
-    // Styles based on Tier
-    const tierStyles = {
-        BRONZE: { border: '1px solid #CD7F32', bg: 'linear-gradient(135deg, #1c1c1c 0%, #3d2b1f 100%)', text: '#CD7F32' },
-        SILVER: { border: '1px solid #C0C0C0', bg: 'linear-gradient(135deg, #1c1c1c 0%, #2e3b4e 100%)', text: '#C0C0C0' },
-        GOLD: { border: '1px solid #FFD700', bg: 'linear-gradient(135deg, #1c1c1c 0%, #4a3b00 100%)', text: '#FFD700' },
-        PLATINUM: { border: '1px solid #E5E4E2', bg: 'linear-gradient(135deg, #1c1c1c 0%, #2c2c2c 100%)', text: '#E5E4E2' }
-    };
+const TIER_COLORS = {
+    BRONZE: 'linear-gradient(135deg, #cd7f32 0%, #a05a2c 100%)',
+    SILVER: 'linear-gradient(135deg, #C0C0C0 0%, #A9A9A9 100%)',
+    GOLD: 'linear-gradient(135deg, #FFD700 0%, #DAA520 100%)',
+    PLATINUM: 'linear-gradient(135deg, #E5E4E2 0%, #B0C4DE 100%)'
+};
 
-    const style = tierStyles[badge.tier] || tierStyles.BRONZE;
-    const isSmall = size === 'small';
+const TIER_BORDER = {
+    BRONZE: '#cd7f32',
+    SILVER: '#C0C0C0',
+    GOLD: '#FFD700',
+    PLATINUM: 'cyan'
+};
+
+export default function BadgeCard({ badge, size = 'md' }) {
+    // size: 'sm' (list view), 'md' (profile view), 'lg' (modal)
+
+    const isSmall = size === 'sm';
+    const bg = TIER_COLORS[badge.tier] || TIER_COLORS.BRONZE;
+    const border = TIER_BORDER[badge.tier] || TIER_BORDER.BRONZE;
 
     return (
         <div style={{
-            background: style.bg,
-            border: style.border,
+            background: 'white',
             borderRadius: 12,
-            padding: isSmall ? 10 : 15,
+            border: `1px solid ${border}`,
+            padding: isSmall ? '8px' : '16px',
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'center',
+            justifyContent: 'center',
             textAlign: 'center',
-            minWidth: isSmall ? 80 : 120,
-            boxShadow: '0 4px 10px rgba(0,0,0,0.3)',
+            boxShadow: `0 4px 10px -2px ${border}40`, // 40 = 25% opacity hex
+            width: isSmall ? 80 : 120, // fixed width for grid alignment
+            minHeight: isSmall ? 100 : 140,
+            gap: 8,
             position: 'relative',
             overflow: 'hidden'
         }}>
-            <div style={{ fontSize: isSmall ? 24 : 36, marginBottom: 5 }}>{badge.icon}</div>
-            <div style={{ fontSize: isSmall ? 11 : 14, fontWeight: 700, color: 'white' }}>{badge.name}</div>
-            {!isSmall && badge.description && (
-                <div style={{ fontSize: 11, color: '#aaa', marginTop: 4 }}>{badge.description}</div>
-            )}
-            {awardedAt && (
-                <div style={{ fontSize: 10, color: style.text, marginTop: isSmall ? 2 : 8, fontWeight: 600 }}>
-                    {new Date(awardedAt).toLocaleDateString()}
+            {/* Glow effect at top */}
+            <div style={{ position: 'absolute', top: -20, insetInline: 0, height: 40, background: bg, opacity: 0.2, borderRadius: '50%', filter: 'blur(20px)' }} />
+
+            <div style={{
+                fontSize: isSmall ? 24 : 32,
+                lineHeight: 1,
+                filter: 'drop-shadow(0 2px 2px rgba(0,0,0,0.1))'
+            }}>
+                {badge.icon || '🏆'}
+            </div>
+
+            <div>
+                <div style={{
+                    fontSize: isSmall ? 11 : 13,
+                    fontWeight: 700,
+                    color: '#1C2541',
+                    marginBottom: 2
+                }}>
+                    {badge.name}
                 </div>
-            )}
+                {!isSmall && (
+                    <div style={{ fontSize: 10, color: '#64748b' }}>
+                        {badge.tier}
+                    </div>
+                )}
+            </div>
         </div>
     );
 }
