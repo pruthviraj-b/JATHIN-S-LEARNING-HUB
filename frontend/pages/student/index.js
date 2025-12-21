@@ -53,11 +53,11 @@ export default function StudentDashboard() {
         {/* Subjects Grid (New Section) */}
         <div style={{ marginBottom: 40 }}>
           <h3 style={{ marginTop: 0, marginBottom: 20 }}>📚 My Subjects (Class {user?.student?.classLevel})</h3>
-          {loading ? <p>Loading subjects...</p> : stats.subjects.length === 0 ? (
+          {loading ? <p>Loading subjects...</p> : (stats.subjects || []).length === 0 ? (
             <p style={{ color: 'var(--text-muted)' }}>No subjects assigned for this class yet.</p>
           ) : (
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(180px, 1fr))', gap: 20 }}>
-              {stats.subjects.map((sub, i) => (
+              {(stats.subjects || []).map((sub, i) => (
                 <div key={sub.id} style={{
                   background: '#09090B',
                   padding: 24,
