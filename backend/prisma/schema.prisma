@@ -35,6 +35,7 @@ model Student {
   results     TestResult[]
   stars       Star[]
   tasks       Task[]
+  badges      StudentBadge[]
 }
 
 model Subject {
@@ -154,4 +155,25 @@ model Task {
   text      String
   completed Boolean  @default(false)
   createdAt DateTime @default(now())
+}
+
+model Badge {
+  id          String         @id @default(cuid())
+  name        String
+  description String?
+  icon        String         @default("🏆") // Store emoji or icon name
+  tier        String         @default("BRONZE") // BRONZE, SILVER, GOLD, PLATINUM
+  students    StudentBadge[]
+  createdAt   DateTime       @default(now())
+}
+
+model StudentBadge {
+  id        String   @id @default(cuid())
+  student   Student  @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  studentId String
+  badge     Badge    @relation(fields: [badgeId], references: [id], onDelete: Cascade)
+  badgeId   String
+  awardedAt DateTime @default(now())
+
+  @@unique([studentId, badgeId]) // Prevent duplicate badges of same type for one student
 }

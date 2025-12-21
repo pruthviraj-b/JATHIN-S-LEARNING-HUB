@@ -34,21 +34,8 @@ export default function AdminLayout({ children }) {
             )}
 
             {/* Lernia Sidebar: Black & White */}
-            <aside
-                className={`sidebar ${sidebarOpen ? 'open' : ''} `}
-                style={{
-                    width: 290,
-                    background: 'var(--bg-sidebar)',
-                    display: 'flex',
-                    flexDirection: 'column',
-                    flexShrink: 0,
-                    height: '100vh',
-                    position: 'sticky',
-                    top: 0,
-                    zIndex: 50,
-                    borderRight: '1px solid #27272A' // Zinc-800
-                }}
-            >
+            {/* Lernia Sidebar: Black & White */}
+            <aside className={`sidebar ${sidebarOpen ? 'open' : ''} `}>
 
                 <div style={{ padding: '30px 30px 10px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>

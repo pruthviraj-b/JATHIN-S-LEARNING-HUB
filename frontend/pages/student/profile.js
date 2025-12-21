@@ -118,6 +118,32 @@ export default function Profile() {
                             </div>
                         </div>
                     </div>
+
+                    {/* Achievements Section */}
+                    <div style={{ paddingLeft: 40, flex: 1 }}>
+                        <h2 style={{ color: 'white', marginBottom: 20, display: 'flex', alignItems: 'center', gap: 10 }}>
+                            Achievements
+                            <span style={{ fontSize: 12, background: '#27272A', padding: '2px 8px', borderRadius: 10, border: '1px solid #3F3F46' }}>{badges.length}</span>
+                        </h2>
+
+                        <div style={{ display: 'flex', flexWrap: 'wrap', gap: 15 }}>
+                            {badges.map(sb => (
+                                <BadgeCard key={sb.badge.id} badge={sb.badge} awardedAt={sb.awardedAt} size="small" />
+                            ))}
+                            {badges.length === 0 && (
+                                <div style={{
+                                    color: 'var(--text-muted)',
+                                    border: '1px dashed #27272A',
+                                    padding: 30,
+                                    borderRadius: 12,
+                                    width: '100%',
+                                    textAlign: 'center'
+                                }}>
+                                    No badges earned yet. Keep studying! 🏆
+                                </div>
+                            )}
+                        </div>
+                    </div>
                 </div>
             </StudentLayout>
         </ProtectedRoute>

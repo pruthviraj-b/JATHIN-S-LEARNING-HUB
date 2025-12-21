@@ -33,7 +33,7 @@ export default function AdminDashboard() {
       <AdminLayout>
 
         {/* Stats Grid */}
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: 24, marginBottom: 30 }}>
+        <div className="stats-grid">
           <StatsCard
             label="Total Students"
             value={loading ? '...' : stats.totalStudents}
@@ -57,7 +57,7 @@ export default function AdminDashboard() {
         </div>
 
         {/* Content Grid */}
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(400px, 1fr))', gap: 24 }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: 24 }}>
 
           {/* Quick Actions */}
           <div className="card" style={{ minHeight: 300 }}>

@@ -34,23 +34,7 @@ export default function StudentLayout({ children }) {
             )}
 
             {/* Sidebar */}
-            <aside
-                className={`sidebar ${sidebarOpen ? 'open' : ''}`}
-                style={{
-                    width: 260,
-                    background: '#000000',
-                    color: '#fff',
-                    display: 'flex',
-                    flexDirection: 'column',
-                    flexShrink: 0,
-                    position: 'fixed',
-                    height: '100vh',
-                    zIndex: 50,
-                    left: 0, top: 0,
-                    transform: sidebarOpen ? 'translateX(0)' : 'translateX(-100%)',
-                    transition: 'transform 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
-                }}
-            >
+            <aside className={`sidebar ${sidebarOpen ? 'open' : ''}`}>
                 {/* Desktop reset handled via global css or jsx styles below if strictly needed, but let's assume default is hidden on mobile */}
                 <style jsx global>{`
                     @media (min-width: 769px) {

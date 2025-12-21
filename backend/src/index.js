@@ -41,6 +41,7 @@ const testsRoutes = require('./routes/tests');
 const announcementsRoutes = require('./routes/announcements');
 const materialsRoutes = require('./routes/materials');
 const notificationsRoutes = require('./routes/notifications');
+const badgesRoutes = require('./routes/badges');
 
 app.use('/api/auth', authRoutes);
 app.use('/api/students', studentsRoutes);
@@ -48,6 +49,7 @@ app.use('/api/subjects', subjectsRoutes);
 app.use('/api/teams', teamsRoutes);
 app.use('/api/stars', starsRoutes);
 app.use('/api/timetable', timetableRoutes);
+app.use('/api/badges', badgesRoutes);
 app.use('/api/classes', classesRoutes);
 app.use('/api/tests', testsRoutes);
 app.use('/api/announcements', announcementsRoutes);

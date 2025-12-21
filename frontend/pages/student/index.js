@@ -42,7 +42,7 @@ export default function StudentDashboard() {
           <p style={{ color: '#666', margin: '5px 0 0 0' }}>Track your progress and schedule.</p>
         </div>
 
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: 24, marginBottom: 40 }}>
+        <div className="stats-grid">
           <DashCard title="⭐ My Total Stars" value={loading ? '...' : stats.stars} icon="✨" />
           <Link href="/student/attendance" style={{ textDecoration: 'none' }}>
             <DashCard title="✅ My Attendance" value={loading ? '...' : stats.attendance} icon="📝" />
@@ -87,7 +87,7 @@ export default function StudentDashboard() {
           )}
         </div>
 
-        <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gap: 24 }}>
+        <div className="dashboard-grid">
           <div style={{ background: '#09090B', padding: 24, borderRadius: 12, border: '1px solid #27272A' }}>
             <h3 style={{ marginTop: 0 }}>📅 Your Schedule</h3>
             {loading ? <p>Loading...</p> : stats.classes.length === 0 ? (
