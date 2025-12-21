@@ -190,7 +190,7 @@ export default function ManageStudents() {
             </div>
 
             <form onSubmit={handleSubmit}>
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: 24 }}>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: 24 }}>
                 {/* Avatar Section */}
                 <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 15, padding: 20, background: '#F9F9FC', borderRadius: 20 }}>
                   <div style={{ width: 100, height: 100, borderRadius: '50%', overflow: 'hidden', border: '4px solid white', boxShadow: 'var(--shadow-md)' }}>
@@ -208,6 +208,7 @@ export default function ManageStudents() {
                       <label className="btn btn-secondary" style={{ whiteSpace: 'nowrap' }}>
                         Upload
                         <input type="file" accept="image/*" hidden onChange={async (e) => {
+                          const file = e.target.files[0];
                           if (!file) return;
 
                           // Helper: Compress Image

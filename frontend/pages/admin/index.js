@@ -57,7 +57,7 @@ export default function AdminDashboard() {
         </div>
 
         {/* Content Grid */}
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: 24 }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: 24 }}>
 
           {/* Quick Actions */}
           <div className="card" style={{ minHeight: 300 }}>
