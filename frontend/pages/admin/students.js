@@ -202,14 +202,50 @@ export default function ManageStudents() {
                       <input type="text" placeholder="Paste URL..." value={formData.profileUrl} onChange={e => setFormData({ ...formData, profileUrl: e.target.value })} className="input-field" />
                       <label className="btn btn-secondary" style={{ whiteSpace: 'nowrap' }}>
                         Upload
-                        <input type="file" hidden onChange={async (e) => {
+                        <input type="file" accept="image/*" hidden onChange={async (e) => {
                           const file = e.target.files[0];
                           if (!file) return;
+
+                          // Helper: Compress Image
+                          const compressImage = (file) => {
+                            return new Promise((resolve) => {
+                              const reader = new FileReader();
+                              reader.readAsDataURL(file);
+                              reader.onload = (event) => {
+                                const img = new Image();
+                                img.src = event.target.result;
+                                img.onload = () => {
+                                  const canvas = document.createElement('canvas');
+                                  const MAX_WIDTH = 800;
+                                  const scaleSize = MAX_WIDTH / img.width;
+                                  canvas.width = MAX_WIDTH;
+                                  canvas.height = img.height * scaleSize;
+
+                                  const ctx = canvas.getContext('2d');
+                                  ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+
+                                  canvas.toBlob((blob) => {
+                                    resolve(new File([blob], file.name, { type: 'image/jpeg' }));
+                                  }, 'image/jpeg', 0.7); // 70% Quality
+                                }
+                              };
+                            });
+                          };
+
                           try {
-                            const data = new FormData(); data.append('file', file);
+                            const compressedFile = await compressImage(file);
+                            const data = new FormData();
+                            data.append('file', compressedFile);
+
+                            // Use relative path /upload directly (apiCall handles /api prefix check)
+                            // Wait, apiCall prepends BASE.
+                            // Route is /api/upload. apiCall('/upload') -> /api/upload. Correct.
                             const res = await apiCall('/upload', { method: 'POST', body: data });
                             setFormData(prev => ({ ...prev, profileUrl: res.url }));
-                          } catch (err) { alert(err.message) }
+                          } catch (err) {
+                            console.error(err);
+                            alert('Upload Failed: ' + err.message);
+                          }
                         }} />
                       </label>
                     </div>
