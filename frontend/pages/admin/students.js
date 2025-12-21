@@ -317,7 +317,8 @@ export default function ManageStudents() {
               </div>
             </div>
 
-            <table>
+            {/* Desktop Table */}
+            <table className="desktop-only">
               <thead>
                 <tr>
                   <th style={{ width: 50 }}>#</th>
@@ -377,6 +378,52 @@ export default function ManageStudents() {
                 ))}
               </tbody>
             </table>
+
+            {/* Mobile Card List View */}
+            <div className="mobile-only mobile-card-list">
+              {filteredStudents.map((s, idx) => (
+                <div key={s.id} className="mobile-card">
+                  <div className="mobile-card-header">
+                    <StudentProfileImage student={s} size={40} />
+                    <div style={{ flex: 1 }}>
+                      <div style={{ fontSize: 16, fontWeight: 700, color: 'var(--text-main)' }}>{s.firstName} {s.lastName}</div>
+                      <div style={{ fontSize: 12, color: 'var(--text-muted)' }}>{s.user?.email}</div>
+                    </div>
+                    <button onClick={() => setStarModal(s.id)} style={{ ...iconBtnStyle, background: 'var(--secondary)', color: 'black', padding: 8 }}>
+                      <StarIcon size={16} fill="black" />
+                    </button>
+                  </div>
+
+                  <div className="mobile-card-row">
+                    <span className="mobile-label">Class</span>
+                    <span className="mobile-value">Year {s.classLevel}</span>
+                  </div>
+                  <div className="mobile-card-row">
+                    <span className="mobile-label">Points</span>
+                    <span className="mobile-value">{s.totalPoints || 0} ⭐</span>
+                  </div>
+                  <div className="mobile-card-row">
+                    <span className="mobile-label">Status</span>
+                    <span style={{
+                      fontSize: 12, fontWeight: 700,
+                      color: s.active ? '#059669' : '#DC2626',
+                      display: 'flex', alignItems: 'center', gap: 6
+                    }}>
+                      <div style={{ width: 6, height: 6, borderRadius: '50%', background: s.active ? '#059669' : '#DC2626' }}></div>
+                      {s.active ? 'Active' : 'Inactive'}
+                    </span>
+                  </div>
+
+                  <div style={{ display: 'flex', gap: 10, marginTop: 10, paddingTop: 10, borderTop: '1px solid #27272A' }}>
+                    <button onClick={() => handleEdit(s)} className="btn btn-secondary" style={{ flex: 1, height: 36 }}>Edit</button>
+                    <button onClick={() => toggleActive(s.id, s.active)} className="btn btn-outline" style={{ flex: 1, height: 36, color: s.active ? '#DC2626' : '#059669', borderColor: s.active ? '#DC2626' : '#059669' }}>
+                      {s.active ? 'Disable' : 'Activate'}
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
+
             {filteredStudents.length === 0 && <div style={{ padding: 40, textAlign: 'center', color: 'var(--text-muted)' }}>No students found matching "{searchQuery}"</div>}
           </div>
         )}
