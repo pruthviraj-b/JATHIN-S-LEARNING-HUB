@@ -35,17 +35,18 @@ export default function AdminLayout({ children }) {
 
             {/* Lernia Sidebar: Black & White */}
             {/* Lernia Sidebar: Black & White */}
+            {/* Premium Sidebar: Navy & Gold */}
             <aside className={`sidebar ${sidebarOpen ? 'open' : ''} `}>
 
                 <div style={{ padding: '30px 30px 10px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-                        <div style={{ fontWeight: 900, fontSize: 26, color: 'var(--text-main)', letterSpacing: '-0.5px' }}>
-                            JATHIN'S <span style={{ fontWeight: 400 }}>HUB</span>
+                        <div style={{ fontWeight: 900, fontSize: 26, color: 'white', letterSpacing: '-0.5px' }}>
+                            JATHIN'S <span style={{ fontWeight: 400, color: 'var(--secondary)' }}>HUB</span>
                         </div>
                     </div>
                 </div>
 
-                <div style={{ height: 1, background: '#27272A', margin: '10px 30px 20px' }}></div>
+                <div style={{ height: 1, background: 'rgba(255,255,255,0.1)', margin: '10px 30px 20px' }}></div>
 
                 <nav style={{ flex: 1, padding: '0 16px', overflowY: 'auto' }}>
                     {navItems.map(item => {
@@ -56,9 +57,10 @@ export default function AdminLayout({ children }) {
                                 <div style={{
                                     padding: '12px 20px',
                                     marginBottom: 8,
-                                    borderRadius: 0,
+                                    borderRadius: 12, // Softer roundness
                                     position: 'relative',
-                                    color: isActive ? 'white' : '#A1A1AA',
+                                    color: isActive ? 'var(--secondary)' : '#94A3B8', // Gold if active, Grey if inactive
+                                    background: isActive ? 'rgba(212, 175, 55, 0.1)' : 'transparent', // Gold tint bg
                                     cursor: 'pointer',
                                     fontSize: 15,
                                     fontWeight: isActive ? 700 : 500,
@@ -66,9 +68,9 @@ export default function AdminLayout({ children }) {
                                     alignItems: 'center',
                                     transition: 'all 0.2s',
                                     gap: 14,
-                                    borderLeft: isActive ? '3px solid white' : '3px solid transparent'
+                                    borderLeft: isActive ? '3px solid var(--secondary)' : '3px solid transparent'
                                 }}>
-                                    <Icon size={20} color={isActive ? 'white' : 'currentColor'} strokeWidth={isActive ? 2.5 : 2} />
+                                    <Icon size={20} color={isActive ? 'var(--secondary)' : 'currentColor'} strokeWidth={isActive ? 2.5 : 2} />
                                     {item.label}
                                 </div>
                             </Link>
@@ -81,11 +83,11 @@ export default function AdminLayout({ children }) {
                         onClick={logout}
                         style={{
                             width: '100%',
-                            background: '#18181B',
-                            color: '#EF4444',
-                            border: '1px solid #27272A',
+                            background: 'rgba(255,255,255,0.05)',
+                            color: '#EF4444', // Keep sign out red
+                            border: '1px solid rgba(255,255,255,0.1)',
                             padding: '12px',
-                            borderRadius: 16, // Matching theme radius
+                            borderRadius: 12,
                             cursor: 'pointer',
                             fontSize: 14,
                             fontWeight: 700,
@@ -93,8 +95,8 @@ export default function AdminLayout({ children }) {
                             fontFamily: 'var(--font-main)',
                             transition: 'all 0.2s'
                         }}
-                        onMouseOver={(e) => e.currentTarget.style.background = '#27272A'}
-                        onMouseOut={(e) => e.currentTarget.style.background = '#18181B'}
+                        onMouseOver={(e) => e.currentTarget.style.background = 'rgba(255,255,255,0.1)'}
+                        onMouseOut={(e) => e.currentTarget.style.background = 'rgba(255,255,255,0.05)'}
                     >
                         <LogOut size={18} /> Sign Out
                     </button>

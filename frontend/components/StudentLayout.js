@@ -33,21 +33,20 @@ export default function StudentLayout({ children }) {
                 />
             )}
 
-            {/* Sidebar */}
+            {/* Premium Sidebar: Navy & Gold */}
             <aside className={`sidebar ${sidebarOpen ? 'open' : ''}`}>
-                {/* Desktop reset handled via global css or jsx styles below if strictly needed, but let's assume default is hidden on mobile */}
                 <style jsx global>{`
                     @media (min-width: 769px) {
                         aside { transform: translateX(0) !important; position: sticky !important; }
                     }
                 `}</style>
 
-                <div style={{ padding: '24px', borderBottom: '1px solid #333', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                <div style={{ padding: '24px', borderBottom: '1px solid rgba(255,255,255,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
                         <img src="/logo.png" alt="Logo" style={{ width: 30, height: 30, objectFit: 'contain' }} />
                         <div>
                             <h2 style={{ margin: 0, fontSize: 16, color: '#fff', fontWeight: '700' }}>JATHIN'S</h2>
-                            <p style={{ margin: 0, fontSize: 10, color: '#94a3b8', letterSpacing: 1 }}>LEARNING HUB</p>
+                            <p style={{ margin: 0, fontSize: 10, color: 'var(--secondary)', letterSpacing: 1 }}>LEARNING HUB</p>
                         </div>
                     </div>
                     <button onClick={() => setSidebarOpen(false)} style={{ background: 'transparent', border: 'none', color: 'white', cursor: 'pointer' }} className="md:hidden">
@@ -65,9 +64,9 @@ export default function StudentLayout({ children }) {
                                     padding: '12px 16px',
                                     marginBottom: 4,
                                     borderRadius: 12,
-                                    color: isActive ? '#fff' : '#94a3b8',
-                                    background: isActive ? 'linear-gradient(90deg, rgba(59,130,246,0.2) 0%, rgba(59,130,246,0.05) 100%)' : 'transparent',
-                                    border: isActive ? '1px solid rgba(59,130,246,0.2)' : '1px solid transparent',
+                                    color: isActive ? 'var(--secondary)' : '#94a3b8',
+                                    background: isActive ? 'rgba(212, 175, 55, 0.1)' : 'transparent', // Gold tint
+                                    border: '1px solid transparent', // Remove blue border
                                     cursor: 'pointer',
                                     fontSize: 14,
                                     fontWeight: 500,
@@ -76,7 +75,7 @@ export default function StudentLayout({ children }) {
                                     transition: 'all 0.2s',
                                     gap: 12
                                 }}>
-                                    <Icon size={18} color={isActive ? '#60a5fa' : '#94a3b8'} strokeWidth={2} />
+                                    <Icon size={18} color={isActive ? 'var(--secondary)' : '#94a3b8'} strokeWidth={isActive ? 2.5 : 2} />
                                     {item.label}
                                 </div>
                             </Link>
@@ -84,15 +83,15 @@ export default function StudentLayout({ children }) {
                     })}
                 </nav>
 
-                <div style={{ padding: 20, borderTop: '1px solid #333', display: 'flex', flexDirection: 'column', gap: 10 }}>
+                <div style={{ padding: 20, borderTop: '1px solid rgba(255,255,255,0.1)', display: 'flex', flexDirection: 'column', gap: 10 }}>
                     <a
                         href="https://wa.me/919740634537"
                         target="_blank"
                         rel="noreferrer"
                         style={{
                             display: 'flex', alignItems: 'center', gap: 10,
-                            padding: '10px 12px', background: '#25D366', color: 'white',
-                            borderRadius: 8, textDecoration: 'none', fontSize: 13, fontWeight: 600
+                            padding: '10px 12px', background: 'var(--secondary)', color: 'black', // Gold Button
+                            borderRadius: 8, textDecoration: 'none', fontSize: 13, fontWeight: 700
                         }}
                     >
                         <MessageCircle size={18} /> Help / Support
@@ -127,12 +126,13 @@ export default function StudentLayout({ children }) {
                 <header className="glass-panel" style={{
                     height: 64, margin: '15px 15px 0 15px', borderRadius: 12,
                     display: 'flex', alignItems: 'center', padding: '0 20px', justifyContent: 'space-between',
-                    position: 'sticky', top: 10, zIndex: 40
+                    position: 'sticky', top: 10, zIndex: 40,
+                    background: 'rgba(255,255,255,0.8)', backdropFilter: 'blur(10px)', border: '1px solid rgba(0,0,0,0.05)'
                 }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: 15 }}>
                         <button
                             onClick={() => setSidebarOpen(true)}
-                            style={{ background: 'transparent', border: 'none', cursor: 'pointer', color: '#333', display: 'flex', padding: 0 }}
+                            style={{ background: 'transparent', border: 'none', cursor: 'pointer', color: '#1C2541', display: 'flex', padding: 0 }}
                             className="md:hidden" // Add class to hide on desktop if using Tailwind, otherwise use media query
                         >
                             <Menu size={24} />
