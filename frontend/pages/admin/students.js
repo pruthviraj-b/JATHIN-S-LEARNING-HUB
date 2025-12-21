@@ -139,16 +139,17 @@ export default function ManageStudents() {
       <AdminLayout>
 
         {/* Stats Grid */}
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: 20, marginBottom: 30 }}>
+        {/* Stats Grid */}
+        <div className="stats-grid">
           <StatsCard icon={Users} label="Total Students" value={totalStudents} />
           <StatsCard icon={UserCheck} label="Active Students" value={activeStudents} />
           <StatsCard icon={StarIcon} label="Total Stars Awarded" value={totalStars} />
-          <div style={{ background: '#18181B', border: '1px solid #27272A', borderRadius: 20, padding: 20, color: 'white', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+          <div className="card" style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', padding: 24, background: '#18181B' }}>
             <div>
-              <div style={{ fontSize: 14, opacity: 0.8, color: '#A1A1AA' }}>New This Month</div>
-              <div style={{ fontSize: 24, fontWeight: 700 }}>+12</div>
+              <div style={{ fontSize: 14, opacity: 0.8, color: '#A1A1AA', fontWeight: 500 }}>New This Month</div>
+              <div style={{ fontSize: 24, fontWeight: 700, color: 'white', marginTop: 4 }}>+12</div>
             </div>
-            <div style={{ background: '#27272A', padding: 10, borderRadius: '50%' }}>
+            <div style={{ background: '#27272A', padding: 10, borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
               <TrendingUp size={24} color="white" />
             </div>
           </div>
