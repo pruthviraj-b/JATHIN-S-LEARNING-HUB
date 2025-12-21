@@ -1,13 +1,34 @@
-import { getProxiedImageUrl } from '../../lib/imageUrl'
 import { useState, useEffect } from 'react'
 import ProtectedRoute from '../../components/ProtectedRoute'
 import StudentLayout from '../../components/StudentLayout'
 import { useAuth } from '../../hooks/useAuth'
 import { apiCall } from '../../lib/api'
 
+// Simple Badge Component if not imported
+function BadgeCard({ badge, awardedAt, size }) {
+    return (
+        <div style={{ background: '#18181B', padding: 10, borderRadius: 8, border: '1px solid #27272A', display: 'flex', alignItems: 'center', gap: 10 }}>
+            <div style={{ fontSize: 20 }}>{badge.icon}</div>
+            <div>
+                <div style={{ fontWeight: 'bold', fontSize: 13, color: 'white' }}>{badge.name}</div>
+                <div style={{ fontSize: 10, color: '#A1A1AA' }}>{new Date(awardedAt).toLocaleDateString()}</div>
+            </div>
+        </div>
+    )
+}
+
 export default function Profile() {
     const { user } = useAuth()
     const s = user?.student
+    const [badges, setBadges] = useState([])
+
+    useEffect(() => {
+        if (s?.id) {
+            apiCall(`/badges/student/${s.id}`)
+                .then(data => setBadges(data || []))
+                .catch(err => console.error(err))
+        }
+    }, [s?.id])
 
     if (!s) return <div style={{ padding: 50, textAlign: 'center' }}>Loading ID Card...</div>
 
@@ -56,7 +77,7 @@ export default function Profile() {
                             }}>
                                 <img
                                     src={
-                                        getProxiedImageUrl(s.profileUrl) ||
+                                        s.profileUrl ||
                                         `https://ui-avatars.com/api/?name=${s.firstName}+${s.lastName}&background=18181b&color=fff&size=256`
                                     }
                                     alt="Profile"
