@@ -44,7 +44,7 @@ export default function StudentTests() {
                                     <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 12, alignItems: 'flex-start' }}>
                                         <h3 style={{ margin: 0, fontSize: 18, color: 'var(--text-main)' }}>{t.title}</h3>
                                         <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: 4 }}>
-                                            {isOnline && <span style={{ fontSize: 10, background: '#dbeafe', color: '#1e40af', padding: '2px 6px', borderRadius: 4, fontWeight: 600 }}>ONLINE</span>}
+                                            {isOnline && <span style={{ fontSize: 10, background: '#18181B', color: 'white', padding: '2px 6px', borderRadius: 4, fontWeight: 600, border: '1px solid #27272A' }}>ONLINE</span>}
                                             <span style={{ fontSize: 11, color: 'var(--text-muted)' }}>
                                                 {new Date(t.scheduledAt).toLocaleDateString()}
                                             </span>
@@ -56,12 +56,12 @@ export default function StudentTests() {
                                         <div style={{ fontWeight: 600 }}>{t.subject?.name}</div>
                                     </div>
 
-                                    <div style={{ marginTop: 'auto', borderTop: '1px solid #f1f5f9', paddingTop: 16 }}>
+                                    <div style={{ marginTop: 'auto', borderTop: '1px solid #27272A', paddingTop: 16 }}>
                                         <div style={{ fontSize: 12, textTransform: 'uppercase', color: 'var(--text-muted)', marginBottom: 5 }}>Your Score</div>
                                         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end' }}>
                                             {hasResult ? (
                                                 <div>
-                                                    <div style={{ fontSize: 24, fontWeight: 'bold', color: marks >= t.maxMarks * 0.4 ? 'var(--success)' : 'var(--danger)' }}>
+                                                    <div style={{ fontSize: 24, fontWeight: 'bold', color: 'white' }}>
                                                         {marks} <span style={{ fontSize: 14, color: 'var(--text-muted)', fontWeight: 'normal' }}>/ {t.maxMarks}</span>
                                                     </div>
                                                     {isOnline && <div style={{ fontSize: 11, color: 'var(--text-muted)', marginTop: 2 }}>{new Date(result.createdAt).toLocaleDateString()}</div>}

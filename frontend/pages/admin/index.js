@@ -3,6 +3,7 @@ import ProtectedRoute from '../../components/ProtectedRoute'
 import AdminLayout from '../../components/AdminLayout'
 import { apiCall } from '../../lib/api'
 import Link from 'next/link'
+import { Users, Calendar, ClipboardCheck, Star, Zap, Activity, BookOpen, Bell } from 'lucide-react'
 
 export default function AdminDashboard() {
   const [stats, setStats] = useState({
@@ -30,44 +31,72 @@ export default function AdminDashboard() {
   return (
     <ProtectedRoute requiredRole="ADMIN">
       <AdminLayout>
-        <div style={{ marginBottom: 30 }}>
-          <h1 style={{ margin: 0, fontSize: 28, fontWeight: 700 }}>Dashboard</h1>
-          <p style={{ color: '#666', margin: '5px 0 0 0' }}>Overview of your tuition center.</p>
+
+        {/* Stats Grid */}
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: 24, marginBottom: 30 }}>
+          <StatsCard
+            label="Total Students"
+            value={loading ? '...' : stats.totalStudents}
+            icon={Users}
+          />
+          <StatsCard
+            label="Classes Today"
+            value={loading ? '...' : stats.classesToday}
+            icon={Calendar}
+          />
+          <StatsCard
+            label="Avg Attendance"
+            value={loading ? '...' : stats.attendanceRate + '%'}
+            icon={ClipboardCheck}
+          />
+          <StatsCard
+            label="Top Performer"
+            value={loading ? '...' : stats.topStudent}
+            icon={Star}
+          />
         </div>
 
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: 24, marginBottom: 40 }}>
-          <DashCard title="Total Students" value={loading ? '...' : stats.totalStudents} icon="👥" color="#3699ff" href="/admin/students" />
-          <DashCard title="Classes Today" value={loading ? '...' : stats.classesToday} icon="📅" color="#1bc5bd" href="/admin/classes" />
-          <DashCard title="Avg Attendance" value={loading ? '...' : stats.attendanceRate + '%'} icon="✅" color="#8950fc" href="/admin/attendance" />
-          <DashCard title="Top Performer" value={loading ? '...' : stats.topStudent} icon="👑" color="#ffa800" href="/admin/stars" />
-        </div>
+        {/* Content Grid */}
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(400px, 1fr))', gap: 24 }}>
 
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 24 }}>
-          {/* Quick Actions removed as sidebar covers navigation, maybe show recent activity or quick links in a different style? */}
-          <div className="card" style={{ background: 'white', borderRadius: 12, padding: 24, boxShadow: '0 0 20px 0 rgba(76,87,125,0.02)', border: '1px solid #f0f0f0' }}>
-            <h3 style={{ marginTop: 0 }}>🚀 Quick Actions</h3>
+          {/* Quick Actions */}
+          <div className="card" style={{ minHeight: 300 }}>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 20 }}>
+              <h3 style={{ margin: 0, fontSize: 18, color: 'var(--text-main)' }}>Quick Actions</h3>
+              <div style={{ background: '#18181B', padding: 8, borderRadius: 10 }}>
+                <Zap size={18} color="white" />
+              </div>
+            </div>
+
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 15 }}>
-              <QuickBtn href="/admin/students" label="Add Student" color="#3699ff" />
-              <QuickBtn href="/admin/classes" label="Schedule Class" color="#1bc5bd" />
-              <QuickBtn href="/admin/announcements" label="Post Notice" color="#8950fc" />
-              <QuickBtn href="/admin/tests" label="Create Test" color="#ffa800" />
+              <QuickAction href="/admin/students" label="Add Student" icon={Users} />
+              <QuickAction href="/admin/classes" label="Schedule Class" icon={Calendar} />
+              <QuickAction href="/admin/announcements" label="Post Notice" icon={Bell} />
+              <QuickAction href="/admin/tests" label="Create Test" icon={BookOpen} />
             </div>
           </div>
 
-          <div className="card" style={{ background: 'white', borderRadius: 12, padding: 24, boxShadow: '0 0 20px 0 rgba(76,87,125,0.02)', border: '1px solid #f0f0f0' }}>
-            <h3 style={{ marginTop: 0 }}>📌 System Status</h3>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 10 }}>
-              <div style={{ width: 10, height: 10, borderRadius: '50%', background: '#1bc5bd' }}></div>
-              <span>Backend API: Online</span>
+          {/* System Status */}
+          <div className="card" style={{ minHeight: 300 }}>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 20 }}>
+              <h3 style={{ margin: 0, fontSize: 18, color: 'var(--text-main)' }}>System Status</h3>
+              <div style={{ background: '#18181B', padding: 8, borderRadius: 10 }}>
+                <Activity size={18} color="white" />
+              </div>
             </div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-              <div style={{ width: 10, height: 10, borderRadius: '50%', background: '#1bc5bd' }}></div>
-              <span>Star System: Active</span>
+
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 15 }}>
+              <StatusItem label="Backend API" status="Online" />
+              <StatusItem label="Database" status="Connected" />
+              <StatusItem label="Star System" status="Active" />
             </div>
-            <div style={{ marginTop: 20, padding: 15, background: '#f9f9f9', borderRadius: 8, fontSize: 13, color: '#666' }}>
-              Tip: Remember to award stars weekly to keep students engaged!
+
+            <div style={{ marginTop: 'auto', padding: 15, background: '#18181B', borderRadius: 12, fontSize: 13, color: 'var(--text-muted)', display: 'flex', gap: 10, alignItems: 'start', border: '1px solid #27272A' }}>
+              <span>💡</span>
+              <span>Tip: Award stars weekly to keep students engaged and motivated!</span>
             </div>
           </div>
+
         </div>
 
       </AdminLayout>
@@ -75,61 +104,56 @@ export default function AdminDashboard() {
   )
 }
 
-function DashCard({ title, value, icon, color, href }) {
-  const CardContent = (
-    <div className="card" style={{
-      background: 'white',
-      borderRadius: 12,
-      padding: 24,
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'space-between',
-      boxShadow: '0 0 20px 0 rgba(76,87,125,0.02)',
-      border: '1px solid #f0f0f0',
-      cursor: href ? 'pointer' : 'default',
-      transition: 'transform 0.2s, box-shadow 0.2s',
-      height: '100%'
-    }}>
-      <div>
-        <div style={{ color: '#b5b5c3', fontSize: 13, fontWeight: 600, textTransform: 'uppercase' }}>{title}</div>
-        <div style={{ fontSize: 24, fontWeight: 700, marginTop: 5, color: '#3f4254' }}>{value}</div>
+function StatsCard({ label, value, icon: Icon, href }) {
+  const Content = (
+    <div className="card" style={{ flexDirection: 'row', alignItems: 'center', gap: 15, transition: 'transform 0.2s', cursor: href ? 'pointer' : 'default' }}>
+      <div style={{ width: 56, height: 56, borderRadius: '50%', background: '#18181B', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, border: '1px solid #27272A' }}>
+        <Icon size={24} color="white" />
       </div>
-      <div style={{ width: 48, height: 48, background: `${color}20`, color: color, borderRadius: 12, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 20 }}>
-        {icon}
+      <div>
+        <div style={{ fontSize: 14, color: 'var(--text-muted)', fontWeight: 500 }}>{label}</div>
+        <div style={{ fontSize: 24, fontWeight: 700, color: 'var(--text-main)', lineHeight: 1.2 }}>{value}</div>
       </div>
     </div>
   )
 
-  if (href) {
-    return (
-      <Link href={href} style={{ textDecoration: 'none' }}>
-        {CardContent}
-      </Link>
-    )
-  }
-  return CardContent
+  return href ? <Link href={href} style={{ textDecoration: 'none' }}>{Content}</Link> : Content
 }
 
-function QuickBtn({ href, label, color }) {
+function QuickAction({ href, label, icon: Icon }) {
   return (
     <Link href={href} style={{ textDecoration: 'none' }}>
       <div style={{
-        padding: '12px',
-        border: `1px solid ${color}`,
-        color: color,
-        borderRadius: 8,
-        textAlign: 'center',
-        fontWeight: 600,
-        fontSize: 14,
-        cursor: 'pointer',
+        background: '#09090B',
+        borderRadius: 16,
+        padding: 20,
+        display: 'flex',
+        alignItems: 'center',
+        gap: 12,
         transition: 'all 0.2s',
-        background: 'white'
+        border: '1px solid #27272A',
+        cursor: 'pointer'
       }}
-        onMouseOver={(e) => { e.currentTarget.style.background = color; e.currentTarget.style.color = 'white'; }}
-        onMouseOut={(e) => { e.currentTarget.style.background = 'white'; e.currentTarget.style.color = color; }}
+        onMouseOver={(e) => { e.currentTarget.style.borderColor = 'white'; e.currentTarget.style.background = '#000000'; }}
+        onMouseOut={(e) => { e.currentTarget.style.borderColor = '#27272A'; e.currentTarget.style.background = '#09090B'; }}
       >
-        {label}
+        <div style={{ background: '#18181B', padding: 8, borderRadius: 8, border: '1px solid #27272A' }}>
+          <Icon size={18} color="white" />
+        </div>
+        <span style={{ fontSize: 14, fontWeight: 700, color: 'var(--text-main)' }}>{label}</span>
       </div>
     </Link>
+  )
+}
+
+function StatusItem({ label, status }) {
+  return (
+    <div style={{ display: 'flex', items: 'center', justifyContent: 'space-between', padding: '10px 0', borderBottom: '1px dashed #27272A' }}>
+      <span style={{ fontSize: 14, fontWeight: 600, color: 'var(--text-main)' }}>{label}</span>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+        <div style={{ width: 6, height: 6, borderRadius: '50%', background: 'white' }}></div>
+        <span style={{ fontSize: 13, fontWeight: 700, color: 'white' }}>{status}</span>
+      </div>
+    </div>
   )
 }

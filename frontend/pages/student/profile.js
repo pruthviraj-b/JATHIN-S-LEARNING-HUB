@@ -1,3 +1,4 @@
+import { getProxiedImageUrl } from '../../lib/imageUrl'
 import { useState, useEffect } from 'react'
 import ProtectedRoute from '../../components/ProtectedRoute'
 import StudentLayout from '../../components/StudentLayout'
@@ -18,27 +19,27 @@ export default function Profile() {
                     {/* ID CARD CONTAINER */}
                     <div style={{
                         width: '100%', maxWidth: 380,
-                        background: 'white',
+                        background: '#09090B',
                         borderRadius: 20,
                         overflow: 'hidden',
-                        boxShadow: '0 10px 40px -10px rgba(0,0,0,0.2)',
-                        border: '1px solid #e2e8f0',
+                        boxShadow: '0 10px 40px -10px rgba(0,0,0,0.5)',
+                        border: '1px solid #27272A',
                         position: 'relative'
                     }}>
                         {/* Header */}
                         <div style={{
-                            background: '#1e3a8a', // Deep blue
+                            background: 'white', // High contrast for header
                             padding: '20px 0',
                             textAlign: 'center',
-                            color: 'white',
+                            color: 'black',
                             position: 'relative'
                         }}>
                             <div style={{ fontSize: 18, fontWeight: 800, letterSpacing: 1 }}>JATHIN'S LEARNING HUB</div>
-                            <div style={{ fontSize: 11, fontWeight: 500, opacity: 0.8, marginTop: 4, letterSpacing: 2 }}>STUDENT IDENTITY CARD</div>
+                            <div style={{ fontSize: 11, fontWeight: 700, opacity: 0.8, marginTop: 4, letterSpacing: 2 }}>STUDENT IDENTITY CARD</div>
 
                             {/* Hole Punch Visual */}
                             <div style={{
-                                width: 60, height: 6, background: 'rgba(0,0,0,0.2)', borderRadius: 10,
+                                width: 60, height: 6, background: '#e4e4e7', borderRadius: 10,
                                 position: 'absolute', top: 10, left: '50%', transform: 'translateX(-50%)'
                             }}></div>
                         </div>
@@ -47,33 +48,33 @@ export default function Profile() {
                         <div style={{ textAlign: 'center', marginTop: 30, marginBottom: 20 }}>
                             <div style={{
                                 width: 140, height: 140, borderRadius: '50%',
-                                border: '5px solid #fff',
-                                boxShadow: '0 4px 15px rgba(0,0,0,0.15)',
+                                border: '5px solid #27272A',
+                                boxShadow: '0 4px 15px rgba(0,0,0,0.5)',
                                 overflow: 'hidden',
                                 margin: '0 auto',
-                                background: '#f1f5f9'
+                                background: '#18181B'
                             }}>
                                 <img
                                     src={
-                                        s.profileUrl
-                                            ? (s.profileUrl.startsWith('http://localhost') ? s.profileUrl.replace('http://localhost:4000', '') : s.profileUrl)
-                                            : `https://ui-avatars.com/api/?name=${s.firstName}+${s.lastName}&background=1e3a8a&color=fff&size=256`
+                                        getProxiedImageUrl(s.profileUrl) ||
+                                        `https://ui-avatars.com/api/?name=${s.firstName}+${s.lastName}&background=18181b&color=fff&size=256`
                                     }
                                     alt="Profile"
                                     style={{ width: '100%', height: '100%', objectFit: 'cover' }}
                                 />
                             </div>
-                            <h2 style={{ margin: '15px 0 5px', fontSize: 24, fontWeight: 800, color: '#1e293b' }}>
+                            <h2 style={{ margin: '15px 0 5px', fontSize: 24, fontWeight: 800, color: 'white' }}>
                                 {s.firstName} {s.lastName}
                             </h2>
                             <div style={{
                                 display: 'inline-block',
                                 padding: '4px 12px',
                                 borderRadius: 12,
-                                background: '#e0f2fe',
-                                color: '#0369a1',
+                                background: '#27272A',
+                                color: 'white',
                                 fontSize: 12, fontWeight: 700,
-                                textTransform: 'uppercase'
+                                textTransform: 'uppercase',
+                                border: '1px solid #3F3F46'
                             }}>
                                 Student
                             </div>
@@ -87,32 +88,32 @@ export default function Profile() {
                                 <IDItem label="Team" value={s.team?.name || 'N/A'} />
                                 <IDItem label="Phone" value={s.phoneNumber || '-'} />
                                 <IDItem label="D.O.B" value={s.dob ? new Date(s.dob).toLocaleDateString() : '-'} />
-                                <IDItem label="Status" value={s.active ? 'Active' : 'Inactive'} color={s.active ? '#16a34a' : '#ef4444'} />
+                                <IDItem label="Status" value={s.active ? 'Active' : 'Inactive'} color={s.active ? 'white' : 'var(--text-muted)'} />
                             </div>
 
                             <div style={{ marginTop: 20 }}>
-                                <div style={{ fontSize: 10, color: '#94a3b8', fontWeight: 600, textTransform: 'uppercase' }}>Email Address</div>
-                                <div style={{ fontSize: 13, fontWeight: 600, color: '#334155' }}>{user.email}</div>
+                                <div style={{ fontSize: 10, color: 'var(--text-muted)', fontWeight: 600, textTransform: 'uppercase' }}>Email Address</div>
+                                <div style={{ fontSize: 13, fontWeight: 600, color: 'white' }}>{user.email}</div>
                             </div>
                         </div>
 
                         {/* Footer / Barcode */}
                         <div style={{
-                            background: '#f8fafc',
+                            background: '#18181B',
                             padding: '15px',
-                            borderTop: '1px solid #e2e8f0',
+                            borderTop: '1px solid #27272A',
                             textAlign: 'center'
                         }}>
                             {/* Fake Barcode Visual */}
                             <div style={{
                                 height: 35,
-                                background: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='4' height='40' viewBox='0 0 4 40'%3E%3Crect width='2' height='40' fill='%2364748b'/%3E%3C/svg%3E")`,
+                                background: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='4' height='40' viewBox='0 0 4 40'%3E%3Crect width='2' height='40' fill='%2371717a'/%3E%3C/svg%3E")`,
                                 backgroundSize: '4px 35px',
                                 width: '80%',
                                 margin: '0 auto',
-                                opacity: 0.5
+                                opacity: 0.8
                             }}></div>
-                            <div style={{ fontSize: 10, color: '#94a3b8', marginTop: 5, letterSpacing: 2 }}>
+                            <div style={{ fontSize: 10, color: 'var(--text-muted)', marginTop: 5, letterSpacing: 2 }}>
                                 {s.id.toUpperCase()}
                             </div>
                         </div>
@@ -126,8 +127,8 @@ export default function Profile() {
 function IDItem({ label, value, color }) {
     return (
         <div>
-            <div style={{ fontSize: 10, color: '#94a3b8', fontWeight: 600, textTransform: 'uppercase' }}>{label}</div>
-            <div style={{ fontSize: 13, fontWeight: 700, color: color || '#334155', marginTop: 1 }}>{value}</div>
+            <div style={{ fontSize: 10, color: 'var(--text-muted)', fontWeight: 600, textTransform: 'uppercase' }}>{label}</div>
+            <div style={{ fontSize: 13, fontWeight: 700, color: color || 'white', marginTop: 1 }}>{value}</div>
         </div>
     )
 }

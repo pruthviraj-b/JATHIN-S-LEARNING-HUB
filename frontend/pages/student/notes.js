@@ -58,8 +58,8 @@ export default function Notes() {
                 </div>
 
                 <div className="card" style={{
-                    background: 'white', borderRadius: 16,
-                    border: '1px solid #e2e8f0', overflow: 'hidden', padding: 24,
+                    background: '#09090B', borderRadius: 16,
+                    border: '1px solid #27272A', overflow: 'hidden', padding: 24,
                     maxWidth: 600
                 }}>
                     <form onSubmit={handleAdd} style={{ display: 'flex', gap: 10, marginBottom: 20 }}>
@@ -69,16 +69,18 @@ export default function Notes() {
                             placeholder="Add a new task..."
                             style={{
                                 flex: 1, padding: 12, borderRadius: 8,
-                                border: '1px solid #e2e8f0', fontFamily: 'inherit', outline: 'none'
+                                border: '1px solid #27272A', fontFamily: 'inherit', outline: 'none',
+                                background: '#18181B', color: 'white'
                             }}
                         />
                         <button
                             type="submit"
                             disabled={!newTask.trim() || adding}
                             style={{
-                                background: '#0f172a', color: 'white', border: 'none',
+                                background: 'white', color: 'black', border: 'none',
                                 borderRadius: 8, padding: '0 20px', fontWeight: 600,
-                                cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 6
+                                cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 6,
+                                opacity: (!newTask.trim() || adding) ? 0.5 : 1
                             }}
                         >
                             <Plus size={18} /> Add
@@ -89,24 +91,24 @@ export default function Notes() {
                         {tasks?.map(task => (
                             <div key={task.id} style={{
                                 display: 'flex', alignItems: 'center', gap: 12,
-                                padding: 12, borderRadius: 8, background: '#f8fafc',
-                                border: '1px solid #f1f5f9',
+                                padding: 12, borderRadius: 8, background: '#18181B',
+                                border: '1px solid #27272A',
                                 opacity: task.completed ? 0.6 : 1,
                                 textDecoration: task.completed ? 'line-through' : 'none',
                                 transition: 'all 0.2s'
                             }}>
                                 <button
                                     onClick={() => toggleTask(task.id)}
-                                    style={{ background: 'none', border: 'none', cursor: 'pointer', color: task.completed ? '#22c55e' : '#cbd5e1' }}
+                                    style={{ background: 'none', border: 'none', cursor: 'pointer', color: task.completed ? 'white' : 'var(--text-muted)' }}
                                 >
                                     {task.completed ? <CheckSquare size={20} /> : <Square size={20} />}
                                 </button>
 
-                                <span style={{ flex: 1, fontWeight: 500, color: '#334155' }}>{task.text}</span>
+                                <span style={{ flex: 1, fontWeight: 500, color: 'white' }}>{task.text}</span>
 
                                 <button
                                     onClick={() => deleteTask(task.id)}
-                                    style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#ef4444', opacity: 0.6 }}
+                                    style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--text-muted)', opacity: 0.6 }}
                                     title="Delete"
                                 >
                                     <Trash2 size={16} />
@@ -114,7 +116,7 @@ export default function Notes() {
                             </div>
                         ))}
                         {tasks?.length === 0 && (
-                            <div style={{ textAlign: 'center', padding: 40, color: '#94a3b8' }}>
+                            <div style={{ textAlign: 'center', padding: 40, color: 'var(--text-muted)' }}>
                                 <StickyNote size={32} style={{ marginBottom: 10, opacity: 0.5 }} />
                                 <div>No tasks yet. Add one above!</div>
                             </div>

@@ -165,11 +165,7 @@ export default function StudentLayout({ children }) {
                     <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
                         {user?.student?.profileUrl ? (
                             <img
-                                src={
-                                    user.student.profileUrl.startsWith('http://localhost')
-                                        ? user.student.profileUrl.replace('http://localhost:4000', '')
-                                        : user.student.profileUrl
-                                }
+                                src={getProxiedImageUrl(user.student.profileUrl)}
                                 alt="User"
                                 style={{ width: 38, height: 38, borderRadius: '50%', objectFit: 'cover', border: '2px solid #fff', boxShadow: '0 2px 5px rgba(0,0,0,0.1)' }}
                             />

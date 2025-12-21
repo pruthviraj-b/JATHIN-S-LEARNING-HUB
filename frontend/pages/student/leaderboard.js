@@ -40,7 +40,7 @@ export default function Leaderboard() {
                 {/* Tabs */}
                 <div style={{
                     display: 'flex', gap: 10, marginBottom: 24,
-                    background: '#f1f5f9', padding: 4, borderRadius: 12, width: 'fit-content'
+                    background: '#18181B', padding: 4, borderRadius: 12, width: 'fit-content', border: '1px solid #27272A'
                 }}>
                     <TabButton
                         active={activeTab === 'students'}
@@ -57,25 +57,24 @@ export default function Leaderboard() {
                 </div>
 
                 {loadState.loading ? (
-                    <div style={{ padding: 40, textAlign: 'center', color: '#64748b' }}>Loading scores...</div>
+                    <div style={{ padding: 40, textAlign: 'center', color: 'var(--text-muted)' }}>Loading scores...</div>
                 ) : loadState.error ? (
-                    <div style={{ padding: 20, color: '#ef4444', background: '#fef2f2', borderRadius: 8 }}>{loadState.error}</div>
+                    <div style={{ padding: 20, color: 'white', background: '#3F3F46', borderRadius: 8 }}>{loadState.error}</div>
                 ) : (
                     <div className="card" style={{
-                        background: 'white',
+                        background: '#09090B',
                         borderRadius: 16,
-                        border: '1px solid #e2e8f0',
+                        border: '1px solid #27272A',
                         overflow: 'hidden',
-                        boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.05)'
                     }}>
                         <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 14 }}>
-                            <thead style={{ background: '#f8fafc', borderBottom: '1px solid #e2e8f0' }}>
+                            <thead style={{ background: '#18181B', borderBottom: '1px solid #27272A' }}>
                                 <tr>
-                                    <th style={{ padding: '16px', textAlign: 'left', width: 80, color: '#64748b', fontWeight: 600 }}>Rank</th>
-                                    <th style={{ padding: '16px', textAlign: 'left', color: '#64748b', fontWeight: 600 }}>
+                                    <th style={{ padding: '16px', textAlign: 'left', width: 80, color: 'var(--text-muted)', fontWeight: 600 }}>Rank</th>
+                                    <th style={{ padding: '16px', textAlign: 'left', color: 'var(--text-muted)', fontWeight: 600 }}>
                                         {activeTab === 'students' ? 'Student' : 'Team / Members'}
                                     </th>
-                                    <th style={{ padding: '16px', textAlign: 'right', color: '#64748b', fontWeight: 600 }}>Points</th>
+                                    <th style={{ padding: '16px', textAlign: 'right', color: 'var(--text-muted)', fontWeight: 600 }}>Points</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -97,26 +96,26 @@ export default function Leaderboard() {
 
                                         // Special visual for Top 3 ranks (even if tied)
                                         const rankIcon = currentRank === 1 ? '👑' : currentRank === 2 ? '🥈' : currentRank === 3 ? '🥉' : `#${currentRank}`
-                                        const rankColor = currentRank === 1 ? '#fbbf24' : currentRank === 2 ? '#94a3b8' : currentRank === 3 ? '#b45309' : '#64748b'
+                                        const rankColor = currentRank <= 3 ? 'white' : 'var(--text-muted)'
 
                                         const isTop3 = currentRank <= 3;
 
                                         return (
-                                            <tr key={i} style={{ borderBottom: '1px solid #f1f5f9' }}>
+                                            <tr key={i} style={{ borderBottom: '1px solid #27272A' }}>
                                                 <td style={{ padding: '16px', fontWeight: 700, color: rankColor, fontSize: 16 }}>
                                                     {rankIcon}
                                                 </td>
                                                 <td style={{ padding: '16px' }}>
                                                     {activeTab === 'students' ? (
-                                                        <div style={{ fontWeight: 600, color: '#0f172a' }}>
+                                                        <div style={{ fontWeight: 600, color: 'white' }}>
                                                             {entry.student?.firstName} {entry.student?.lastName}
                                                         </div>
                                                     ) : (
                                                         <div>
-                                                            <div style={{ fontWeight: 700, color: '#0f172a', fontSize: 16, marginBottom: 4 }}>
+                                                            <div style={{ fontWeight: 700, color: 'white', fontSize: 16, marginBottom: 4 }}>
                                                                 {entry.team?.name || 'Unknown Team'}
                                                             </div>
-                                                            <div style={{ fontSize: 13, color: '#64748b', lineHeight: 1.4 }}>
+                                                            <div style={{ fontSize: 13, color: 'var(--text-muted)', lineHeight: 1.4 }}>
                                                                 {entry.team?.members?.length > 0 ? (
                                                                     entry.team.members.map(s => s.firstName).join(', ')
                                                                 ) : 'No members'}
@@ -127,9 +126,10 @@ export default function Leaderboard() {
                                                 <td style={{ padding: '16px', textAlign: 'right' }}>
                                                     <div style={{
                                                         display: 'inline-flex', alignItems: 'center', gap: 6,
-                                                        background: isTop3 ? '#fffbeb' : '#f1f5f9',
-                                                        color: isTop3 ? '#b45309' : '#475569',
-                                                        padding: '6px 12px', borderRadius: 20, fontWeight: 700
+                                                        background: isTop3 ? '#18181B' : 'transparent',
+                                                        color: isTop3 ? 'white' : 'var(--text-muted)',
+                                                        padding: '6px 12px', borderRadius: 20, fontWeight: 700,
+                                                        border: isTop3 ? '1px solid #3F3F46' : 'none'
                                                     }}>
                                                         <Trophy size={14} /> {entry.points}
                                                     </div>
@@ -140,7 +140,7 @@ export default function Leaderboard() {
                                 })()}
                                 {leaders.length === 0 && (
                                     <tr>
-                                        <td colSpan={3} style={{ padding: 40, textAlign: 'center', color: '#94a3b8' }}>
+                                        <td colSpan={3} style={{ padding: 40, textAlign: 'center', color: 'var(--text-muted)' }}>
                                             No data available yet.
                                         </td>
                                     </tr>
@@ -161,12 +161,13 @@ function TabButton({ active, onClick, icon, label }) {
             style={{
                 display: 'flex', alignItems: 'center', gap: 8,
                 padding: '8px 16px', borderRadius: 8, border: 'none',
-                background: active ? 'white' : 'transparent',
-                color: active ? '#0f172a' : '#64748b',
+                background: active ? '#09090B' : 'transparent',
+                color: active ? 'white' : 'var(--text-muted)',
                 fontWeight: active ? 600 : 500,
-                boxShadow: active ? '0 1px 3px rgba(0,0,0,0.1)' : 'none',
+                // boxShadow: active ? '0 1px 3px rgba(0,0,0,0.1)' : 'none',
                 cursor: 'pointer', transition: 'all 0.2s',
-                fontSize: 14
+                fontSize: 14,
+                border: active ? '1px solid #27272A' : '1px solid transparent'
             }}
         >
             {icon} {label}

@@ -2,7 +2,7 @@ import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { useAuth } from '../hooks/useAuth'
 import { useState } from 'react'
-import { LayoutDashboard, Users, BookOpen, Calendar, ClipboardCheck, Star, Users2, Bell, FolderOpen, LogOut, Menu, X, MessageSquare } from 'lucide-react'
+import { LayoutDashboard, Users, BookOpen, Calendar, ClipboardCheck, Star, Users2, Bell, FolderOpen, LogOut, Menu, X, MessageSquare, Search, ChevronRight } from 'lucide-react'
 
 export default function AdminLayout({ children }) {
     const router = useRouter()
@@ -11,20 +11,19 @@ export default function AdminLayout({ children }) {
 
     const navItems = [
         { label: 'Dashboard', href: '/admin', icon: LayoutDashboard },
-        { label: 'Attendance', href: '/admin/attendance', icon: ClipboardCheck },
         { label: 'Students', href: '/admin/students', icon: Users },
-        { label: 'Subjects', href: '/admin/subjects', icon: BookOpen },
         { label: 'Classes', href: '/admin/classes', icon: Calendar },
-        { label: 'Tests', href: '/admin/tests', icon: ClipboardCheck },
-        { label: 'Stars', href: '/admin/stars', icon: Star },
+        { label: 'Attendance', href: '/admin/attendance', icon: ClipboardCheck },
+        { label: 'Performance', href: '/admin/stars', icon: Star },
         { label: 'Teams', href: '/admin/teams', icon: Users2 },
-        { label: 'Notices', href: '/admin/announcements', icon: Bell },
-        { label: 'Notifications', href: '/admin/notifications', icon: MessageSquare },
+        { label: 'Subjects', href: '/admin/subjects', icon: BookOpen },
+        { label: 'Tests', href: '/admin/tests', icon: ClipboardCheck },
         { label: 'Materials', href: '/admin/materials', icon: FolderOpen },
+        { label: 'Notices', href: '/admin/announcements', icon: Bell },
     ]
 
     return (
-        <div style={{ display: 'flex', minHeight: '100vh', fontFamily: "'DM Sans', sans-serif", background: 'var(--bg-body)' }}>
+        <div style={{ display: 'flex', minHeight: '100vh', background: 'var(--bg-body)' }}>
 
             {/* Mobile Sidebar Overlay */}
             {sidebarOpen && (
@@ -34,69 +33,55 @@ export default function AdminLayout({ children }) {
                 />
             )}
 
-            {/* Sidebar */}
+            {/* Lernia Sidebar: Black & White */}
             <aside
                 className={`sidebar ${sidebarOpen ? 'open' : ''} `}
                 style={{
-                    width: 260,
-                    background: '#09090b',
-                    color: '#fff',
+                    width: 290,
+                    background: 'var(--bg-sidebar)',
                     display: 'flex',
                     flexDirection: 'column',
                     flexShrink: 0,
                     height: '100vh',
-                    position: 'fixed',
+                    position: 'sticky',
                     top: 0,
-                    left: 0,
                     zIndex: 50,
-                    transform: sidebarOpen ? 'translateX(0)' : 'translateX(-100%)',
-                    transition: 'transform 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
-                    borderRight: '1px solid #1f1f23'
+                    borderRight: '1px solid #27272A' // Zinc-800
                 }}
             >
-                {/* Desktop Styles Injection */}
-                <style jsx global>{`
-@media(min-width: 1024px) {
-                        aside { transform: translateX(0)!important; position: sticky!important; }
-}
-`}</style>
 
-                <div style={{ padding: '24px', borderBottom: '1px solid #1f1f23', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-                        <img src="/logo.png" alt="Logo" style={{ width: 32, height: 32, objectFit: 'contain' }} />
-                        <div>
-                            <h2 style={{ margin: 0, fontSize: 15, color: '#fff', fontWeight: '700', lineHeight: 1 }}>JATHIN'S</h2>
-                            <span style={{ color: '#3b82f6', fontSize: 11, fontWeight: '500', letterSpacing: '0.5px' }}>LEARNING HUB</span>
+                <div style={{ padding: '30px 30px 10px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                        <div style={{ fontWeight: 900, fontSize: 26, color: 'var(--text-main)', letterSpacing: '-0.5px' }}>
+                            JATHIN'S <span style={{ fontWeight: 400 }}>HUB</span>
                         </div>
                     </div>
-                    <button onClick={() => setSidebarOpen(false)} style={{ background: 'transparent', border: 'none', color: 'white', cursor: 'pointer' }} className="lg:hidden">
-                        <X size={24} />
-                    </button>
-                    <style>{`@media(min-width: 1024px) { .lg\\:hidden { display: none!important; } } `}</style>
                 </div>
 
-                <nav style={{ flex: 1, padding: '20px 10px', overflowY: 'auto' }}>
+                <div style={{ height: 1, background: '#27272A', margin: '10px 30px 20px' }}></div>
+
+                <nav style={{ flex: 1, padding: '0 16px', overflowY: 'auto' }}>
                     {navItems.map(item => {
                         const isActive = router.pathname === item.href
                         const Icon = item.icon
                         return (
                             <Link key={item.href} href={item.href} style={{ textDecoration: 'none' }} onClick={() => setSidebarOpen(false)}>
                                 <div style={{
-                                    padding: '12px 16px',
-                                    marginBottom: 4,
-                                    borderRadius: 12,
-                                    color: isActive ? '#fff' : '#a1a1aa',
-                                    background: isActive ? 'linear-gradient(90deg, rgba(59,130,246,0.2) 0%, rgba(59,130,246,0.05) 100%)' : 'transparent',
-                                    border: isActive ? '1px solid rgba(59,130,246,0.2)' : '1px solid transparent',
+                                    padding: '12px 20px',
+                                    marginBottom: 8,
+                                    borderRadius: 0,
+                                    position: 'relative',
+                                    color: isActive ? 'white' : '#A1A1AA',
                                     cursor: 'pointer',
-                                    fontSize: 14,
-                                    fontWeight: 500,
+                                    fontSize: 15,
+                                    fontWeight: isActive ? 700 : 500,
                                     display: 'flex',
                                     alignItems: 'center',
                                     transition: 'all 0.2s',
-                                    gap: 12
+                                    gap: 14,
+                                    borderLeft: isActive ? '3px solid white' : '3px solid transparent'
                                 }}>
-                                    <Icon size={18} color={isActive ? '#60a5fa' : '#a1a1aa'} strokeWidth={2} />
+                                    <Icon size={20} color={isActive ? 'white' : 'currentColor'} strokeWidth={isActive ? 2.5 : 2} />
                                     {item.label}
                                 </div>
                             </Link>
@@ -104,58 +89,99 @@ export default function AdminLayout({ children }) {
                     })}
                 </nav>
 
-                <div style={{ padding: 20, borderTop: '1px solid #1f1f23' }}>
+                <div style={{ padding: 20 }}>
                     <button
                         onClick={logout}
                         style={{
                             width: '100%',
-                            background: 'rgba(239,68,68,0.1)',
-                            color: '#f87171',
-                            border: '1px solid rgba(239,68,68,0.2)',
+                            background: '#18181B',
+                            color: '#EF4444',
+                            border: '1px solid #27272A',
                             padding: '12px',
-                            borderRadius: 12,
+                            borderRadius: 16, // Matching theme radius
                             cursor: 'pointer',
                             fontSize: 14,
-                            fontWeight: 600,
-                            display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8
+                            fontWeight: 700,
+                            display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 10,
+                            fontFamily: 'var(--font-main)',
+                            transition: 'all 0.2s'
                         }}
+                        onMouseOver={(e) => e.currentTarget.style.background = '#27272A'}
+                        onMouseOut={(e) => e.currentTarget.style.background = '#18181B'}
                     >
-                        <LogOut size={16} /> Sign Out
+                        <LogOut size={18} /> Sign Out
                     </button>
                 </div>
             </aside>
 
             {/* Main Content */}
             <div style={{ flex: 1, display: 'flex', flexDirection: 'column', height: '100vh', overflowY: 'auto', width: '100%' }}>
-                <header className="glass-panel" style={{
-                    height: 70, margin: '15px', borderRadius: 16,
-                    display: 'flex', alignItems: 'center', padding: '0 20px', justifyContent: 'space-between',
-                    position: 'sticky', top: 15, zIndex: 40
+
+                {/* Modern Floating Header - Dark Glass */}
+                <header style={{
+                    minHeight: 80,
+                    margin: '20px 20px 10px',
+                    borderRadius: 20,
+                    background: 'rgba(9, 9, 11, 0.7)', // Dark glass
+                    backdropFilter: 'blur(20px)',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                    padding: '0 24px',
+                    zIndex: 40,
+                    position: 'sticky', // Ensure it sticks on mobile if needed, or just stay relative
+                    top: 20,
+                    border: '1px solid #27272A'
                 }}>
+                    <div style={{ display: 'flex', flexDirection: 'column' }}>
+                        <div style={{ fontSize: 12, color: 'var(--text-muted)' }}>Pages / {navItems.find(i => i.href === router.pathname)?.label || 'Dashboard'}</div>
+                        <h2 style={{ margin: 0, fontSize: 24, color: 'var(--text-main)', marginTop: 2 }}>
+                            {navItems.find(i => i.href === router.pathname)?.label || 'Dashboard'}
+                        </h2>
+                    </div>
+
                     <div style={{ display: 'flex', alignItems: 'center', gap: 15 }}>
-                        <button
-                            onClick={() => setSidebarOpen(true)}
-                            style={{ background: 'transparent', border: 'none', cursor: 'pointer', color: '#18181b', padding: 0 }}
-                            className="lg:hidden"
-                        >
+                        {/* Search Bar - Hidden on very small screens, or collapsed? For now, standard. */}
+                        <div className="search-bar-container" style={{ background: '#18181B', borderRadius: 20, padding: '8px 16px', display: 'flex', alignItems: 'center', gap: 8, border: '1px solid #27272A' }}>
+                            <Search size={16} color="var(--text-muted)" />
+                            <input
+                                type="text"
+                                placeholder="Search..."
+                                onKeyDown={(e) => {
+                                    if (e.key === 'Enter') {
+                                        router.push(`/admin/students?search=${e.target.value}`)
+                                    }
+                                }}
+                                style={{ border: 'none', background: 'transparent', outline: 'none', fontSize: 14, width: 150, color: 'var(--text-main)' }}
+                            />
+                        </div>
+
+                        <div style={{ display: 'flex', alignItems: 'center', gap: 15 }} className="header-actions">
+                            <Bell size={20} color="var(--text-muted)" style={{ cursor: 'pointer' }} />
+                            <div style={{ width: 35, height: 35, background: 'white', borderRadius: '50%', color: 'black', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 14, fontWeight: 700 }}>
+                                AP
+                            </div>
+                        </div>
+
+                        {/* Mobile Menu Button - Visible < 1024px */}
+                        <button onClick={() => setSidebarOpen(true)} className="mobile-menu-btn" style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--text-main)' }}>
                             <Menu size={24} />
                         </button>
-
-                        <div style={{ fontSize: 14, color: '#64748b', fontWeight: 500, display: 'flex', alignItems: 'center', gap: 6 }}>
-                            <span className="breadcrumb-hidden" style={{ display: 'none' }}>Admin / </span>
-                            <span style={{ color: '#0f172a', fontWeight: 700, fontSize: 16 }}>{navItems.find(i => i.href === router.pathname)?.label || 'Overview'}</span>
-                        </div>
-                        <style>{`@media(min-width: 768px) { .breadcrumb - hidden { display: inline!important; } } `}</style>
                     </div>
 
-                    <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-                        <div style={{ width: 36, height: 36, borderRadius: '50%', background: 'linear-gradient(135deg, #3b82f6, #8b5cf6)', color: 'white', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 'bold', fontSize: 13, boxShadow: '0 4px 10px rgba(59,130,246,0.3)' }}>
-                            A
-                        </div>
-                    </div>
+                    <style>{`
+                        @media(max-width: 1024px) {
+                            .search-bar-container { display: none!important; }
+                            .mobile-menu-btn { display: block; }
+                            .header-actions { display: none!important; } /* Simplify header on mobile */
+                        }
+                         @media(min-width: 1025px) {
+                            .mobile-menu-btn { display: none; }
+                        }
+                    `}</style>
                 </header>
 
-                <main style={{ padding: '15px 15px 40px 15px', maxWidth: 1200, margin: '0 auto', width: '100%' }}>
+                <main style={{ padding: '0 20px 40px', maxWidth: 1600, width: '100%' }}>
                     {children}
                 </main>
             </div>
@@ -163,3 +189,4 @@ export default function AdminLayout({ children }) {
         </div>
     )
 }
+
