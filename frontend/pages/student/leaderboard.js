@@ -66,6 +66,7 @@ export default function Leaderboard() {
                         borderRadius: 16,
                         border: '1px solid #27272A',
                         overflow: 'hidden',
+                        overflowX: 'auto' // Add scroll for mobile
                     }}>
                         <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 14 }}>
                             <thead style={{ background: '#18181B', borderBottom: '1px solid #27272A' }}>
