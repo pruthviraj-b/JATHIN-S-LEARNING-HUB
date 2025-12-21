@@ -27,9 +27,14 @@ export default function ManageStudents() {
   const [starData, setStarData] = useState({ reason: 'Excellent Performance', points: 1 })
   const [editingId, setEditingId] = useState(null)
 
-  // Search State
-  const [searchQuery, setSearchQuery] = useState('')
-  const router = useRouter() // Import useRouter if not imported, wait, students.js might not have it imported top level
+  const [uploading, setUploading] = useState(false);
+
+  // ... rest of code
+
+  // Inside the return block, replace the Upload label text
+  <label className="btn btn-secondary" style={{ whiteSpace: 'nowrap', opacity: uploading ? 0.7 : 1, pointerEvents: uploading ? 'none' : 'auto' }}>
+    {uploading ? 'Compressing...' : 'Upload'}
+    const router = useRouter() // Import useRouter if not imported, wait, students.js might not have it imported top level
 
   useEffect(() => {
     if (router.query.search) {
@@ -37,17 +42,17 @@ export default function ManageStudents() {
     }
   }, [router.query])
 
-  useEffect(() => { fetchData() }, [])
+  useEffect(() => {fetchData()}, [])
 
   const fetchData = async () => {
     try {
       setLoading(true)
       const [sData, tData] = await Promise.all([
-        apiCall('/students'),
+    apiCall('/students'),
         apiCall('/teams').catch(() => [])
-      ])
-      setStudents(sData)
-      setTeams(tData)
+    ])
+    setStudents(sData)
+    setTeams(tData)
     } catch (err) {
       console.error(err)
       setError(err.message)
@@ -57,20 +62,20 @@ export default function ManageStudents() {
   }
 
   const handleSubmit = async (e) => {
-    e.preventDefault()
+      e.preventDefault()
     setSubmitting(true)
     setError('')
     try {
       if (editingId) {
-        await apiCall(`/students/${editingId}`, { method: 'PUT', body: JSON.stringify(formData) })
+      await apiCall(`/students/${editingId}`, { method: 'PUT', body: JSON.stringify(formData) })
         setEditingId(null)
       } else {
-        await apiCall('/students', { method: 'POST', body: JSON.stringify(formData) })
-        setCreatedCredentials({ email: formData.email, password: formData.password })
+      await apiCall('/students', { method: 'POST', body: JSON.stringify(formData) })
+        setCreatedCredentials({email: formData.email, password: formData.password })
       }
-      setFormData(initialFormState)
-      setShowForm(false)
-      await fetchData()
+    setFormData(initialFormState)
+    setShowForm(false)
+    await fetchData()
     } catch (err) {
       setError(err.message)
     } finally {
@@ -79,28 +84,28 @@ export default function ManageStudents() {
   }
 
   const handleEdit = (student) => {
-    setEditingId(student.id)
+      setEditingId(student.id)
     setFormData({
       firstName: student.firstName,
-      lastName: student.lastName || '',
-      email: student.user?.email || '',
-      password: '',
-      dob: student.dob ? new Date(student.dob).toISOString().split('T')[0] : '',
-      profileUrl: student.profileUrl || '',
-      active: student.active,
-      classLevel: student.classLevel || 1,
-      teamId: student.teamId || '',
-      phoneNumber: student.phoneNumber || ''
+    lastName: student.lastName || '',
+    email: student.user?.email || '',
+    password: '',
+    dob: student.dob ? new Date(student.dob).toISOString().split('T')[0] : '',
+    profileUrl: student.profileUrl || '',
+    active: student.active,
+    classLevel: student.classLevel || 1,
+    teamId: student.teamId || '',
+    phoneNumber: student.phoneNumber || ''
     })
     setShowForm(true)
-    window.scrollTo({ top: 0, behavior: 'smooth' })
+    window.scrollTo({top: 0, behavior: 'smooth' })
   }
 
   const toggleActive = async (studentId, currentStatus) => {
     try {
       await apiCall(`/students/${studentId}/activate`, { method: 'POST', body: JSON.stringify({ active: !currentStatus }) })
       await fetchData()
-    } catch (err) { setError(err.message) }
+    } catch (err) {setError(err.message)}
   }
 
   const awardStar = async (studentId) => {
@@ -108,8 +113,8 @@ export default function ManageStudents() {
     try {
       await apiCall('/stars', { method: 'POST', body: JSON.stringify({ studentId, reason: starData.reason, points: Number(starData.points) }) })
       setStarModal(null)
-      await fetchData()
-    } catch (err) { alert(err.message) }
+    await fetchData()
+    } catch (err) {alert(err.message)}
   }
 
   const handleDelete = async (studentId) => {
@@ -117,13 +122,13 @@ export default function ManageStudents() {
     try {
       await apiCall(`/students/${studentId}`, { method: 'DELETE' })
       await fetchData()
-    } catch (err) { setError(err.message) }
+    } catch (err) {setError(err.message)}
   }
 
-  const initialFormState = { firstName: '', lastName: '', email: '', password: '', dob: '', profileUrl: '', active: true, classLevel: 1, teamId: '', phoneNumber: '' }
+    const initialFormState = {firstName: '', lastName: '', email: '', password: '', dob: '', profileUrl: '', active: true, classLevel: 1, teamId: '', phoneNumber: '' }
 
-  // Stats Calculation
-  const totalStudents = students.length
+    // Stats Calculation
+    const totalStudents = students.length
   const activeStudents = students.filter(s => s.active).length
   const totalStars = students.reduce((acc, s) => acc + (s.totalPoints || 0), 0)
 
@@ -132,9 +137,9 @@ export default function ManageStudents() {
     s.firstName.toLowerCase().includes(searchQuery.toLowerCase()) ||
     s.lastName?.toLowerCase().includes(searchQuery.toLowerCase()) ||
     s.user?.email.toLowerCase().includes(searchQuery.toLowerCase())
-  )
+    )
 
-  return (
+    return (
     <ProtectedRoute requiredRole="ADMIN">
       <AdminLayout>
 
@@ -203,7 +208,6 @@ export default function ManageStudents() {
                       <label className="btn btn-secondary" style={{ whiteSpace: 'nowrap' }}>
                         Upload
                         <input type="file" accept="image/*" hidden onChange={async (e) => {
-                          const file = e.target.files[0];
                           if (!file) return;
 
                           // Helper: Compress Image
@@ -233,17 +237,13 @@ export default function ManageStudents() {
                           };
 
                           try {
-                            // Add simplistic "loading" feedback (optional UI improvement)
-                            e.target.parentElement.textContent = 'Compressing...';
-                            e.target.disabled = true;
-
+                            setUploading(true);
                             console.log('Starting compression for:', file.name, file.type, file.size);
                             const compressedFile = await compressImage(file);
                             console.log('Compression complete:', compressedFile.name, compressedFile.type, compressedFile.size);
 
                             if (compressedFile.size > 4 * 1024 * 1024) {
                               alert('Image is still too large (>4MB) after compression. Please choose a smaller image.');
-                              e.target.parentElement.innerHTML = `Upload <input type="file" accept="image/*" hidden />`;
                               return;
                             }
 
@@ -256,18 +256,11 @@ export default function ManageStudents() {
                             console.log('Upload success:', res);
 
                             setFormData(prev => ({ ...prev, profileUrl: res.url }));
-
-                            // Restore button text
-                            e.target.parentElement.innerHTML = `Upload <input type="file" accept="image/*" hidden />`;
-
                           } catch (err) {
                             console.error('Upload failed details:', err);
-                            // improved error alert
                             alert(`Upload Failed: ${err.message || JSON.stringify(err)}`);
-
-                            // Restore button
-                            e.target.parentElement.innerHTML = `Upload <input type="file" accept="image/*" hidden />`;
                           } finally {
+                            setUploading(false);
                             // Reset input value to allow re-selecting same file if needed
                             e.target.value = '';
                           }
@@ -441,23 +434,23 @@ export default function ManageStudents() {
 
       </AdminLayout>
     </ProtectedRoute>
-  )
+    )
 }
 
-// Sub-components & Styles
+    // Sub-components & Styles
 
-const StatsCard = ({ icon: Icon, label, value }) => (
-  <div className="card" style={{ flexDirection: 'row', alignItems: 'center', gap: 15 }}>
-    <div style={{ width: 56, height: 56, borderRadius: '50%', background: '#18181B', display: 'flex', alignItems: 'center', justifyContent: 'center', border: '1px solid #27272A' }}>
-      <Icon size={24} color="white" />
+    const StatsCard = ({icon: Icon, label, value }) => (
+    <div className="card" style={{ flexDirection: 'row', alignItems: 'center', gap: 15 }}>
+      <div style={{ width: 56, height: 56, borderRadius: '50%', background: '#18181B', display: 'flex', alignItems: 'center', justifyContent: 'center', border: '1px solid #27272A' }}>
+        <Icon size={24} color="white" />
+      </div>
+      <div>
+        <div style={{ fontSize: 14, color: 'var(--text-muted)' }}>{label}</div>
+        <div style={{ fontSize: 24, fontWeight: 700, color: 'var(--text-main)', lineHeight: 1.2 }}>{value}</div>
+      </div>
     </div>
-    <div>
-      <div style={{ fontSize: 14, color: 'var(--text-muted)' }}>{label}</div>
-      <div style={{ fontSize: 24, fontWeight: 700, color: 'var(--text-main)', lineHeight: 1.2 }}>{value}</div>
-    </div>
-  </div>
-)
+    )
 
-const labelStyle = { display: 'block', fontSize: 12, fontWeight: 700, color: 'var(--text-muted)', marginBottom: 4, letterSpacing: 0.5 }
-const iconBtnStyle = { background: 'transparent', border: 'none', cursor: 'pointer', padding: 5, borderRadius: 8, transition: 'background 0.2s', display: 'flex', alignItems: 'center', justifyContent: 'center' }
-const modalOverlayStyle = { position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.4)', backdropFilter: 'blur(4px)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 60 }
+    const labelStyle = {display: 'block', fontSize: 12, fontWeight: 700, color: 'var(--text-muted)', marginBottom: 4, letterSpacing: 0.5 }
+    const iconBtnStyle = {background: 'transparent', border: 'none', cursor: 'pointer', padding: 5, borderRadius: 8, transition: 'background 0.2s', display: 'flex', alignItems: 'center', justifyContent: 'center' }
+    const modalOverlayStyle = {position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.4)', backdropFilter: 'blur(4px)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 60 }
