@@ -19,155 +19,111 @@ function BadgeCard({ badge, awardedAt, size }) {
 
 export default function Profile() {
     const { user } = useAuth()
-    const s = user?.student
-    const [badges, setBadges] = useState([])
+    // --- Badges ---
+    const [badges, setBadges] = useState([]);
 
     useEffect(() => {
-        if (s?.id) {
-            apiCall(`/badges/student/${s.id}`)
-                .then(data => setBadges(data || []))
-                .catch(err => console.error(err))
+        if (user?.student?.id) {
+            fetchBadges();
         }
-    }, [s?.id])
+    }, [user]);
 
-    if (!s) return <div style={{ padding: 50, textAlign: 'center' }}>Loading ID Card...</div>
+    const fetchBadges = async () => {
+        try {
+            const data = await apiCall(`/badges/student/${user.student.id}`);
+            // data is array of StudentBadge { badge: Badge }
+            setBadges(data.map(sb => sb.badge));
+        } catch (err) {
+            console.error('Failed to fetch badges', err);
+        }
+    };
+
+    if (!user) return <div>Loading...</div>
+
+    const s = user.student || {}
 
     return (
-        <ProtectedRoute requiredRole="STUDENT">
-            <StudentLayout>
-                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '20px 0' }}>
+        <StudentLayout>
+            <div className="animate-fade-in">
+                <h1 style={{ marginBottom: 20 }}>My Profile</h1>
 
-                    {/* ID CARD CONTAINER */}
-                    <div style={{
-                        width: '100%', maxWidth: 380,
-                        background: '#09090B',
+                {/* Digital ID Card */}
+                <div className="id-card-container" style={{ marginBottom: 40 }}>
+                    <div className="id-card" style={{
+                        background: 'white',
                         borderRadius: 20,
+                        boxShadow: '0 10px 30px rgba(0,0,0,0.1)',
                         overflow: 'hidden',
-                        boxShadow: '0 10px 40px -10px rgba(0,0,0,0.5)',
-                        border: '1px solid #27272A',
+                        maxWidth: 400,
+                        margin: '0 auto',
                         position: 'relative'
                     }}>
-                        {/* Header */}
-                        <div style={{
-                            background: 'white', // High contrast for header
-                            padding: '20px 0',
-                            textAlign: 'center',
-                            color: 'black',
-                            position: 'relative'
-                        }}>
-                            <div style={{ fontSize: 18, fontWeight: 800, letterSpacing: 1 }}>JATHIN'S LEARNING HUB</div>
-                            <div style={{ fontSize: 11, fontWeight: 700, opacity: 0.8, marginTop: 4, letterSpacing: 2 }}>STUDENT IDENTITY CARD</div>
+                        {/* Header Gradient */}
+                        <div style={{ height: 100, background: 'linear-gradient(135deg, #1C2541, #0F172A)' }}></div>
 
-                            {/* Hole Punch Visual */}
-                            <div style={{
-                                width: 60, height: 6, background: '#e4e4e7', borderRadius: 10,
-                                position: 'absolute', top: 10, left: '50%', transform: 'translateX(-50%)'
-                            }}></div>
-                        </div>
-
-                        {/* Photo Section */}
-                        <div style={{ textAlign: 'center', marginTop: 30, marginBottom: 20 }}>
-                            <div style={{
-                                width: 140, height: 140, borderRadius: '50%',
-                                border: '5px solid #27272A',
-                                boxShadow: '0 4px 15px rgba(0,0,0,0.5)',
-                                overflow: 'hidden',
-                                margin: '0 auto',
-                                background: '#18181B'
-                            }}>
+                        {/* Avatar */}
+                        <div style={{ marginTop: -50, display: 'flex', justifyContent: 'center' }}>
+                            <div style={{ padding: 4, background: 'white', borderRadius: '50%' }}>
                                 <img
-                                    src={
-                                        s.profileUrl ||
-                                        `https://ui-avatars.com/api/?name=${s.firstName}+${s.lastName}&background=18181b&color=fff&size=256`
-                                    }
-                                    alt="Profile"
-                                    style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                                    src={s.profileUrl || `https://ui-avatars.com/api/?name=${s.firstName}+${s.lastName}&background=0D8ABC&color=fff`}
+                                    style={{ width: 100, height: 100, borderRadius: '50%', objectFit: 'cover' }}
                                 />
                             </div>
-                            <h2 style={{ margin: '15px 0 5px', fontSize: 24, fontWeight: 800, color: 'white' }}>
-                                {s.firstName} {s.lastName}
-                            </h2>
-                            <div style={{
-                                display: 'inline-block',
-                                padding: '4px 12px',
-                                borderRadius: 12,
-                                background: '#27272A',
-                                color: 'white',
-                                fontSize: 12, fontWeight: 700,
-                                textTransform: 'uppercase',
-                                border: '1px solid #3F3F46'
-                            }}>
-                                Student
-                            </div>
-                        </div>
-
-                        {/* Details Grid */}
-                        <div style={{ padding: '0 30px 30px' }}>
-                            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '15px 10px' }}>
-                                <IDItem label="Student ID" value={s.id.slice(-6).toUpperCase()} />
-                                <IDItem label="Class" value={`Class ${s.classLevel}`} />
-                                <IDItem label="Team" value={s.team?.name || 'N/A'} />
-                                <IDItem label="Phone" value={s.phoneNumber || '-'} />
-                                <IDItem label="D.O.B" value={s.dob ? new Date(s.dob).toLocaleDateString() : '-'} />
-                                <IDItem label="Status" value={s.active ? 'Active' : 'Inactive'} color={s.active ? 'white' : 'var(--text-muted)'} />
-                            </div>
-
-                            <div style={{ marginTop: 20 }}>
-                                <div style={{ fontSize: 10, color: 'var(--text-muted)', fontWeight: 600, textTransform: 'uppercase' }}>Email Address</div>
-                                <div style={{ fontSize: 13, fontWeight: 600, color: 'white' }}>{user.email}</div>
-                            </div>
-                        </div>
-
-                        {/* Footer / Barcode */}
-                        <div style={{
-                            background: '#18181B',
-                            padding: '15px',
-                            borderTop: '1px solid #27272A',
-                            textAlign: 'center'
-                        }}>
-                            {/* Fake Barcode Visual */}
-                            <div style={{
-                                height: 35,
-                                background: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='4' height='40' viewBox='0 0 4 40'%3E%3Crect width='2' height='40' fill='%2371717a'/%3E%3C/svg%3E")`,
-                                backgroundSize: '4px 35px',
-                                width: '80%',
-                                margin: '0 auto',
-                                opacity: 0.8
-                            }}></div>
-                            <div style={{ fontSize: 10, color: 'var(--text-muted)', marginTop: 5, letterSpacing: 2 }}>
-                                {s.id.toUpperCase()}
-                            </div>
+                            <div style={{ fontSize: 10, color: 'var(--text-muted)', fontWeight: 600, textTransform: 'uppercase' }}>Email Address</div>
+                            <div style={{ fontSize: 13, fontWeight: 600, color: 'white' }}>{user.email}</div>
                         </div>
                     </div>
 
-                    {/* Achievements Section */}
-                    <div style={{ paddingLeft: 40, flex: 1 }}>
-                        <h2 style={{ color: 'white', marginBottom: 20, display: 'flex', alignItems: 'center', gap: 10 }}>
-                            Achievements
-                            <span style={{ fontSize: 12, background: '#27272A', padding: '2px 8px', borderRadius: 10, border: '1px solid #3F3F46' }}>{badges.length}</span>
-                        </h2>
-
-                        <div style={{ display: 'flex', flexWrap: 'wrap', gap: 15 }}>
-                            {badges.map(sb => (
-                                <BadgeCard key={sb.badge.id} badge={sb.badge} awardedAt={sb.awardedAt} size="small" />
-                            ))}
-                            {badges.length === 0 && (
-                                <div style={{
-                                    color: 'var(--text-muted)',
-                                    border: '1px dashed #27272A',
-                                    padding: 30,
-                                    borderRadius: 12,
-                                    width: '100%',
-                                    textAlign: 'center'
-                                }}>
-                                    No badges earned yet. Keep studying! 🏆
-                                </div>
-                            )}
+                    {/* Footer / Barcode */}
+                    <div style={{
+                        background: '#18181B',
+                        padding: '15px',
+                        borderTop: '1px solid #27272A',
+                        textAlign: 'center'
+                    }}>
+                        {/* Fake Barcode Visual */}
+                        <div style={{
+                            height: 35,
+                            background: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='4' height='40' viewBox='0 0 4 40'%3E%3Crect width='2' height='40' fill='%2371717a'/%3E%3C/svg%3E")`,
+                            backgroundSize: '4px 35px',
+                            width: '80%',
+                            margin: '0 auto',
+                            opacity: 0.8
+                        }}></div>
+                        <div style={{ fontSize: 10, color: 'var(--text-muted)', marginTop: 5, letterSpacing: 2 }}>
+                            {s.id.toUpperCase()}
                         </div>
                     </div>
                 </div>
-            </StudentLayout>
-        </ProtectedRoute>
+
+                {/* Achievements Section */}
+                <div style={{ paddingLeft: 40, flex: 1 }}>
+                    <h2 style={{ color: 'white', marginBottom: 20, display: 'flex', alignItems: 'center', gap: 10 }}>
+                        Achievements
+                        <span style={{ fontSize: 12, background: '#27272A', padding: '2px 8px', borderRadius: 10, border: '1px solid #3F3F46' }}>{badges.length}</span>
+                    </h2>
+
+                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: 15 }}>
+                        {badges.map(sb => (
+                            <BadgeCard key={sb.badge.id} badge={sb.badge} awardedAt={sb.awardedAt} size="small" />
+                        ))}
+                        {badges.length === 0 && (
+                            <div style={{
+                                color: 'var(--text-muted)',
+                                border: '1px dashed #27272A',
+                                padding: 30,
+                                borderRadius: 12,
+                                width: '100%',
+                                textAlign: 'center'
+                            }}>
+                                No badges earned yet. Keep studying! 🏆
+                            </div>
+                        )}
+                    </div>
+                </div>
+            </div>
+        </StudentLayout>
+        </ProtectedRoute >
     )
 }
 
