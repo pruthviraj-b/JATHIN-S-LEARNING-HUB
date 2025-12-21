@@ -4,12 +4,16 @@ const getApiUrl = () => {
 
   const hostname = window.location.hostname;
 
-  // If running on ngrok or some other domain, use relative path or configured env
+  // Check if referencing a specific environment variable
   if (process.env.NEXT_PUBLIC_API_URL) return process.env.NEXT_PUBLIC_API_URL;
 
-  // IMPORTANT: Assume Backend is on same IP as Frontend, but port 4000
-  // valid for localhost, 192.168.x.x, 10.x.x.x etc
-  return `http://${hostname}:4000/api`;
+  // Local Development
+  if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+    return 'http://localhost:4000/api';
+  }
+
+  // Production (Vercel): Use relative path so it uses the same domain (and Vercel Rewrites/Functions)
+  return '/api';
 }
 
 const API_BASE = getApiUrl();
