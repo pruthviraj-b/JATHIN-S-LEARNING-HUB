@@ -90,11 +90,11 @@ export default function StudentDashboard() {
         <div className="dashboard-grid">
           <div style={{ background: '#09090B', padding: 24, borderRadius: 12, border: '1px solid #27272A' }}>
             <h3 style={{ marginTop: 0 }}>📅 Your Schedule</h3>
-            {loading ? <p>Loading...</p> : stats.classes.length === 0 ? (
+            {loading ? <p>Loading...</p> : (stats.classes || []).length === 0 ? (
               <p style={{ color: 'var(--text-muted)' }}>No upcoming classes scheduled.</p>
             ) : (
               <div style={{ display: 'flex', flexDirection: 'column', gap: 15 }}>
-                {stats.classes.map(c => (
+                {(stats.classes || []).map(c => (
                   <div key={c.id} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '10px', background: '#18181B', borderRadius: 8, border: '1px solid #27272A' }}>
                     <div>
                       <div style={{ fontWeight: 'bold' }}>{c.subject?.name}: {c.title}</div>
@@ -109,11 +109,11 @@ export default function StudentDashboard() {
 
           <div style={{ background: '#09090B', padding: 24, borderRadius: 12, border: '1px solid #27272A' }}>
             <h3 style={{ marginTop: 0 }}>📢 Latest Notices</h3>
-            {loading ? <p>Loading...</p> : stats.announcements.length === 0 ? (
+            {loading ? <p>Loading...</p> : (stats.announcements || []).length === 0 ? (
               <p style={{ color: 'var(--text-muted)' }}>No new announcements.</p>
             ) : (
               <div style={{ display: 'flex', flexDirection: 'column', gap: 15 }}>
-                {stats.announcements.map(a => (
+                {(stats.announcements || []).map(a => (
                   <div key={a.id} style={{ paddingBottom: 10, borderBottom: '1px solid #27272A' }}>
                     <div style={{ fontWeight: 500 }}>{a.title}</div>
                     <div style={{ fontSize: 12, color: 'var(--text-muted)', marginTop: 2 }}>{new Date(a.createdAt).toLocaleDateString()}</div>
