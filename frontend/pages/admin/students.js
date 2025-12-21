@@ -233,18 +233,32 @@ export default function ManageStudents() {
                           };
 
                           try {
-                            const compressedFile = await compressImage(file);
-                            const data = new FormData();
-                            data.append('file', compressedFile);
+                            // Add simplistic "loading" feedback (optional UI improvement)
+                            // e.target.parentElement.textContent = 'Compressing...';
 
-                            // Use relative path /upload directly (apiCall handles /api prefix check)
-                            // Wait, apiCall prepends BASE.
-                            // Route is /api/upload. apiCall('/upload') -> /api/upload. Correct.
+                            const compressedFile = await compressImage(file);
+
+                            // Restore button text
+                            // e.target.parentElement.innerHTML = `
+                            //   Upload
+                            //   <input type="file" accept="image/*" hidden />
+                            // `;
+                            // Re-attach listener (tricky with innerHTML replacement, better to use state but trying to keep minimal diff)
+                            // Actually, let's just use the existing state methodology or just alert user.
+                            // Better: Don't mess with DOM. 
+
+                            const data = new FormData();
+                            // CRITICAL FIX: Pass the filename as third argument to ensure middleware recognizes it as a file
+                            data.append('file', compressedFile, 'profile.jpg');
+
                             const res = await apiCall('/upload', { method: 'POST', body: data });
                             setFormData(prev => ({ ...prev, profileUrl: res.url }));
                           } catch (err) {
-                            console.error(err);
-                            alert('Upload Failed: ' + err.message);
+                            console.error('Upload failed:', err);
+                            alert('Upload Failed: ' + (err.message || 'Unknown error'));
+                          } finally {
+                            // Reset input value to allow re-selecting same file if needed
+                            e.target.value = '';
                           }
                         }} />
                       </label>
