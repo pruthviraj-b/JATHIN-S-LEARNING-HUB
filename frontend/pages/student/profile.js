@@ -69,59 +69,50 @@ export default function Profile() {
                                     style={{ width: 100, height: 100, borderRadius: '50%', objectFit: 'cover' }}
                                 />
                             </div>
-                            <div style={{ fontSize: 10, color: 'var(--text-muted)', fontWeight: 600, textTransform: 'uppercase' }}>Email Address</div>
-                            <div style={{ fontSize: 13, fontWeight: 600, color: 'white' }}>{user.email}</div>
-                        </div>
-                    </div>
-
-                    {/* Footer / Barcode */}
-                    <div style={{
-                        background: '#18181B',
-                        padding: '15px',
-                        borderTop: '1px solid #27272A',
-                        textAlign: 'center'
+                            borderTop: '1px solid #27272A',
+                            textAlign: 'center'
                     }}>
-                        {/* Fake Barcode Visual */}
-                        <div style={{
-                            height: 35,
-                            background: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='4' height='40' viewBox='0 0 4 40'%3E%3Crect width='2' height='40' fill='%2371717a'/%3E%3C/svg%3E")`,
-                            backgroundSize: '4px 35px',
-                            width: '80%',
-                            margin: '0 auto',
-                            opacity: 0.8
-                        }}></div>
-                        <div style={{ fontSize: 10, color: 'var(--text-muted)', marginTop: 5, letterSpacing: 2 }}>
-                            {s.id.toUpperCase()}
+                            {/* Fake Barcode Visual */}
+                            <div style={{
+                                height: 35,
+                                background: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='4' height='40' viewBox='0 0 4 40'%3E%3Crect width='2' height='40' fill='%2371717a'/%3E%3C/svg%3E")`,
+                                backgroundSize: '4px 35px',
+                                width: '80%',
+                                margin: '0 auto',
+                                opacity: 0.8
+                            }}></div>
+                            <div style={{ fontSize: 10, color: 'var(--text-muted)', marginTop: 5, letterSpacing: 2 }}>
+                                {s.id.toUpperCase()}
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Achievements Section */}
+                    <div style={{ paddingLeft: 40, flex: 1 }}>
+                        <h2 style={{ color: 'white', marginBottom: 20, display: 'flex', alignItems: 'center', gap: 10 }}>
+                            Achievements
+                            <span style={{ fontSize: 12, background: '#27272A', padding: '2px 8px', borderRadius: 10, border: '1px solid #3F3F46' }}>{badges.length}</span>
+                        </h2>
+
+                        <div style={{ display: 'flex', flexWrap: 'wrap', gap: 15 }}>
+                            {badges.map(sb => (
+                                <BadgeCard key={sb.badge.id} badge={sb.badge} awardedAt={sb.awardedAt} size="small" />
+                            ))}
+                            {badges.length === 0 && (
+                                <div style={{
+                                    color: 'var(--text-muted)',
+                                    border: '1px dashed #27272A',
+                                    padding: 30,
+                                    borderRadius: 12,
+                                    width: '100%',
+                                    textAlign: 'center'
+                                }}>
+                                    No badges earned yet. Keep studying! 🏆
+                                </div>
+                            )}
                         </div>
                     </div>
                 </div>
-
-                {/* Achievements Section */}
-                <div style={{ paddingLeft: 40, flex: 1 }}>
-                    <h2 style={{ color: 'white', marginBottom: 20, display: 'flex', alignItems: 'center', gap: 10 }}>
-                        Achievements
-                        <span style={{ fontSize: 12, background: '#27272A', padding: '2px 8px', borderRadius: 10, border: '1px solid #3F3F46' }}>{badges.length}</span>
-                    </h2>
-
-                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: 15 }}>
-                        {badges.map(sb => (
-                            <BadgeCard key={sb.badge.id} badge={sb.badge} awardedAt={sb.awardedAt} size="small" />
-                        ))}
-                        {badges.length === 0 && (
-                            <div style={{
-                                color: 'var(--text-muted)',
-                                border: '1px dashed #27272A',
-                                padding: 30,
-                                borderRadius: 12,
-                                width: '100%',
-                                textAlign: 'center'
-                            }}>
-                                No badges earned yet. Keep studying! 🏆
-                            </div>
-                        )}
-                    </div>
-                </div>
-            </div>
         </StudentLayout>
         </ProtectedRoute >
     )
