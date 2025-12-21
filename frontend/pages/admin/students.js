@@ -234,28 +234,39 @@ export default function ManageStudents() {
 
                           try {
                             // Add simplistic "loading" feedback (optional UI improvement)
-                            // e.target.parentElement.textContent = 'Compressing...';
+                            e.target.parentElement.textContent = 'Compressing...';
+                            e.target.disabled = true;
 
+                            console.log('Starting compression for:', file.name, file.type, file.size);
                             const compressedFile = await compressImage(file);
+                            console.log('Compression complete:', compressedFile.name, compressedFile.type, compressedFile.size);
 
-                            // Restore button text
-                            // e.target.parentElement.innerHTML = `
-                            //   Upload
-                            //   <input type="file" accept="image/*" hidden />
-                            // `;
-                            // Re-attach listener (tricky with innerHTML replacement, better to use state but trying to keep minimal diff)
-                            // Actually, let's just use the existing state methodology or just alert user.
-                            // Better: Don't mess with DOM. 
+                            if (compressedFile.size > 4 * 1024 * 1024) {
+                              alert('Image is still too large (>4MB) after compression. Please choose a smaller image.');
+                              e.target.parentElement.innerHTML = `Upload <input type="file" accept="image/*" hidden />`;
+                              return;
+                            }
 
                             const data = new FormData();
-                            // CRITICAL FIX: Pass the filename as third argument to ensure middleware recognizes it as a file
+                            // CRITICAL FIX: Explicitly pass filename and ensure type is image/jpeg
                             data.append('file', compressedFile, 'profile.jpg');
 
+                            console.log('Sending upload request...');
                             const res = await apiCall('/upload', { method: 'POST', body: data });
+                            console.log('Upload success:', res);
+
                             setFormData(prev => ({ ...prev, profileUrl: res.url }));
+
+                            // Restore button text
+                            e.target.parentElement.innerHTML = `Upload <input type="file" accept="image/*" hidden />`;
+
                           } catch (err) {
-                            console.error('Upload failed:', err);
-                            alert('Upload Failed: ' + (err.message || 'Unknown error'));
+                            console.error('Upload failed details:', err);
+                            // improved error alert
+                            alert(`Upload Failed: ${err.message || JSON.stringify(err)}`);
+
+                            // Restore button
+                            e.target.parentElement.innerHTML = `Upload <input type="file" accept="image/*" hidden />`;
                           } finally {
                             // Reset input value to allow re-selecting same file if needed
                             e.target.value = '';
