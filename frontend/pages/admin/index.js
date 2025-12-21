@@ -18,7 +18,7 @@ export default function AdminDashboard() {
     async function load() {
       try {
         const data = await apiCall('/dashboard/stats')
-        setStats(data)
+        setStats(data || { totalStudents: 0, classesToday: 0, attendanceRate: 0, topStudent: '—' })
       } catch (e) {
         console.error(e)
       } finally {
