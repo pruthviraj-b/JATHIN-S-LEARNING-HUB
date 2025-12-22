@@ -33,16 +33,7 @@ export default function AdminDashboard() {
       <AdminLayout>
 
         {/* Welcome Banner */}
-        <div style={{
-          background: 'linear-gradient(135deg, #18181B 0%, #09090B 100%)',
-          borderRadius: 24,
-          padding: '30px',
-          marginBottom: 30,
-          position: 'relative',
-          overflow: 'hidden',
-          border: '1px solid #27272A',
-          boxShadow: '0 10px 30px -10px rgba(0,0,0,0.5)'
-        }}>
+        <div className="welcome-banner">
           <div style={{ position: 'relative', zIndex: 2 }}>
             <h1 style={{ margin: 0, fontSize: 32, fontWeight: 800, background: 'linear-gradient(to right, #fff, #a1a1aa)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
               Welcome to Jathin's Hub

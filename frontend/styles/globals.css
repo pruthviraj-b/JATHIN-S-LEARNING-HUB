@@ -58,6 +58,10 @@
   --font-display: 'Plus Jakarta Sans', sans-serif;
 }
 
+* {
+  box-sizing: border-box;
+}
+
 body {
   margin: 0;
   padding: 0;
@@ -488,6 +492,26 @@ tr:hover td {
   .stats-card-value {
     font-size: 20px !important;
   }
+
+  .welcome-banner {
+    padding: 20px !important;
+    border-radius: 16px !important;
+  }
+
+  .welcome-banner h1 {
+    font-size: 24px !important;
+  }
+}
+
+.welcome-banner {
+  background: linear-gradient(135deg, #18181B 0%, #09090B 100%);
+  border-radius: 24px;
+  padding: 30px;
+  margin-bottom: 30px;
+  position: relative;
+  overflow: hidden;
+  border: 1px solid #27272A;
+  box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5);
 }
 
 /* --- Admin Layout Refactor --- */
