@@ -32,10 +32,20 @@ export default function AdminDashboard() {
     <ProtectedRoute requiredRole="ADMIN">
       <AdminLayout>
 
-        {/* Welcome Banner */}
-        <div className="welcome-banner">
+        {/* Welcome Banner - Forced Inline Styles to fix visibility */}
+        <div style={{
+          background: 'linear-gradient(135deg, #18181B 0%, #09090B 100%)',
+          borderRadius: 24,
+          padding: 30,
+          marginBottom: 30,
+          position: 'relative',
+          overflow: 'hidden',
+          border: '1px solid #27272A',
+          boxShadow: '0 10px 30px -10px rgba(0,0,0,0.5)',
+          display: 'block' // Ensure display
+        }}>
           <div style={{ position: 'relative', zIndex: 2 }}>
-            <h1 style={{ margin: 0, fontSize: 32, fontWeight: 800, background: 'linear-gradient(to right, #fff, #a1a1aa)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
+            <h1 style={{ margin: 0, fontSize: 'clamp(24px, 5vw, 32px)', fontWeight: 800, background: 'linear-gradient(to right, #fff, #a1a1aa)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
               Welcome to Jathin's Hub
             </h1>
             <p style={{ color: '#A1A1AA', marginTop: 10, fontSize: 16 }}>
@@ -56,8 +66,13 @@ export default function AdminDashboard() {
           }} />
         </div>
 
-        {/* Stats Grid */}
-        <div className="stats-grid">
+        {/* Stats Grid - Responsive Grid Inline */}
+        <div style={{
+          display: 'grid',
+          gridTemplateColumns: 'repeat(auto-fit, minmax(160px, 1fr))', // Smaller min-width for mobile 2-col
+          gap: 15,
+          marginBottom: 40
+        }}>
           <StatsCard
             label="Total Students"
             value={loading ? '...' : stats.totalStudents}
@@ -77,6 +92,7 @@ export default function AdminDashboard() {
             label="Top Performer"
             value={loading ? '...' : stats.topStudent}
             icon={Star}
+            href="/admin/stars"
           />
         </div>
 
