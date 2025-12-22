@@ -49,11 +49,28 @@ router.get('/stats', authMiddleware(['ADMIN']), async (req, res) => {
         const presentRecords = await prisma.attendance.count({ where: { present: true } });
         const attendanceRate = totalRecords > 0 ? Math.round((presentRecords / totalRecords) * 100) : 0;
 
+        // 5. Team Captains List (New)
+        const teams = await prisma.team.findMany({
+            include: {
+                captain: { select: { id: true, firstName: true, lastName: true, profileUrl: true } }
+            }
+        });
+
+        const teamCaptains = teams.map(t => ({
+            id: t.id,
+            name: t.name,
+            captain: t.captain ? {
+                ...t.captain,
+                name: `${t.captain.firstName} ${t.captain.lastName || ''}`
+            } : null
+        }));
+
         res.json({
             totalStudents: studentCount,
             classesToday,
             topStudent: topStudentName,
-            attendanceRate
+            attendanceRate,
+            teamCaptains // New: List of all teams and their captains
         });
 
     } catch (err) {

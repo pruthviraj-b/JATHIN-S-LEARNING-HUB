@@ -4,6 +4,7 @@ import AdminLayout from '../../components/AdminLayout'
 import { apiCall } from '../../lib/api'
 import Link from 'next/link'
 import { Users, Calendar, ClipboardCheck, Star, Zap, Activity, BookOpen, Bell } from 'lucide-react'
+import StudentProfileImage from '../../components/StudentProfileImage'
 
 export default function AdminDashboard() {
   const [stats, setStats] = useState({
@@ -94,6 +95,54 @@ export default function AdminDashboard() {
             icon={Star}
             href="/admin/stars"
           />
+        </div>
+
+        {/* Team Captains Grid */}
+        <div className="card" style={{ marginBottom: 30 }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 20 }}>
+            <div style={{ background: '#18181B', padding: 8, borderRadius: 10 }}>
+              <div style={{ fontSize: 18 }}>👑</div>
+            </div>
+            <h3 style={{ margin: 0, fontSize: 18, color: 'var(--text-main)' }}>Current Team Captains</h3>
+          </div>
+
+          <div style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))',
+            gap: 15
+          }}>
+            {(stats.teamCaptains || []).length > 0 ? (stats.teamCaptains.map(team => (
+              <div key={team.id} style={{
+                background: '#18181B',
+                borderRadius: 16,
+                padding: 20,
+                border: '1px solid #27272A',
+                display: 'flex',
+                alignItems: 'center',
+                gap: 15
+              }}>
+                {team.captain ? (
+                  <>
+                    <StudentProfileImage student={team.captain} size={48} />
+                    <div>
+                      <div style={{ fontSize: 14, fontWeight: 700, color: '#D4AF37' }}>{team.captain.firstName}</div>
+                      <div style={{ fontSize: 12, color: 'var(--text-muted)' }}>{team.name}</div>
+                    </div>
+                  </>
+                ) : (
+                  <>
+                    <div style={{ width: 48, height: 48, background: '#27272A', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>❓</div>
+                    <div>
+                      <div style={{ fontSize: 14, fontWeight: 700, color: 'var(--text-muted)' }}>No Captain</div>
+                      <div style={{ fontSize: 12, color: 'var(--text-muted)' }}>{team.name}</div>
+                    </div>
+                  </>
+                )}
+              </div>
+            ))) : (
+              <div style={{ color: 'var(--text-muted)', fontSize: 14, fontStyle: 'italic' }}>No teams or captains yet.</div>
+            )}
+          </div>
         </div>
 
         {/* Content Grid */}

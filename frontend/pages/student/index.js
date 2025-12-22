@@ -4,6 +4,7 @@ import Link from 'next/link'
 import { useEffect, useState } from 'react'
 import { apiCall } from '../../lib/api'
 import StudentLayout from '../../components/StudentLayout'
+import StudentProfileImage from '../../components/StudentProfileImage'
 
 export default function StudentDashboard() {
   const { user } = useAuth()
@@ -85,8 +86,11 @@ export default function StudentDashboard() {
                 {stats.teamName || 'No Team'}
               </div>
             </div>
-            <div style={{ width: 48, height: 48, background: 'rgba(212, 175, 55, 0.1)', color: '#D4AF37', borderRadius: 12, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 20, border: '1px solid rgba(212, 175, 55, 0.2)' }}>
-              👑
+            <div style={{ width: 48, height: 48, borderRadius: 12, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              {stats.captain ?
+                <StudentProfileImage student={stats.captain} size={48} /> :
+                <div style={{ fontSize: 20 }}>👑</div>
+              }
             </div>
           </div>
         </div>
