@@ -65,6 +65,8 @@ body {
   background-color: var(--bg-body);
   color: var(--text-main);
   -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+  width: 100vw;
 }
 
 /* Scrollbar Dark */
@@ -289,6 +291,32 @@ tr:hover td {
   gap: 24px;
 }
 
+.responsive-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 24px;
+}
+
+@media (max-width: 480px) {
+  .responsive-grid {
+    grid-template-columns: 1fr;
+    /* Force 1 column on mobile */
+    gap: 16px;
+  }
+}
+
+.quick-actions-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 15px;
+}
+
+@media (max-width: 480px) {
+  .quick-actions-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
 @media (max-width: 1024px) {
   .dashboard-grid {
     grid-template-columns: 1fr;
@@ -317,71 +345,147 @@ tr:hover td {
   display: block;
 }
 
-@media (max-width: 768px) {
-  .mobile-only {
+/* Admin Header & Main Layout */
+.admin-header {
+  margin: 20px 20px 10px;
+}
+
+.admin-main {
+  padding: 0 20px 40px;
+}
+
+@media (max-width: 1024px) {
+  .search-bar-container {
+    display: none !important;
+  }
+
+  .mobile-menu-btn {
     display: block;
   }
 
-  .desktop-only {
+  .header-actions {
+    display: none !important;
+  }
+}
+
+@media (min-width: 1025px) {
+  .mobile-menu-btn {
     display: none;
   }
+}
 
-  /* Transform Tables to Cards */
-  .table-container table {
-    display: none;
+@media (max-width: 480px) {
+  .admin-header {
+    margin: 10px;
+    padding: 0 15px !important;
+    min-height: 60px !important;
+    border-radius: 12px !important;
+    top: 10px !important;
   }
 
-  .mobile-card-list {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
+  .admin-main {
+    padding: 0 10px 20px;
   }
+}
 
-  .mobile-card {
-    background: var(--bg-card);
-    border: 1px solid #27272A;
-    border-radius: var(--radius-lg);
-    padding: 16px;
-    box-shadow: var(--shadow-sm);
-  }
+.desktop-only {
+  display: none;
+}
 
-  .mobile-card-header {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    padding-bottom: 12px;
-    border-bottom: 1px solid #27272A;
-    margin-bottom: 12px;
-  }
+/* Transform Tables to Cards */
+.table-container table {
+  display: none;
+}
 
-  .mobile-card-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 8px;
-  }
+.mobile-card-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
 
-  .mobile-label {
-    font-size: 11px;
-    text-transform: uppercase;
-    color: var(--text-muted);
-    font-weight: 700;
-  }
+.mobile-card {
+  background: var(--bg-card);
+  border: 1px solid #27272A;
+  border-radius: var(--radius-lg);
+  padding: 16px;
+  box-shadow: var(--shadow-sm);
+}
 
-  .mobile-value {
-    font-size: 13px;
-    color: var(--text-main);
-    font-weight: 600;
-  }
+.mobile-card-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid #27272A;
+  margin-bottom: 12px;
+}
 
-  /* Form Optimization */
-  .input-field {
-    font-size: 16px;
-    /* Stop iOS zoom */
-  }
+.mobile-card-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
 
+.mobile-label {
+  font-size: 11px;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  font-weight: 700;
+}
+
+.mobile-value {
+  font-size: 13px;
+  color: var(--text-main);
+  font-weight: 600;
+}
+
+/* Form Optimization */
+.input-field {
+  font-size: 16px;
+  /* Stop iOS zoom */
+}
+
+.card {
+  padding: 16px;
+  /* Reduce padding */
+}
+
+/* Aggressive Mobile Scaling */
+@media (max-width: 430px) {
   .card {
-    padding: 16px;
-    /* Reduce padding */
+    padding: 12px;
+  }
+
+  h1 {
+    font-size: 24px !important;
+  }
+
+  h2 {
+    font-size: 20px !important;
+  }
+
+  h3 {
+    font-size: 18px !important;
+  }
+
+  .btn {
+    padding: 10px 16px;
+    font-size: 13px;
+  }
+
+  /* Stats Card Compact */
+  .stats-card-icon {
+    width: 40px !important;
+    height: 40px !important;
+  }
+
+  .stats-card-icon svg {
+    width: 20px !important;
+    height: 20px !important;
+  }
+
+  .stats-card-value {
+    font-size: 20px !important;
   }
 }

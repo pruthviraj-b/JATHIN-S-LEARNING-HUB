@@ -103,13 +103,12 @@ export default function AdminLayout({ children }) {
                 </div>
             </aside>
 
-            {/* Main Content */}
-            <div style={{ flex: 1, display: 'flex', flexDirection: 'column', height: '100vh', overflowY: 'auto', width: '100%' }}>
+            {/* Main Content - Window Scroll */}
+            <div style={{ flex: 1, display: 'flex', flexDirection: 'column', minHeight: '100vh', width: '100%' }}>
 
                 {/* Modern Floating Header - Dark Glass */}
-                <header style={{
+                <header className="admin-header" style={{
                     minHeight: 80,
-                    margin: '20px 20px 10px',
                     borderRadius: 20,
                     background: 'rgba(9, 9, 11, 0.7)', // Dark glass
                     backdropFilter: 'blur(20px)',
@@ -118,7 +117,7 @@ export default function AdminLayout({ children }) {
                     justifyContent: 'space-between',
                     padding: '0 24px',
                     zIndex: 40,
-                    position: 'sticky', // Ensure it sticks on mobile if needed, or just stay relative
+                    position: 'sticky',
                     top: 20,
                     border: '1px solid #27272A'
                 }}>
@@ -130,7 +129,7 @@ export default function AdminLayout({ children }) {
                     </div>
 
                     <div style={{ display: 'flex', alignItems: 'center', gap: 15 }}>
-                        {/* Search Bar - Hidden on very small screens, or collapsed? For now, standard. */}
+                        {/* Search Bar */}
                         <div className="search-bar-container" style={{ background: '#18181B', borderRadius: 20, padding: '8px 16px', display: 'flex', alignItems: 'center', gap: 8, border: '1px solid #27272A' }}>
                             <Search size={16} color="var(--text-muted)" />
                             <input
@@ -152,30 +151,19 @@ export default function AdminLayout({ children }) {
                             </div>
                         </div>
 
-                        {/* Mobile Menu Button - Visible < 1024px */}
+                        {/* Mobile Menu Button */}
                         <button onClick={() => setSidebarOpen(true)} className="mobile-menu-btn" style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--text-main)' }}>
                             <Menu size={24} />
                         </button>
                     </div>
-
-                    <style>{`
-                        @media(max-width: 1024px) {
-                            .search-bar-container { display: none!important; }
-                            .mobile-menu-btn { display: block; }
-                            .header-actions { display: none!important; } /* Simplify header on mobile */
-                        }
-                         @media(min-width: 1025px) {
-                            .mobile-menu-btn { display: none; }
-                        }
-                    `}</style>
                 </header>
 
-                <main style={{ padding: '0 20px 40px', maxWidth: 1600, width: '100%' }}>
+                <main className="admin-main" style={{ maxWidth: 1600, width: '100%' }}>
                     {children}
                 </main>
-            </div>
+            </div >
 
-        </div>
+        </div >
     )
 }
 

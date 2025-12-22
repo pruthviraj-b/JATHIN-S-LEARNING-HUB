@@ -57,7 +57,7 @@ export default function AdminDashboard() {
         </div>
 
         {/* Content Grid */}
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: 24 }}>
+        <div className="responsive-grid">
 
           {/* Quick Actions */}
           <div className="card" style={{ minHeight: 300 }}>
@@ -68,7 +68,7 @@ export default function AdminDashboard() {
               </div>
             </div>
 
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 15 }}>
+            <div className="quick-actions-grid">
               <QuickAction href="/admin/students" label="Add Student" icon={Users} />
               <QuickAction href="/admin/classes" label="Schedule Class" icon={Calendar} />
               <QuickAction href="/admin/announcements" label="Post Notice" icon={Bell} />
@@ -107,12 +107,12 @@ export default function AdminDashboard() {
 function StatsCard({ label, value, icon: Icon, href }) {
   const Content = (
     <div className="card" style={{ flexDirection: 'row', alignItems: 'center', gap: 15, transition: 'transform 0.2s', cursor: href ? 'pointer' : 'default' }}>
-      <div style={{ width: 56, height: 56, borderRadius: '50%', background: '#18181B', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, border: '1px solid #27272A' }}>
+      <div className="stats-card-icon" style={{ width: 56, height: 56, borderRadius: '50%', background: '#18181B', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, border: '1px solid #27272A' }}>
         <Icon size={24} color="white" />
       </div>
       <div>
         <div style={{ fontSize: 14, color: 'var(--text-muted)', fontWeight: 500 }}>{label}</div>
-        <div style={{ fontSize: 24, fontWeight: 700, color: 'var(--text-main)', lineHeight: 1.2 }}>{value}</div>
+        <div className="stats-card-value" style={{ fontSize: 24, fontWeight: 700, color: 'var(--text-main)', lineHeight: 1.2 }}>{value}</div>
       </div>
     </div>
   )
