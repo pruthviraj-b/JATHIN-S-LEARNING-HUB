@@ -37,9 +37,36 @@ export default function StudentDashboard() {
   return (
     <ProtectedRoute requiredRole="STUDENT">
       <StudentLayout>
-        <div style={{ marginBottom: 30 }}>
-          <h1 style={{ margin: 0, fontSize: 28, fontWeight: 700 }}>Dashboard</h1>
-          <p style={{ color: '#666', margin: '5px 0 0 0' }}>Track your progress and schedule.</p>
+        <div style={{
+          background: 'linear-gradient(135deg, #18181B 0%, #09090B 100%)',
+          borderRadius: 24,
+          padding: '30px',
+          marginBottom: 30,
+          position: 'relative',
+          overflow: 'hidden',
+          border: '1px solid #27272A',
+          boxShadow: '0 10px 30px -10px rgba(0,0,0,0.5)'
+        }}>
+          <div style={{ position: 'relative', zIndex: 2 }}>
+            <h1 style={{ margin: 0, fontSize: 28, fontWeight: 800, background: 'linear-gradient(to right, #fff, #a1a1aa)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
+              Welcome to Jathin's Hub, {studentName} 👋
+            </h1>
+            <p style={{ color: '#A1A1AA', marginTop: 8, fontSize: 15 }}>
+              Track your progress and stay updated.
+            </p>
+          </div>
+          {/* Decorative Circle */}
+          <div style={{
+            position: 'absolute',
+            top: -50,
+            right: -50,
+            width: 150,
+            height: 150,
+            background: 'var(--secondary)',
+            opacity: 0.1,
+            borderRadius: '50%',
+            filter: 'blur(40px)'
+          }} />
         </div>
 
         <div className="stats-grid">
