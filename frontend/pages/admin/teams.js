@@ -30,7 +30,7 @@ export default function ManageTeams() {
                 apiCall('/students')
             ])
             setTeams(teamsData)
-            setStudents(studentsData)
+            setStudents(studentsData.students || studentsData || [])
             setError('')
 
             // If GET /teams fails, we might need to rely on what we have. 

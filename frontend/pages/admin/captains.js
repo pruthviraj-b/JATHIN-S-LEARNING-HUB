@@ -12,7 +12,8 @@ export default function ManageCaptains() {
     // Fetch Leaders
     const { data: leaders, mutate: mutateLeaders } = useSWR('/roles', fetcher)
     // Fetch All Students for selection
-    const { data: students } = useSWR('/students?active=true', fetcher)
+    const { data: studentsData } = useSWR('/students?active=true', fetcher)
+    const students = studentsData?.students || []
 
     const [loading, setLoading] = useState(false)
 
