@@ -56,33 +56,48 @@ export default function Profile() {
                         overflow: 'hidden',
                         maxWidth: 400,
                         margin: '0 auto',
-                        position: 'relative'
+                        position: 'relative',
+                        paddingBottom: 20
                     }}>
                         {/* Header Gradient */}
                         <div style={{ height: 100, background: 'linear-gradient(135deg, #1C2541, #0F172A)' }}></div>
 
                         {/* Avatar */}
-                        <div style={{ marginTop: -50, display: 'flex', justifyContent: 'center' }}>
+                        <div style={{ marginTop: -50, display: 'flex', justifyContent: 'center', marginBottom: 15 }}>
                             <div style={{ padding: 4, background: 'white', borderRadius: '50%' }}>
                                 <img
                                     src={s.profileUrl || `https://ui-avatars.com/api/?name=${s.firstName}+${s.lastName}&background=0D8ABC&color=fff`}
                                     style={{ width: 100, height: 100, borderRadius: '50%', objectFit: 'cover' }}
+                                    alt="Profile"
                                 />
                             </div>
-                            borderTop: '1px solid #27272A',
-                            textAlign: 'center'
-                    }}>
-                            {/* Fake Barcode Visual */}
+                        </div>
+
+                        {/* Student Info */}
+                        <div style={{ textAlign: 'center', padding: '0 20px 20px' }}>
+                            <h2 style={{ fontSize: 24, margin: '0 0 5px 0', color: '#111' }}>{s.firstName} {s.lastName}</h2>
+                            <p style={{ color: '#666', margin: 0, fontSize: 14 }}>{user.email}</p>
+
+                            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 15, marginTop: 25, textAlign: 'left', background: '#F8FAFC', padding: 20, borderRadius: 12 }}>
+                                <IDItem label="Class" value={`Class ${s.classLevel || 'N/A'}`} color="#333" />
+                                <IDItem label="DOB" value={s.dob ? new Date(s.dob).toLocaleDateString() : 'N/A'} color="#333" />
+                                <IDItem label="Phone" value={s.phoneNumber || 'N/A'} color="#333" />
+                                <IDItem label="Status" value={s.active ? 'Active' : 'Inactive'} color={s.active ? 'green' : 'red'} />
+                            </div>
+                        </div>
+
+                        {/* Barcode Footer */}
+                        <div style={{ borderTop: '1px dashed #E2E8F0', padding: '20px 0', textAlign: 'center' }}>
                             <div style={{
                                 height: 35,
                                 background: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='4' height='40' viewBox='0 0 4 40'%3E%3Crect width='2' height='40' fill='%2371717a'/%3E%3C/svg%3E")`,
                                 backgroundSize: '4px 35px',
-                                width: '80%',
+                                width: '60%',
                                 margin: '0 auto',
-                                opacity: 0.8
+                                opacity: 0.5
                             }}></div>
-                            <div style={{ fontSize: 10, color: 'var(--text-muted)', marginTop: 5, letterSpacing: 2 }}>
-                                {s.id.toUpperCase()}
+                            <div style={{ fontSize: 10, color: '#94A3B8', marginTop: 5, letterSpacing: 2, fontWeight: 700 }}>
+                                {s.id ? s.id.toUpperCase() : 'ID-PENDING'}
                             </div>
                         </div>
                     </div>
@@ -113,6 +128,7 @@ export default function Profile() {
                         </div>
                     </div>
                 </div>
+            </div>
         </StudentLayout>
         </ProtectedRoute >
     )
