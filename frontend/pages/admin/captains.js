@@ -12,8 +12,22 @@ export default function ManageCaptains() {
     // Fetch Leaders
     const { data: leaders, mutate: mutateLeaders } = useSWR('/roles', fetcher)
     // Fetch All Students for selection
-    const { data: studentsData } = useSWR('/students?active=true', fetcher)
+    const { data: studentsData, error: studentsError } = useSWR('/students?active=true', fetcher)
     const students = Array.isArray(studentsData) ? studentsData : (studentsData?.students || [])
+
+    if (studentsError) {
+        return (
+            <ProtectedRoute requiredRole="ADMIN">
+                <AdminLayout>
+                    <div style={{ padding: 20, color: 'red' }}>
+                        <h3>⚠️ Error Loading Students</h3>
+                        <p>{studentsError.message || 'Unknown error occurred'}</p>
+                        <p>Please try the <a href="/api/emergency-fix" target="_blank" style={{ textDecoration: 'underline' }}>Emergency Fix</a> again.</p>
+                    </div>
+                </AdminLayout>
+            </ProtectedRoute>
+        )
+    }
 
     const [loading, setLoading] = useState(false)
 
