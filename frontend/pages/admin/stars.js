@@ -58,6 +58,21 @@ export default function ManageStars() {
         } catch (e) { }
     }
 
+    const updateWeeklyCaptains = async () => {
+        if (!confirm("👑 Update Weekly Captains?\n\nThis will automatically assign the Captain role to the student with the HIGHEST points in each team.")) return
+
+        setLoading(prev => ({ ...prev, captains: true }))
+        try {
+            const res = await apiCall('/teams/update-captains', { method: 'POST' })
+            alert(`✅ Captains Updated!\n\n${res.updated} teams have new captains.\n${res.logs.join('\n')}`)
+            refreshAll()
+        } catch (e) {
+            alert(e.message)
+        } finally {
+            setLoading(prev => ({ ...prev, captains: false }))
+        }
+    }
+
     // Leaderboard Processing
     const topStudent = studentLeaderboard?.[0]
     const topTeam = teamLeaderboard?.[0]
@@ -286,11 +301,30 @@ export default function ManageStars() {
 
                     {/* Right Column: Leaderboards */}
                     <div className="card" style={{ height: 'fit-content', background: '#09090B', border: '1px solid #27272A' }}>
-                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 20 }}>
+                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 20, flexWrap: 'wrap', gap: 10 }}>
                             <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
                                 <div style={{ background: '#18181B', padding: 8, borderRadius: 8, border: '1px solid #27272A' }}><TrendingUp size={18} color="white" /></div>
                                 <h3 style={{ margin: 0, fontSize: 18 }}>Leaderboard</h3>
                             </div>
+
+                            <button
+                                onClick={updateWeeklyCaptains}
+                                disabled={loading.captains}
+                                style={{
+                                    background: '#18181B',
+                                    border: '1px solid #D4AF37',
+                                    color: '#D4AF37',
+                                    padding: '8px 12px',
+                                    borderRadius: 8,
+                                    cursor: 'pointer',
+                                    fontWeight: 700,
+                                    fontSize: 12,
+                                    display: 'flex', alignItems: 'center', gap: 6,
+                                    opacity: loading.captains ? 0.7 : 1
+                                }}
+                            >
+                                {loading.captains ? 'Updating...' : '👑 Update Captains'}
+                            </button>
                         </div>
 
                         <div style={{ display: 'flex', gap: 15, borderBottom: '1px solid #27272A', marginBottom: 15 }}>

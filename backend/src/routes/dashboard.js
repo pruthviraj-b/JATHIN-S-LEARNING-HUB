@@ -67,7 +67,18 @@ router.get('/student', authMiddleware(['STUDENT']), async (req, res) => {
     try {
         const userId = req.user.sub;
         // Get student record
-        const user = await prisma.user.findUnique({ where: { id: userId }, include: { student: true } });
+        const user = await prisma.user.findUnique({
+            where: { id: userId },
+            include: {
+                student: {
+                    include: {
+                        team: {
+                            include: { captain: true }
+                        }
+                    }
+                }
+            }
+        });
         if (!user || !user.student) return res.status(404).json({ error: 'Student not found' });
         const studentId = user.student.id;
         const classLevel = user.student.classLevel;
@@ -128,7 +139,14 @@ router.get('/student', authMiddleware(['STUDENT']), async (req, res) => {
             classes: upcomingClasses,
             classes: upcomingClasses,
             announcements,
-            subjects // Added
+            subjects, // Added
+            captain: user.student.team?.captain ? {
+                id: user.student.team.captain.id,
+                firstName: user.student.team.captain.firstName,
+                lastName: user.student.team.captain.lastName,
+                profileUrl: user.student.team.captain.profileUrl
+            } : null,
+            teamName: user.student.team?.name || null
         });
 
     } catch (err) {

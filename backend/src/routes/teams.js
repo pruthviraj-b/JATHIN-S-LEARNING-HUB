@@ -143,4 +143,63 @@ router.get('/leaderboard/top', async (req, res) => {
   }
 });
 
+// Update Weekly Captains (King of the Hill)
+router.post('/update-captains', async (req, res) => {
+  try {
+    // 1. Get all teams with members
+    const teams = await prisma.team.findMany({
+      include: { members: { select: { id: true, firstName: true } } }
+    });
+
+    const updates = [];
+    const logs = [];
+
+    // 2. Calculate scores for all students
+    const starCounts = await prisma.star.groupBy({
+      by: ['studentId'],
+      _sum: { points: true },
+      where: { studentId: { not: null } }
+    });
+
+    // Map studentId -> points
+    const pointsMap = {};
+    starCounts.forEach(s => pointsMap[s.studentId] = s._sum.points || 0);
+
+    // 3. Determine new captain for each team
+    for (const team of teams) {
+      if (!team.members.length) continue;
+
+      let maxPoints = -9999;
+      let bestCandidateId = null;
+
+      for (const member of team.members) {
+        const points = pointsMap[member.id] || 0;
+        // Strict > means if tie, current leader (or first found) keeps it. 
+        // Logic: "King of the Hill" -> Challenger needs MORE points to overthrow.
+        if (points > maxPoints) {
+          maxPoints = points;
+          bestCandidateId = member.id;
+        }
+      }
+
+      if (bestCandidateId && bestCandidateId !== team.captainId) {
+        updates.push(prisma.team.update({
+          where: { id: team.id },
+          data: { captainId: bestCandidateId }
+        }));
+        logs.push(`Team ${team.name}: New Captain ${bestCandidateId} (${maxPoints} pts)`);
+      }
+    }
+
+    if (updates.length > 0) {
+      await prisma.$transaction(updates);
+    }
+
+    res.json({ success: true, updated: updates.length, logs });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: err.message });
+  }
+});
+
 module.exports = router;

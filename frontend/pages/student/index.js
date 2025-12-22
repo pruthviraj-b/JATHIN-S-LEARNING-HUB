@@ -74,6 +74,21 @@ export default function StudentDashboard() {
             <DashCard title="✅ My Attendance" value={loading ? '...' : stats.attendance} icon="📝" />
           </Link>
           <DashCard title="🏆 Class Rank" value={loading ? '...' : stats.rank} icon="🎖️" />
+
+          {/* Captain / Team Card */}
+          <div style={{ background: '#09090B', borderRadius: 12, padding: 24, display: 'flex', alignItems: 'center', justifyContent: 'space-between', border: '1px solid #27272A' }}>
+            <div>
+              <div style={{ color: 'var(--text-muted)', fontSize: 13, fontWeight: 600, textTransform: 'uppercase' }}>
+                {stats.captain?.id === user?.student?.id ? '👑 You are Captain' : `👑 Captain: ${stats.captain?.firstName || 'None'}`}
+              </div>
+              <div style={{ fontSize: 18, fontWeight: 700, marginTop: 5, color: 'var(--text-main)' }}>
+                {stats.teamName || 'No Team'}
+              </div>
+            </div>
+            <div style={{ width: 48, height: 48, background: 'rgba(212, 175, 55, 0.1)', color: '#D4AF37', borderRadius: 12, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 20, border: '1px solid rgba(212, 175, 55, 0.2)' }}>
+              👑
+            </div>
+          </div>
         </div>
 
         {/* Subjects Grid (New Section) */}
