@@ -657,8 +657,8 @@ tr:hover td {
 .admin-header {
   min-height: 80px;
   border-radius: 20px;
-  background: rgba(9, 9, 11, 0.7);
-  backdrop-filter: blur(20px);
+  background: #09090B;
+  /* Removed backdrop-filter for Plain Look */
   display: flex;
   align-items: center;
   justify-content: space-between;

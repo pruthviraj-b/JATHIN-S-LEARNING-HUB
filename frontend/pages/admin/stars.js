@@ -54,11 +54,6 @@ export default function ManageStars() {
     const deleteStar = async (id) => {
         if (!confirm('Undo this award?')) return
         try {
-            // Note: Assuming a delete endpoint exists or we just don't implement delete yet if not. 
-            // Looking at routes/stars.js, DELETE isn't there. 
-            // I'll show it for UI completeness but it might need backend implementation.
-            // For now, let's assume specific deletion isn't supported by backend yet or add it later.
-            // Actually, I'll allow "Negative" awards (Deductions) instead which IS supported.
             alert("To undo, please award negative points.")
         } catch (e) { }
     }
@@ -69,13 +64,36 @@ export default function ManageStars() {
 
     // Selector Options
     const studentOptions = useMemo(() => students?.filter(s => s.active && (s.firstName.toLowerCase().includes(filterQuery) || s.lastName?.toLowerCase().includes(filterQuery))) || [], [students, filterQuery])
-    // Basic unique team extraction (can also fetch /teams if needed but extracting from students is fine for now)
+    // Basic unique team extraction
     const teamOptions = useMemo(() => {
         const map = new Map();
         students?.forEach(s => { if (s.team) map.set(s.team.id, s.team) })
         return Array.from(map.values())
     }, [students])
 
+
+    // Rank Logic (1, 1, 3) - Tie-Aware Ranking
+    const rankedStudentLeaderboard = useMemo(() => {
+        if (!studentLeaderboard) return []
+        let currentRank = 1
+        return studentLeaderboard.map((student, index) => {
+            if (index > 0 && student.points < studentLeaderboard[index - 1].points) {
+                currentRank = index + 1
+            }
+            return { ...student, rank: currentRank }
+        })
+    }, [studentLeaderboard])
+
+    const rankedTeamLeaderboard = useMemo(() => {
+        if (!teamLeaderboard) return []
+        let currentRank = 1
+        return teamLeaderboard.map((team, index) => {
+            if (index > 0 && team.points < teamLeaderboard[index - 1].points) {
+                currentRank = index + 1
+            }
+            return { ...team, rank: currentRank }
+        })
+    }, [teamLeaderboard])
 
     return (
         <ProtectedRoute requiredRole="ADMIN">
@@ -299,23 +317,23 @@ export default function ManageStars() {
                         </div>
 
                         <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-                            {(activeTab === 'students' ? studentLeaderboard : teamLeaderboard)?.slice(0, 10).map((entry, idx) => (
+                            {(activeTab === 'students' ? rankedStudentLeaderboard : rankedTeamLeaderboard)?.slice(0, 10).map((entry, idx) => (
                                 <div key={idx} style={{
                                     display: 'flex', alignItems: 'center', justifyContent: 'space-between',
                                     padding: '12px 15px',
-                                    background: idx < 3 ? 'linear-gradient(to right, #18181B, #09090B)' : 'transparent',
+                                    background: entry.rank <= 3 ? 'linear-gradient(to right, #18181B, #09090B)' : 'transparent',
                                     borderRadius: 12,
-                                    border: idx === 0 ? '1px solid #D4AF37' : idx < 3 ? '1px solid #27272A' : '1px solid transparent'
+                                    border: entry.rank === 1 ? '1px solid #D4AF37' : entry.rank <= 3 ? '1px solid #27272A' : '1px solid transparent'
                                 }}>
                                     <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
                                         <div style={{
                                             fontWeight: 700, fontSize: 14, width: 24, height: 24, borderRadius: '50%',
                                             display: 'flex', alignItems: 'center', justifyContent: 'center',
-                                            background: idx === 0 ? '#D4AF37' : idx === 1 ? '#94A3B8' : idx === 2 ? '#B45309' : '#18181B',
-                                            color: idx < 3 ? 'white' : 'var(--text-muted)',
-                                            boxShadow: idx < 3 ? '0 2px 5px rgba(0,0,0,0.2)' : 'none'
+                                            background: entry.rank === 1 ? '#D4AF37' : entry.rank === 2 ? '#94A3B8' : entry.rank === 3 ? '#B45309' : '#18181B',
+                                            color: entry.rank <= 3 ? 'white' : 'var(--text-muted)',
+                                            boxShadow: entry.rank <= 3 ? '0 2px 5px rgba(0,0,0,0.2)' : 'none'
                                         }}>
-                                            {idx + 1}
+                                            {entry.rank}
                                         </div>
                                         {activeTab === 'students' && entry.student ?
                                             <StudentProfileImage student={entry.student} size={32} /> :
