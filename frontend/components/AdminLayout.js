@@ -2,7 +2,7 @@ import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { useAuth } from '../hooks/useAuth'
 import { useState } from 'react'
-import { LayoutDashboard, Users, BookOpen, Calendar, ClipboardCheck, Star, Users2, Bell, FolderOpen, LogOut, Menu, X, Search } from 'lucide-react'
+import { LayoutDashboard, Users, BookOpen, Calendar, ClipboardCheck, Star, Users2, Bell, FolderOpen, LogOut, Menu, X, Search, Crown, Award } from 'lucide-react'
 
 export default function AdminLayout({ children }) {
     const router = useRouter()
