@@ -130,7 +130,7 @@ export default function Profile() {
                 </div>
             </div>
         </StudentLayout>
-    </ProtectedRoute >
+    </ProtectedRoute>
     )
 }
 
