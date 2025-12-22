@@ -83,46 +83,57 @@ export default function ManageStars() {
 
                 {/* Header Stats */}
                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: 20, marginBottom: 30 }}>
-                    <div className="card" style={{ background: '#09090B', color: 'white', border: '1px solid #27272A' }}>
+                    <div className="card" style={{
+                        background: 'linear-gradient(135deg, #0f172a 0%, #09090b 100%)',
+                        color: 'white',
+                        border: '1px solid #1e293b',
+                        borderLeft: '4px solid #D4AF37', // Gold Accent
+                        boxShadow: '0 4px 20px rgba(0,0,0,0.2)'
+                    }}>
                         <div style={{ display: 'flex', alignItems: 'center', gap: 15 }}>
-                            <div style={{ background: '#18181B', padding: 12, borderRadius: 12, border: '1px solid #27272A' }}>
-                                <Trophy size={24} color="white" />
+                            <div style={{ background: 'rgba(212, 175, 55, 0.1)', padding: 12, borderRadius: 12, border: '1px solid rgba(212, 175, 55, 0.2)' }}>
+                                <Trophy size={24} color="#D4AF37" />
                             </div>
                             <div>
-                                <div style={{ fontSize: 13, opacity: 0.9, color: '#A1A1AA' }}>Top Student</div>
-                                <div style={{ fontSize: 20, fontWeight: 700 }}>{topStudent ? `${topStudent.student?.firstName} ${topStudent.student?.lastName}` : '---'}</div>
-                                <div style={{ fontSize: 13, opacity: 0.8, color: '#A1A1AA' }}>{topStudent?.points || 0} Points</div>
+                                <div style={{ fontSize: 13, opacity: 0.9, color: '#94A3B8' }}>Top Student</div>
+                                <div style={{ fontSize: 20, fontWeight: 700, color: 'white' }}>{topStudent ? `${topStudent.student?.firstName} ${topStudent.student?.lastName}` : '---'}</div>
+                                <div style={{ fontSize: 13, color: '#D4AF37', fontWeight: 600 }}>{topStudent?.points || 0} Points</div>
                             </div>
                         </div>
                     </div>
 
-                    <div className="card" style={{ background: '#09090B', border: '1px solid #27272A' }}>
+                    <div className="card" style={{
+                        background: 'linear-gradient(135deg, #0f172a 0%, #09090b 100%)',
+                        border: '1px solid #1e293b',
+                        borderLeft: '4px solid #3B82F6', // Blue Accent
+                        boxShadow: '0 4px 20px rgba(0,0,0,0.2)'
+                    }}>
                         <div style={{ display: 'flex', alignItems: 'center', gap: 15 }}>
-                            <div style={{ background: '#18181B', padding: 12, borderRadius: 12, border: '1px solid #27272A' }}>
-                                <Crown size={24} color="white" />
+                            <div style={{ background: 'rgba(59, 130, 246, 0.1)', padding: 12, borderRadius: 12, border: '1px solid rgba(59, 130, 246, 0.2)' }}>
+                                <Crown size={24} color="#3B82F6" />
                             </div>
                             <div>
-                                <div style={{ fontSize: 13, color: 'var(--text-muted)' }}>Top Team</div>
-                                <div style={{ fontSize: 20, fontWeight: 700, color: 'var(--text-main)' }}>{topTeam ? topTeam.team?.name : '---'}</div>
-                                <div style={{ fontSize: 13, color: 'var(--text-muted)' }}>{topTeam?.points || 0} Points</div>
+                                <div style={{ fontSize: 13, color: '#94A3B8' }}>Top Team</div>
+                                <div style={{ fontSize: 20, fontWeight: 700, color: 'white' }}>{topTeam ? topTeam.team?.name : '---'}</div>
+                                <div style={{ fontSize: 13, color: '#3B82F6', fontWeight: 600 }}>{topTeam?.points || 0} Points</div>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <div style={{ display: 'grid', gridTemplateColumns: '1.2fr 0.8fr', gap: 24, alignItems: 'start' }}>
+                <div className="admin-stars-grid">
 
                     {/* Left Column: Awarding & Activity */}
                     <div style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
 
                         {/* Awarding Console */}
-                        <div className="card">
+                        <div className="card" style={{ border: '1px solid #27272A', background: '#09090B' }}>
                             <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 20 }}>
-                                <div style={{ background: '#18181B', padding: 8, borderRadius: 8, border: '1px solid #27272A' }}><Zap size={18} color="white" /></div>
-                                <h3 style={{ margin: 0, fontSize: 18 }}>Quick Award</h3>
+                                <div style={{ background: '#D4AF37', padding: 8, borderRadius: 8, color: 'black' }}><Zap size={18} fill="currentColor" /></div>
+                                <h3 style={{ margin: 0, fontSize: 18, color: 'white' }}>Quick Award</h3>
                             </div>
 
-                            <div style={{ display: 'flex', gap: 10, background: '#09090B', padding: 5, borderRadius: 12, width: 'fit-content', marginBottom: 20, border: '1px solid #27272A' }}>
+                            <div style={{ display: 'flex', gap: 10, background: '#18181B', padding: 5, borderRadius: 12, width: 'fit-content', marginBottom: 20, border: '1px solid #27272A' }}>
                                 <TabBtn active={!awardData.isTeam} onClick={() => setAwardData({ ...awardData, isTeam: false, targetId: '' })} label="Student" icon={User} />
                                 <TabBtn active={awardData.isTeam} onClick={() => setAwardData({ ...awardData, isTeam: true, targetId: '' })} label="Team" icon={Users} />
                             </div>
@@ -136,7 +147,7 @@ export default function ManageStars() {
                                             className="input-field"
                                             value={awardData.targetId}
                                             onChange={e => setAwardData({ ...awardData, targetId: e.target.value })}
-                                            style={{ height: 48 }}
+                                            style={{ height: 48, background: '#18181B', borderColor: '#27272A' }}
                                         >
                                             <option value="">Select {awardData.isTeam ? 'Team' : 'Student'}...</option>
                                             {!awardData.isTeam ?
@@ -153,37 +164,53 @@ export default function ManageStars() {
                                             className="input-field"
                                             value={awardData.points}
                                             onChange={e => setAwardData({ ...awardData, points: e.target.value })}
-                                            style={{ height: 48 }}
+                                            style={{ height: 48, background: '#18181B', borderColor: '#27272A' }}
                                         />
                                     </div>
                                 </div>
 
                                 <div>
                                     <label style={labelStyle}>Reason</label>
-                                    <div style={{ display: 'flex', gap: 10 }}>
+                                    <div className="award-form-row">
                                         <input
                                             className="input-field"
                                             placeholder="e.g. Excellent presentation"
                                             value={awardData.reason}
                                             onChange={e => setAwardData({ ...awardData, reason: e.target.value })}
+                                            style={{ background: '#18181B', borderColor: '#27272A', flex: 1 }}
                                         />
                                         <button
                                             type="submit"
-                                            className="btn btn-primary"
+                                            className="btn"
                                             disabled={loading[awardData.targetId]}
-                                            style={{ minWidth: 100 }}
+                                            style={{
+                                                minWidth: 100,
+                                                background: '#D4AF37',
+                                                color: 'black',
+                                                fontWeight: 700,
+                                                border: 'none'
+                                            }}
                                         >
                                             {loading[awardData.targetId] ? '...' : 'Award'}
                                         </button>
                                     </div>
-                                    <div style={{ display: 'flex', gap: 8, marginTop: 10, flexWrap: 'wrap' }}>
+                                    <div style={{ display: 'flex', gap: 8, marginTop: 12, flexWrap: 'wrap' }}>
                                         {['Homework', 'Participation', 'Discipline', 'Full Marks', 'Helping Others'].map(r => (
                                             <span
                                                 key={r}
                                                 onClick={() => setAwardData({ ...awardData, reason: r })}
-                                                style={{ fontSize: 11, background: '#18181B', padding: '4px 10px', borderRadius: 20, cursor: 'pointer', color: 'var(--text-muted)', border: '1px solid #27272A' }}
-                                                onMouseOver={e => { e.currentTarget.style.borderColor = 'white'; e.currentTarget.style.color = 'white' }}
-                                                onMouseOut={e => { e.currentTarget.style.borderColor = '#27272A'; e.currentTarget.style.color = 'var(--text-muted)' }}
+                                                style={{
+                                                    fontSize: 11,
+                                                    background: awardData.reason === r ? '#D4AF37' : '#18181B',
+                                                    padding: '6px 12px',
+                                                    borderRadius: 20,
+                                                    cursor: 'pointer',
+                                                    color: awardData.reason === r ? 'black' : '#94A3B8',
+                                                    fontWeight: awardData.reason === r ? 700 : 500,
+                                                    border: '1px solid',
+                                                    borderColor: awardData.reason === r ? '#D4AF37' : '#27272A',
+                                                    transition: 'all 0.2s'
+                                                }}
                                             >
                                                 {r}
                                             </span>
@@ -194,7 +221,7 @@ export default function ManageStars() {
                         </div>
 
                         {/* Recent Activity */}
-                        <div className="card">
+                        <div className="card" style={{ background: '#09090B', border: '1px solid #27272A' }}>
                             <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 20 }}>
                                 <div style={{ background: '#18181B', padding: 8, borderRadius: 8, border: '1px solid #27272A' }}><History size={18} color="white" /></div>
                                 <h3 style={{ margin: 0, fontSize: 18 }}>Recent Activity</h3>
@@ -208,24 +235,26 @@ export default function ManageStars() {
                                     }}>
                                         <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
                                             <div style={{
-                                                width: 36, height: 36, borderRadius: '50%',
-                                                background: '#18181B', border: '1px solid #27272A',
-                                                color: 'white',
-                                                display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 700, fontSize: 13
+                                                width: 32, height: 32, borderRadius: '50%',
+                                                background: star.points > 0 ? 'rgba(16, 185, 129, 0.1)' : 'rgba(239, 68, 68, 0.1)',
+                                                border: '1px solid',
+                                                borderColor: star.points > 0 ? 'rgba(16, 185, 129, 0.2)' : 'rgba(239, 68, 68, 0.2)',
+                                                color: star.points > 0 ? '#10B981' : '#EF4444',
+                                                display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 700, fontSize: 12
                                             }}>
                                                 {star.points > 0 ? '+' : ''}{star.points}
                                             </div>
                                             <div>
                                                 <div style={{ fontSize: 14, fontWeight: 700, color: 'var(--text-main)' }}>
                                                     {star.student?.firstName || star.team?.name || 'Unknown'}
-                                                    <span style={{ fontWeight: 400, color: 'var(--text-muted)', fontSize: 12, marginLeft: 6 }}>
+                                                    <span style={{ fontWeight: 400, color: '#64748B', fontSize: 12, marginLeft: 6 }}>
                                                         {star.teamId && !star.studentId ? '(Team)' : ''}
                                                     </span>
                                                 </div>
                                                 <div style={{ fontSize: 12, color: 'var(--text-muted)' }}>{star.reason}</div>
                                             </div>
                                         </div>
-                                        <div style={{ fontSize: 11, color: 'var(--text-muted)', textAlign: 'right' }}>
+                                        <div style={{ fontSize: 11, color: '#64748B', textAlign: 'right' }}>
                                             {new Date(star.createdAt).toLocaleDateString()}
                                             <div style={{ fontSize: 10 }}>{new Date(star.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</div>
                                         </div>
@@ -238,7 +267,7 @@ export default function ManageStars() {
                     </div>
 
                     {/* Right Column: Leaderboards */}
-                    <div className="card" style={{ height: 'fit-content' }}>
+                    <div className="card" style={{ height: 'fit-content', background: '#09090B', border: '1px solid #27272A' }}>
                         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 20 }}>
                             <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
                                 <div style={{ background: '#18181B', padding: 8, borderRadius: 8, border: '1px solid #27272A' }}><TrendingUp size={18} color="white" /></div>
@@ -251,8 +280,8 @@ export default function ManageStars() {
                                 onClick={() => setActiveTab('students')}
                                 style={{
                                     paddingBottom: 10, cursor: 'pointer', fontSize: 14, fontWeight: 600,
-                                    borderBottom: activeTab === 'students' ? '2px solid var(--primary)' : '2px solid transparent',
-                                    color: activeTab === 'students' ? 'var(--primary)' : 'var(--text-muted)'
+                                    borderBottom: activeTab === 'students' ? '2px solid #D4AF37' : '2px solid transparent',
+                                    color: activeTab === 'students' ? '#D4AF37' : 'var(--text-muted)'
                                 }}
                             >
                                 Top Students
@@ -261,8 +290,8 @@ export default function ManageStars() {
                                 onClick={() => setActiveTab('teams')}
                                 style={{
                                     paddingBottom: 10, cursor: 'pointer', fontSize: 14, fontWeight: 600,
-                                    borderBottom: activeTab === 'teams' ? '2px solid var(--primary)' : '2px solid transparent',
-                                    color: activeTab === 'teams' ? 'var(--primary)' : 'var(--text-muted)'
+                                    borderBottom: activeTab === 'teams' ? '2px solid #D4AF37' : '2px solid transparent',
+                                    color: activeTab === 'teams' ? '#D4AF37' : 'var(--text-muted)'
                                 }}
                             >
                                 Top Teams
@@ -273,27 +302,30 @@ export default function ManageStars() {
                             {(activeTab === 'students' ? studentLeaderboard : teamLeaderboard)?.slice(0, 10).map((entry, idx) => (
                                 <div key={idx} style={{
                                     display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-                                    padding: '10px 15px', background: idx < 3 ? '#18181B' : '#09090B', borderRadius: 12,
-                                    border: idx < 3 ? '1px solid #27272A' : 'none'
+                                    padding: '12px 15px',
+                                    background: idx < 3 ? 'linear-gradient(to right, #18181B, #09090B)' : 'transparent',
+                                    borderRadius: 12,
+                                    border: idx === 0 ? '1px solid #D4AF37' : idx < 3 ? '1px solid #27272A' : '1px solid transparent'
                                 }}>
                                     <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
                                         <div style={{
                                             fontWeight: 700, fontSize: 14, width: 24, height: 24, borderRadius: '50%',
                                             display: 'flex', alignItems: 'center', justifyContent: 'center',
-                                            background: idx === 0 ? 'white' : idx === 1 ? '#D4D4D8' : idx === 2 ? '#A1A1AA' : 'transparent',
-                                            color: idx < 3 ? 'black' : 'var(--text-muted)'
+                                            background: idx === 0 ? '#D4AF37' : idx === 1 ? '#94A3B8' : idx === 2 ? '#B45309' : '#18181B',
+                                            color: idx < 3 ? 'white' : 'var(--text-muted)',
+                                            boxShadow: idx < 3 ? '0 2px 5px rgba(0,0,0,0.2)' : 'none'
                                         }}>
                                             {idx + 1}
                                         </div>
                                         {activeTab === 'students' && entry.student ?
                                             <StudentProfileImage student={entry.student} size={32} /> :
-                                            <div style={{ width: 32, height: 32, borderRadius: '50%', background: '#E0E5F2', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 12 }}>👥</div>
+                                            <div style={{ width: 32, height: 32, borderRadius: '50%', background: '#1E293B', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 12 }}>👥</div>
                                         }
-                                        <div style={{ fontSize: 14, fontWeight: 600 }}>
+                                        <div style={{ fontSize: 14, fontWeight: 600, color: 'white' }}>
                                             {activeTab === 'students' ? `${entry.student?.firstName} ${entry.student?.lastName}` : entry.team?.name}
                                         </div>
                                     </div>
-                                    <div style={{ fontWeight: 700, color: 'var(--primary)', fontSize: 14 }}>
+                                    <div style={{ fontWeight: 700, color: idx === 0 ? '#D4AF37' : 'var(--text-muted)', fontSize: 14 }}>
                                         {entry.points} ⭐
                                     </div>
                                 </div>
