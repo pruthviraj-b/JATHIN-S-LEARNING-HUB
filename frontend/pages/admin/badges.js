@@ -9,6 +9,7 @@ export default function AdminBadges() {
     const [badges, setBadges] = useState([]);
     const [students, setStudents] = useState([]); // For assignment modal
     const [loading, setLoading] = useState(true);
+    const [mounted, setMounted] = useState(false);
 
     // Create Form
     const [showCreate, setShowCreate] = useState(false);
@@ -19,9 +20,12 @@ export default function AdminBadges() {
     const [searchQuery, setSearchQuery] = useState('');
 
     useEffect(() => {
+        setMounted(true);
         loadBadges();
         loadStudents();
     }, []);
+
+    if (!mounted) return null;
 
     const loadBadges = async () => {
         try {

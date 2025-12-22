@@ -57,6 +57,7 @@ app.use('/api/materials', materialsRoutes);
 app.use('/api/notifications', notificationsRoutes);
 app.use('/api/attendance', require('./routes/attendance'));
 app.use('/api/dashboard', require('./routes/dashboard'));
+app.use('/api/roles', require('./routes/roles')); // Global Roles
 app.use('/api/tasks', require('./routes/tasks'));
 app.use('/api/upload', require('./routes/upload'));
 const path = require('path');

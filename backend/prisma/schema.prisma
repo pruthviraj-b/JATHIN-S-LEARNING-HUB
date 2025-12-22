@@ -36,6 +36,10 @@ model Student {
   stars       Star[]
   tasks       Task[]
   badges      StudentBadge[]
+  
+  // Global Leadership
+  isCaptain     Boolean @default(false)
+  isViceCaptain Boolean @default(false)
 }
 
 model Subject {

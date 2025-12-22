@@ -24,7 +24,8 @@ export default function StudentDashboard() {
       try {
         setLoading(true)
         const data = await apiCall('/dashboard/student')
-        setStats(data)
+        const roles = await apiCall('/roles') // Fetch Global Leaders
+        setStats({ ...data, ...roles })
       } catch (err) {
         console.error(err)
       } finally {
@@ -76,21 +77,26 @@ export default function StudentDashboard() {
           </Link>
           <DashCard title="🏆 Class Rank" value={loading ? '...' : stats.rank} icon="🎖️" />
 
-          {/* Captain / Team Card */}
-          <div style={{ background: '#09090B', borderRadius: 12, padding: 24, display: 'flex', alignItems: 'center', justifyContent: 'space-between', border: '1px solid #27272A' }}>
-            <div>
-              <div style={{ color: 'var(--text-muted)', fontSize: 13, fontWeight: 600, textTransform: 'uppercase' }}>
-                {stats.captain?.id === user?.student?.id ? '👑 You are Captain' : `👑 Captain: ${stats.captain?.firstName || 'None'}`}
-              </div>
-              <div style={{ fontSize: 18, fontWeight: 700, marginTop: 5, color: 'var(--text-main)' }}>
-                {stats.teamName || 'No Team'}
+          {/* Institute Leaders Card */}
+          <div style={{ padding: 24, background: '#09090B', borderRadius: 16, border: '1px solid #27272A', display: 'flex', flexDirection: 'column', gap: 15 }}>
+            <h4 style={{ margin: 0, fontSize: 13, textTransform: 'uppercase', color: 'var(--text-muted)' }}>Institute Leaders</h4>
+
+            {/* Head Captain */}
+            <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+              {stats.captain ? <StudentProfileImage student={stats.captain} size={40} /> : <div style={{ width: 40, height: 40, background: '#18181B', borderRadius: '50%' }} />}
+              <div>
+                <div style={{ fontSize: 14, fontWeight: 700, color: '#D4AF37' }}>{stats.captain ? stats.captain.firstName : 'Vacant'}</div>
+                <div style={{ fontSize: 11, color: 'var(--text-muted)' }}>👑 Head Captain</div>
               </div>
             </div>
-            <div style={{ width: 48, height: 48, borderRadius: 12, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-              {stats.captain ?
-                <StudentProfileImage student={stats.captain} size={48} /> :
-                <div style={{ fontSize: 20 }}>👑</div>
-              }
+
+            {/* Vice Captain */}
+            <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+              {stats.viceCaptain ? <StudentProfileImage student={stats.viceCaptain} size={40} /> : <div style={{ width: 40, height: 40, background: '#18181B', borderRadius: '50%' }} />}
+              <div>
+                <div style={{ fontSize: 14, fontWeight: 700, color: '#94A3B8' }}>{stats.viceCaptain ? stats.viceCaptain.firstName : 'Vacant'}</div>
+                <div style={{ fontSize: 11, color: 'var(--text-muted)' }}>🛡️ Vice Captain</div>
+              </div>
             </div>
           </div>
         </div>

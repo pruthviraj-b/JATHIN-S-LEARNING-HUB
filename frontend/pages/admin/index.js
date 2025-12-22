@@ -19,7 +19,8 @@ export default function AdminDashboard() {
     async function load() {
       try {
         const data = await apiCall('/dashboard/stats')
-        setStats(data || { totalStudents: 0, classesToday: 0, attendanceRate: 0, topStudent: '—' })
+        const roles = await apiCall('/roles') // Fetch roles
+        setStats({ ...(data || {}), ...roles }) // Merge roles into stats
       } catch (e) {
         console.error(e)
       } finally {
@@ -97,51 +98,30 @@ export default function AdminDashboard() {
           />
         </div>
 
-        {/* Team Captains Grid */}
+        {/* Institute Leaders */}
         <div className="card" style={{ marginBottom: 30 }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 20 }}>
             <div style={{ background: '#18181B', padding: 8, borderRadius: 10 }}>
               <div style={{ fontSize: 18 }}>👑</div>
             </div>
-            <h3 style={{ margin: 0, fontSize: 18, color: 'var(--text-main)' }}>Current Team Captains</h3>
+            <h3 style={{ margin: 0, fontSize: 18, color: 'var(--text-main)' }}>Institute Leaders</h3>
           </div>
 
-          <div style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))',
-            gap: 15
-          }}>
-            {(stats.teamCaptains || []).length > 0 ? (stats.teamCaptains.map(team => (
-              <div key={team.id} style={{
-                background: '#18181B',
-                borderRadius: 16,
-                padding: 20,
-                border: '1px solid #27272A',
-                display: 'flex',
-                alignItems: 'center',
-                gap: 15
-              }}>
-                {team.captain ? (
-                  <>
-                    <StudentProfileImage student={team.captain} size={48} />
-                    <div>
-                      <div style={{ fontSize: 14, fontWeight: 700, color: '#D4AF37' }}>{team.captain.firstName}</div>
-                      <div style={{ fontSize: 12, color: 'var(--text-muted)' }}>{team.name}</div>
-                    </div>
-                  </>
-                ) : (
-                  <>
-                    <div style={{ width: 48, height: 48, background: '#27272A', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>❓</div>
-                    <div>
-                      <div style={{ fontSize: 14, fontWeight: 700, color: 'var(--text-muted)' }}>No Captain</div>
-                      <div style={{ fontSize: 12, color: 'var(--text-muted)' }}>{team.name}</div>
-                    </div>
-                  </>
-                )}
-              </div>
-            ))) : (
-              <div style={{ color: 'var(--text-muted)', fontSize: 14, fontStyle: 'italic' }}>No teams or captains yet.</div>
-            )}
+          <div style={{ display: 'flex', gap: 20, flexWrap: 'wrap' }}>
+            {/* Head Captain */}
+            <LeaderDisplay
+              title="Head Captain"
+              student={stats.captain}
+              color="#D4AF37"
+              icon="👑"
+            />
+            {/* Vice Captain */}
+            <LeaderDisplay
+              title="Vice Captain"
+              student={stats.viceCaptain}
+              color="#94A3B8"
+              icon="🛡️"
+            />
           </div>
         </div>
 
@@ -232,6 +212,29 @@ function QuickAction({ href, label, icon: Icon }) {
         <span style={{ fontSize: 14, fontWeight: 700, color: 'var(--text-main)' }}>{label}</span>
       </div>
     </Link>
+  )
+}
+
+function LeaderDisplay({ title, student, color, icon }) {
+  return (
+    <div style={{
+      flex: 1, minWidth: 200,
+      background: `linear-gradient(135deg, ${color}11 0%, transparent 100%)`,
+      border: `1px solid ${color}33`,
+      borderRadius: 16,
+      padding: 20,
+      display: 'flex', alignItems: 'center', gap: 15
+    }}>
+      {student ? (
+        <StudentProfileImage student={student} size={60} />
+      ) : (
+        <div style={{ width: 60, height: 60, borderRadius: '50%', background: '#18181B', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 24, border: '1px dashed #333' }}>❓</div>
+      )}
+      <div>
+        <div style={{ fontSize: 12, color: color, fontWeight: 700, textTransform: 'uppercase', marginBottom: 4 }}>{icon} {title}</div>
+        <div style={{ fontSize: 18, fontWeight: 700, color: 'white' }}>{student ? `${student.firstName} ${student.lastName || ''}` : 'Vacant'}</div>
+      </div>
+    </div>
   )
 }
 

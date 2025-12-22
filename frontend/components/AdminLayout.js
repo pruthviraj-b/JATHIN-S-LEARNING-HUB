@@ -16,6 +16,8 @@ export default function AdminLayout({ children }) {
         { label: 'Classes', href: '/admin/classes', icon: Calendar },
         { label: 'Attendance', href: '/admin/attendance', icon: ClipboardCheck },
         { label: 'Performance', href: '/admin/stars', icon: Star },
+        { label: 'Leaders', href: '/admin/captains', icon: Crown }, // Added Leaders
+        { label: 'Badges', href: '/admin/badges', icon: Award },
         { label: 'Teams', href: '/admin/teams', icon: Users2 },
         { label: 'Subjects', href: '/admin/subjects', icon: BookOpen },
         { label: 'Tests', href: '/admin/tests', icon: ClipboardCheck },

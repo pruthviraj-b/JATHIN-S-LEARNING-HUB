@@ -13,6 +13,9 @@ export default function Notifications() {
     const { data: classes } = useSWR('/classes', fetcher) // To filter by class (optional, or just hardcode class levels)
     const { data: teams } = useSWR('/teams', fetcher)
     const { data: history, mutate: mutateHistory } = useSWR('/notifications/history', fetcher)
+    const [mounted, setMounted] = useState(false)
+
+    useEffect(() => { setMounted(true) }, [])
 
     // 2. State
     const [filterType, setFilterType] = useState('all') // 'all', 'class', 'team', 'individual'
@@ -104,6 +107,7 @@ export default function Notifications() {
 
     const previewMessage = message.replace(/{name}/g, "StudentName")
 
+    if (!mounted) return null
     if (!students) return <AdminLayout><div style={{ padding: 20 }}>Loading student data...</div></AdminLayout>
 
     return (
