@@ -30,6 +30,19 @@ app.get('/api/health-check', async (req, res) => {
   }
 });
 
+// EMERGNCY FIX ROUTE: Run this if DB schema is out of sync and you can't run CLI
+app.get('/api/emergency-fix', async (req, res) => {
+  try {
+    console.log('Attempting to fix DB schema...');
+    await prisma.$executeRawUnsafe(`ALTER TABLE "Student" ADD COLUMN IF NOT EXISTS "isCaptain" BOOLEAN NOT NULL DEFAULT false;`);
+    await prisma.$executeRawUnsafe(`ALTER TABLE "Student" ADD COLUMN IF NOT EXISTS "isViceCaptain" BOOLEAN NOT NULL DEFAULT false;`);
+    res.json({ success: true, message: 'Columns isCaptain/isViceCaptain added (if missing).' });
+  } catch (e) {
+    console.error(e);
+    res.status(500).json({ error: e.message });
+  }
+});
+
 const authRoutes = require('./routes/auth');
 const studentsRoutes = require('./routes/students');
 const subjectsRoutes = require('./routes/subjects');
