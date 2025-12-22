@@ -12,7 +12,6 @@ export default function StudentDashboard() {
     stars: 0,
     rank: '—',
     attendance: '—',
-    attendance: '—',
     classes: [],
     announcements: [],
     subjects: [] // Added
