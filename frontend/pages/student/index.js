@@ -23,11 +23,27 @@ export default function StudentDashboard() {
     async function load() {
       try {
         setLoading(true)
-        const data = await apiCall('/dashboard/student')
-        const roles = await apiCall('/roles') // Fetch Global Leaders
-        setStats({ ...data, ...roles })
+
+        // Fetch in parallel but handle failures independently
+        const [dashboardRes, rolesRes] = await Promise.allSettled([
+          apiCall('/dashboard/student'),
+          apiCall('/roles')
+        ])
+
+        const dashboardData = dashboardRes.status === 'fulfilled' ? dashboardRes.value : {}
+        const rolesData = rolesRes.status === 'fulfilled' ? rolesRes.value : {}
+
+        if (dashboardRes.status === 'rejected') {
+          console.error('Dashboard API failed:', dashboardRes.reason)
+        }
+        if (rolesRes.status === 'rejected') {
+          console.error('Roles API failed:', rolesRes.reason)
+        }
+
+        // Merge what we have. If dashboard failed, we at least show structure (though empty values)
+        setStats(prev => ({ ...prev, ...dashboardData, ...rolesData }))
       } catch (err) {
-        console.error(err)
+        console.error('Critical Layout Error:', err)
       } finally {
         setLoading(false)
       }
