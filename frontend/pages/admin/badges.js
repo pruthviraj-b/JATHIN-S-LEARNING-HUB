@@ -106,24 +106,22 @@ export default function AdminBadges() {
             )}
 
             {/* Badges Grid */}
+            {/* Badges Grid - DEBUGGING */}
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(250px, 1fr))', gap: 20 }}>
+                {/* 
                 {Array.isArray(badges) && badges.filter(Boolean).map(badge => (
                     <div key={badge.id} className="card" style={{ flexDirection: 'row', alignItems: 'center', gap: 15, padding: 15 }}>
-                        <BadgeCard badge={badge} />
+                        <div style={{width: 50, height: 50, background: 'gold'}}>DEBUG ITEM</div>
                         <div style={{ flex: 1 }}>
                             <div style={{ fontWeight: 700, fontSize: 16, color: 'var(--text-main)' }}>{badge.name}</div>
-                            <div style={{ fontSize: 12, color: 'var(--text-muted)' }}>{badge.description}</div>
-                            <div style={{ marginTop: 10, display: 'flex', gap: 8 }}>
-                                <button className="btn btn-secondary" style={{ padding: '6px 10px', fontSize: 12 }} onClick={() => setAssignTarget(badge.id)}>
-                                    <UserPlus size={14} /> Assign
-                                </button>
-                                <button className="btn btn-secondary" style={{ padding: '6px 10px', fontSize: 12, color: 'white', background: 'var(--danger)', boxShadow: 'none' }} onClick={() => handleDelete(badge.id)}>
-                                    <Trash2 size={14} />
-                                </button>
-                            </div>
+                             <div style={{ fontSize: 12, color: 'var(--text-muted)' }}>{badge.description}</div>
                         </div>
                     </div>
-                ))}
+                ))} 
+                */}
+                <div style={{ gridColumn: '1/-1', padding: 20, background: '#e0f2fe', color: '#0369a1', borderRadius: 8 }}>
+                    DEBUG MODE: Grid is hidden. If you see this, the page layout is working.
+                </div>
             </div>
 
             {/* Assignment Modal Overhead (Simple Implementation) */}
