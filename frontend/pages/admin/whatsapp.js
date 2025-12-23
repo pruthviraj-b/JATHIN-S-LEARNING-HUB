@@ -118,7 +118,14 @@ export default function WhatsAppManager() {
                 {status !== 'ready' ? (
                     <div className="card" style={{ textAlign: 'center', padding: 50 }}>
                         {status === 'initializing' && <h3>Connecting to WhatsApp Server...</h3>}
-                        {status === 'disconnected' && <h3>Disconnected. Waiting for server to restart...</h3>}
+                        {status === 'disconnected' && (
+                            <div>
+                                <h3>Bot is Offline</h3>
+                                <button className="btn-primary" onClick={() => apiCall('/whatsapp/start', { method: 'POST' }).then(checkStatus)}>
+                                    Start WhatsApp Bot
+                                </button>
+                            </div>
+                        )}
                         {status === 'qr_ready' && qrCode && (
                             <div>
                                 <h2 style={{ marginBottom: 20 }}>Scan QR Code</h2>

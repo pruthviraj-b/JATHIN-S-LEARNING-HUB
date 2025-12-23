@@ -1,9 +1,15 @@
 const express = require('express');
 const router = express.Router();
 const { authMiddleware } = require('../middleware/auth');
-const { getWhatsAppStatus, sendWhatsAppMessage, logoutWhatsApp } = require('../services/whatsappClient');
+const { getWhatsAppStatus, sendWhatsAppMessage, logoutWhatsApp, startWhatsApp } = require('../services/whatsappClient');
 const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
+
+// Start Bot
+router.post('/start', authMiddleware(['ADMIN']), async (req, res) => {
+    startWhatsApp();
+    res.json({ message: 'Starting WhatsApp Client...' });
+});
 
 // Get Status (for Admin Panel)
 router.get('/status', authMiddleware(['ADMIN']), (req, res) => {

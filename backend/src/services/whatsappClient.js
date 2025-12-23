@@ -52,8 +52,18 @@ const initializeWhatsApp = () => {
     client.initialize();
 };
 
-// Start immediately (or can be lazy loaded)
-initializeWhatsApp();
+// Don't start immediately
+// initializeWhatsApp();
+
+const startWhatsApp = async () => {
+    if (customStatus === 'ready' || customStatus === 'initializing') return;
+    try {
+        initializeWhatsApp();
+    } catch (e) {
+        console.error('Failed to start WhatsApp:', e);
+        customStatus = 'disconnected';
+    }
+};
 
 const getWhatsAppStatus = () => {
     return {
@@ -61,6 +71,7 @@ const getWhatsAppStatus = () => {
         qrCode: qrCodeData
     };
 };
+
 
 const sendWhatsAppMessage = async (phone, message) => {
     if (customStatus !== 'ready') throw new Error('WhatsApp client not ready');
@@ -88,4 +99,4 @@ const logoutWhatsApp = async () => {
     }
 };
 
-module.exports = { getWhatsAppStatus, sendWhatsAppMessage, logoutWhatsApp };
+module.exports = { getWhatsAppStatus, sendWhatsAppMessage, logoutWhatsApp, startWhatsApp };
