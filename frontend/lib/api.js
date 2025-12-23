@@ -8,12 +8,12 @@ const getApiUrl = () => {
   if (process.env.NEXT_PUBLIC_API_URL) return process.env.NEXT_PUBLIC_API_URL;
 
   // Local Development
-  if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+  if (hostname === 'localhost' || hostname === '127.0.0.1') {
     return 'http://localhost:4000/api';
   }
 
-  // Production (Vercel): Use relative path so it uses the same domain (and Vercel Rewrites/Functions)
-  return '/api';
+  // Production (Render Backend)
+  return 'https://jathin-s-learning-hub.onrender.com/api';
 }
 
 const API_BASE = getApiUrl();
