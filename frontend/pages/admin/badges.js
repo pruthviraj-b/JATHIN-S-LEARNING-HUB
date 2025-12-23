@@ -30,7 +30,9 @@ export default function AdminBadges() {
     const loadStudents = async () => {
         try {
             const data = await apiCall('/students?limit=1000');
-            setStudents(data?.students || []);
+            // FIX: Handle if API returns direct array OR object with students property
+            const list = Array.isArray(data) ? data : (data?.students || []);
+            setStudents(list);
         } catch (err) { console.error(err); setStudents([]); }
     };
 
@@ -153,6 +155,9 @@ export default function AdminBadges() {
                             </div>
 
                             <div style={{ overflowY: 'auto', flex: 1 }}>
+                                {filteredStudents.length === 0 && (
+                                    <div style={{ padding: 20, textAlign: 'center', color: 'var(--text-muted)' }}>No students found</div>
+                                )}
                                 {filteredStudents.map(s => (
                                     <div key={s.id} onClick={() => handleAssign(s.id)} style={{ padding: '10px', borderBottom: '1px solid var(--glass-border)', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 10, transition: 'background 0.2s' }} onMouseEnter={e => e.currentTarget.style.background = 'rgba(0,0,0,0.02)'} onMouseLeave={e => e.currentTarget.style.background = 'transparent'}>
                                         <div style={{ width: 30, height: 30, borderRadius: '50%', background: '#eee', overflow: 'hidden' }}>
