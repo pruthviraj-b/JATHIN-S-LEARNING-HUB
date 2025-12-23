@@ -37,8 +37,8 @@ export default function AdminBadges() {
     const loadStudents = async () => {
         try {
             const data = await apiCall('/students?limit=1000'); // Get all for simplicity
-            setStudents(data.students || []);
-        } catch (err) { console.error(err); }
+            setStudents(data?.students || []);
+        } catch (err) { console.error(err); setStudents([]); }
     };
 
     const handleCreate = async () => {
@@ -70,8 +70,8 @@ export default function AdminBadges() {
         } catch (err) { alert(err.message); }
     };
 
-    const filteredStudents = students.filter(s =>
-        (s.firstName + ' ' + s.lastName).toLowerCase().includes(searchQuery.toLowerCase())
+    const filteredStudents = (students || []).filter(s =>
+        s && ((s.firstName || '') + ' ' + (s.lastName || '')).toLowerCase().includes(searchQuery.toLowerCase())
     );
 
     return (
