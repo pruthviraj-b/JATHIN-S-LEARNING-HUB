@@ -9,7 +9,8 @@ export default function Document() {
                 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0" />
                 <meta name="apple-mobile-web-app-capable" content="yes" />
                 <meta name="apple-mobile-web-app-status-bar-style" content="default" />
-                <link rel="apple-touch-icon" href="/icon-192x192.png" />
+                <meta name="apple-mobile-web-app-title" content="JathinHub" />
+                <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
             </Head>
             <body>
                 <Main />
