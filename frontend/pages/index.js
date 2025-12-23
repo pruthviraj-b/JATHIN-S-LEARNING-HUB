@@ -30,7 +30,7 @@ export default function Login() {
     if (typeof window !== 'undefined') {
       const hostname = window.location.hostname;
       if (hostname === 'localhost' || hostname === '127.0.0.1') return 'http://localhost:4000/api';
-      return 'https://jathin-s-learning-hub.onrender.com/api';
+      return 'https://jathin-backend-final.onrender.com/api';
     }
     return 'Server Side';
   }

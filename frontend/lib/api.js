@@ -10,7 +10,7 @@ const getApiUrl = () => {
   }
 
   // Production (Render Backend)
-  return 'https://jathin-s-learning-hub.onrender.com/api';
+  return 'https://jathin-backend-final.onrender.com/api';
 }
 
 const API_BASE = getApiUrl();
