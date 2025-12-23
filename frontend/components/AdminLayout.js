@@ -2,7 +2,7 @@ import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { useAuth } from '../hooks/useAuth'
 import { useState } from 'react'
-import { LayoutDashboard, Users, BookOpen, Calendar, ClipboardCheck, Star, Users2, Bell, FolderOpen, LogOut, Menu, X, Search, Crown, Award } from 'lucide-react'
+import { LayoutDashboard, Users, BookOpen, Calendar, ClipboardCheck, Star, Users2, Bell, FolderOpen, LogOut, Menu, X, Search, Crown, Award, MessageCircle } from 'lucide-react'
 
 export default function AdminLayout({ children }) {
     const router = useRouter()
@@ -23,6 +23,7 @@ export default function AdminLayout({ children }) {
         { label: 'Tests', href: '/admin/tests', icon: ClipboardCheck },
         { label: 'Materials', href: '/admin/materials', icon: FolderOpen },
         { label: 'Notices', href: '/admin/announcements', icon: Bell },
+        { label: 'WhatsApp', href: '/admin/whatsapp', icon: MessageCircle },
     ]
 
     // Get current page label
