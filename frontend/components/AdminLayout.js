@@ -3,11 +3,13 @@ import { useRouter } from 'next/router'
 import { useAuth } from '../hooks/useAuth'
 import { useState } from 'react'
 import { LayoutDashboard, Users, BookOpen, Calendar, ClipboardCheck, Star, Users2, Bell, FolderOpen, LogOut, Menu, X, Search, Crown, Award, MessageCircle } from 'lucide-react'
+import ChatSlider from './ChatSlider'
 
 export default function AdminLayout({ children }) {
     const router = useRouter()
     const { logout } = useAuth()
     const [sidebarOpen, setSidebarOpen] = useState(false)
+    const [chatOpen, setChatOpen] = useState(false)
 
     // Navigation Items configuration
     const navItems = [
@@ -126,6 +128,22 @@ export default function AdminLayout({ children }) {
                             <button style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 0 }} aria-label="Notifications">
                                 <Bell size={20} color="var(--text-muted)" />
                             </button>
+                            {/* Chat Toggle Button */}
+                            <button
+                                onClick={() => setChatOpen(true)}
+                                style={{
+                                    background: 'var(--primary)', // Navy
+                                    border: 'none',
+                                    cursor: 'pointer',
+                                    padding: 8,
+                                    borderRadius: '50%',
+                                    display: 'flex', alignItems: 'center', justifyContent: 'center',
+                                    color: 'var(--secondary)' // Gold icon
+                                }}
+                                aria-label="Open Chat"
+                            >
+                                <MessageCircle size={20} fill="currentColor" />
+                            </button>
                             <div style={{ width: 35, height: 35, background: 'white', borderRadius: '50%', color: 'black', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 14, fontWeight: 700 }}>
                                 AP
                             </div>
@@ -147,8 +165,14 @@ export default function AdminLayout({ children }) {
                 <main className="admin-main">
                     {children}
                 </main>
+                {/* Chat Slider Overlay */}
+                <ChatSlider
+                    isOpen={chatOpen}
+                    onClose={() => setChatOpen(false)}
+                    studentId={null} // Admins don't have studentId
+                    isAdmin={true}
+                />
             </div>
-
         </div>
     )
 }
