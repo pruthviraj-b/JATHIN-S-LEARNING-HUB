@@ -2,7 +2,7 @@ const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
 
 const router = require('express').Router();
-const authMiddleware = require('../middleware/auth');
+const { authMiddleware } = require('../middleware/auth');
 
 // Get all chat rooms for a user (student sees their rooms, admin sees all)
 router.get('/rooms', authMiddleware(['ADMIN', 'STUDENT']), async (req, res) => {
