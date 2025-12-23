@@ -73,7 +73,6 @@ app.use('/api/dashboard', require('./routes/dashboard'));
 app.use('/api/roles', require('./routes/roles')); // Global Roles
 app.use('/api/tasks', require('./routes/tasks'));
 app.use('/api/upload', require('./routes/upload'));
-app.use('/api/whatsapp', require('./routes/whatsapp'));
 const path = require('path');
 
 // Serve static files from uploads directory with CORS and absolute path

@@ -24,20 +24,29 @@ router.post('/logout', authMiddleware(['ADMIN']), async (req, res) => {
 
 // Bulk Send
 router.post('/send', authMiddleware(['ADMIN']), async (req, res) => {
-    const { studentIds, message } = req.body;
+    const { studentIds, message, broadcast } = req.body;
 
-    if (!studentIds || !Array.isArray(studentIds) || studentIds.length === 0) {
-        return res.status(400).json({ error: 'No recipients selected' });
-    }
     if (!message) {
         return res.status(400).json({ error: 'Message content empty' });
     }
 
-    // Fetch students to get phone numbers
-    const students = await prisma.student.findMany({
-        where: { id: { in: studentIds } },
-        select: { id: true, firstName: true, phoneNumber: true }
-    });
+    let students = [];
+    if (broadcast) {
+        // Fetch ALL students with phone numbers
+        students = await prisma.student.findMany({
+            where: { phoneNumber: { not: null } },
+            select: { id: true, firstName: true, phoneNumber: true }
+        });
+    } else {
+        if (!studentIds || !Array.isArray(studentIds) || studentIds.length === 0) {
+            return res.status(400).json({ error: 'No recipients selected' });
+        }
+        // Fetch selected students
+        students = await prisma.student.findMany({
+            where: { id: { in: studentIds } },
+            select: { id: true, firstName: true, phoneNumber: true }
+        });
+    }
 
     const results = {
         success: [],

@@ -23,7 +23,6 @@ export default function AdminLayout({ children }) {
         { label: 'Tests', href: '/admin/tests', icon: ClipboardCheck },
         { label: 'Materials', href: '/admin/materials', icon: FolderOpen },
         { label: 'Notices', href: '/admin/announcements', icon: Bell },
-        { label: 'WhatsApp', href: '/admin/whatsapp', icon: MessageCircle },
     ]
 
     // Get current page label
