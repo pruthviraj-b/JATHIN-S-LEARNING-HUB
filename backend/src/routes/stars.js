@@ -68,6 +68,18 @@ router.get('/all', authMiddleware(['ADMIN']), async (req, res) => {
   }
 });
 
+// Delete a star entry (Admin only)
+router.delete('/:id', authMiddleware(['ADMIN']), async (req, res) => {
+  try {
+    const { id } = req.params;
+    await prisma.star.delete({ where: { id } });
+    res.json({ success: true });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'server error' });
+  }
+});
+
 // Leaderboard - students
 router.get('/leaderboard/students', authMiddleware(['ADMIN', 'STUDENT']), async (req, res) => {
   try {

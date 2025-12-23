@@ -57,10 +57,13 @@ export default function ManageStars() {
     }
 
     const deleteStar = async (id) => {
-        if (!confirm('Undo this award?')) return
+        if (!confirm('Permanently delete this activity record? This will adjust points.')) return
         try {
-            alert("To undo, please award negative points.")
-        } catch (e) { }
+            await apiCall(`/stars/${id}`, { method: 'DELETE' })
+            refreshAll()
+        } catch (e) {
+            alert(e.message)
+        }
     }
 
     const performBulkAward = async () => {
@@ -548,8 +551,15 @@ export default function ManageStars() {
                                             <div style={{ fontSize: 12, color: 'var(--text-muted)' }}>{star.reason}</div>
                                         </div>
                                     </div>
-                                    <div style={{ fontSize: 11, color: 'var(--text-muted)', textAlign: 'right' }}>
-                                        {new Date(star.createdAt).toLocaleDateString()}
+                                    <div style={{ fontSize: 11, color: 'var(--text-muted)', textAlign: 'right', display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: 4 }}>
+                                        <button
+                                            onClick={() => deleteStar(star.id)}
+                                            style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 2, color: '#9CA3AF' }}
+                                            title="Delete Record"
+                                        >
+                                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 6L6 18M6 6l12 12" /></svg>
+                                        </button>
+                                        <div>{new Date(star.createdAt).toLocaleDateString()}</div>
                                         <div style={{ fontSize: 10 }}>{new Date(star.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</div>
                                     </div>
                                 </div>
