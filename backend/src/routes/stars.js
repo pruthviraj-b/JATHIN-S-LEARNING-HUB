@@ -8,7 +8,7 @@ const router = express.Router();
 // Public: list recent stars
 router.get('/', async (req, res) => {
   try {
-    const stars = await prisma.star.findMany({ orderBy: { createdAt: 'desc' }, take: 50 });
+    const stars = await prisma.star.findMany({ orderBy: { createdAt: 'desc' }, take: 50, include: { student: true, team: true } });
     res.json(stars);
   } catch (err) {
     console.error(err);
