@@ -38,10 +38,14 @@ export default function ManageStars() {
         setLoading(prev => ({ ...prev, [targetId]: true }))
 
         try {
+            // If the selected date is TODAY, use the current time. Otherwise use the selected date.
+            const isToday = date === new Date().toISOString().split('T')[0];
+            const timestamp = isToday ? new Date().toISOString() : date;
+
             const body = {
                 points: Number(awardData.points),
                 reason: awardData.reason,
-                date,
+                date: timestamp,
                 [awardData.isTeam ? 'teamId' : 'studentId']: targetId
             }
 
@@ -71,13 +75,16 @@ export default function ManageStars() {
         if (!bulkData.reason) return alert('Please enter a reason')
 
         try {
+            const isToday = date === new Date().toISOString().split('T')[0];
+            const timestamp = isToday ? new Date().toISOString() : date;
+
             await Promise.all(selectedStudents.map(studentId =>
                 apiCall('/stars', {
                     method: 'POST', body: JSON.stringify({
                         studentId,
                         points: Number(bulkData.points),
                         reason: bulkData.reason,
-                        date
+                        date: timestamp
                     })
                 })
             ))
