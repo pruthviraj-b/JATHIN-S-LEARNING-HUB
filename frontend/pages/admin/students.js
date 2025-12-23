@@ -18,7 +18,8 @@ export default function ManageStudents() {
   // Form State
   const [formData, setFormData] = useState({
     firstName: '', lastName: '', email: '', password: '', dob: '',
-    profileUrl: '', active: true, classLevel: 1, teamId: '', phoneNumber: ''
+    profileUrl: '', active: true, classLevel: 1, teamId: '', phoneNumber: '',
+    motherName: '', fatherName: '', parentPhone: ''
   })
   const [submitting, setSubmitting] = useState(false)
 
@@ -27,6 +28,12 @@ export default function ManageStudents() {
   const [starModal, setStarModal] = useState(null)
   const [starData, setStarData] = useState({ reason: 'Excellent Performance', points: 1 })
   const [editingId, setEditingId] = useState(null)
+
+  // Bulk Star Awarding
+  const [selectedStudents, setSelectedStudents] = useState([])
+  const [bulkStarMode, setBulkStarMode] = useState(false)
+  const [showBulkModal, setShowBulkModal] = useState(false)
+  const [bulkStarData, setBulkStarData] = useState({ reason: 'Excellent Performance', points: 1 })
 
   const [uploading, setUploading] = useState(false)
   const [cropImage, setCropImage] = useState(null) // Image to crop
@@ -115,6 +122,37 @@ export default function ManageStudents() {
     } catch (err) { alert(err.message) }
   }
 
+  const awardBulkStars = async () => {
+    if (!bulkStarData.reason || selectedStudents.length === 0) {
+      alert('Please select students and provide a reason')
+      return
+    }
+    try {
+      await Promise.all(selectedStudents.map(studentId =>
+        apiCall('/stars', { method: 'POST', body: JSON.stringify({ studentId, reason: bulkStarData.reason, points: Number(bulkStarData.points) }) })
+      ))
+      setShowBulkModal(false)
+      setSelectedStudents([])
+      setBulkStarMode(false)
+      alert(`Successfully awarded ${bulkStarData.points} points to ${selectedStudents.length} students!`)
+      await fetchData()
+    } catch (err) { alert(err.message) }
+  }
+
+  const toggleSelectStudent = (studentId) => {
+    setSelectedStudents(prev =>
+      prev.includes(studentId) ? prev.filter(id => id !== studentId) : [...prev, studentId]
+    )
+  }
+
+  const toggleSelectAll = () => {
+    if (selectedStudents.length === filteredStudents.length) {
+      setSelectedStudents([])
+    } else {
+      setSelectedStudents(filteredStudents.map(s => s.id))
+    }
+  }
+
   const handleDelete = async (studentId) => {
     if (!confirm('Prepare to delete student?')) return
     try {
@@ -196,9 +234,49 @@ export default function ManageStudents() {
                 style={{ border: 'none', outline: 'none', marginLeft: 10, width: '100%', fontSize: 14, color: 'black' }}
               />
             </div>
-            <button onClick={() => { setEditingId(null); setFormData(initialFormState); setShowForm(true) }} className="btn btn-primary" style={{ borderRadius: 30, padding: '12px 24px' }}>
-              <Plus size={18} /> Add Student
-            </button>
+            <div style={{ display: 'flex', gap: 10 }}>
+              {!bulkStarMode && (
+                <button
+                  onClick={() => { setBulkStarMode(true); setSelectedStudents([]) }}
+                  className="btn btn-outline"
+                  style={{ borderRadius: 30, padding: '12px 24px', borderColor: 'var(--secondary)', color: 'var(--secondary)' }}
+                >
+                  <StarIcon size={16} style={{ marginRight: 8 }} />
+                  Bulk Award Stars
+                </button>
+              )}
+              {bulkStarMode && (
+                <>
+                  <button
+                    onClick={toggleSelectAll}
+                    className="btn btn-outline"
+                    style={{ borderRadius: 30, padding: '12px 24px' }}
+                  >
+                    {selectedStudents.length === filteredStudents.length ? 'Deselect All' : 'Select All'}
+                  </button>
+                  <button
+                    onClick={() => { setShowBulkModal(true) }}
+                    className="btn btn-primary"
+                    style={{ borderRadius: 30, padding: '12px 24px' }}
+                    disabled={selectedStudents.length === 0}
+                  >
+                    Award to {selectedStudents.length} Student{selectedStudents.length !== 1 ? 's' : ''}
+                  </button>
+                  <button
+                    onClick={() => { setBulkStarMode(false); setSelectedStudents([]) }}
+                    className="btn btn-outline"
+                    style={{ borderRadius: 30, padding: '12px 24px', borderColor: '#DC2626', color: '#DC2626' }}
+                  >
+                    Cancel
+                  </button>
+                </>
+              )}
+              {!bulkStarMode && (
+                <button onClick={() => { setEditingId(null); setFormData(initialFormState); setShowForm(true) }} className="btn btn-primary" style={{ borderRadius: 30, padding: '12px 24px' }}>
+                  <Plus size={18} /> Add Student
+                </button>
+              )}
+            </div>
           </div>
         )}
 
@@ -257,6 +335,11 @@ export default function ManageStudents() {
                   <div><label style={labelStyle}>Date of Birth</label><input type="date" className="input-field" value={formData.dob} onChange={e => setFormData({ ...formData, dob: e.target.value })} /></div>
                   <div><label style={labelStyle}>Phone</label><input className="input-field" value={formData.phoneNumber} onChange={e => setFormData({ ...formData, phoneNumber: e.target.value })} /></div>
 
+                  <div style={{ gridColumn: 'span 2', marginTop: 10 }}><h4 style={{ fontSize: 14, textTransform: 'uppercase', color: 'var(--primary)', letterSpacing: 1 }}>Parent Info</h4></div>
+                  <div><label style={labelStyle}>Mother Name</label><input className="input-field" value={formData.motherName || ''} onChange={e => setFormData({ ...formData, motherName: e.target.value })} /></div>
+                  <div><label style={labelStyle}>Father Name</label><input className="input-field" value={formData.fatherName || ''} onChange={e => setFormData({ ...formData, fatherName: e.target.value })} /></div>
+                  <div style={{ gridColumn: 'span 2' }}><label style={labelStyle}>Parent Phone</label><input className="input-field" value={formData.parentPhone || ''} onChange={e => setFormData({ ...formData, parentPhone: e.target.value })} /></div>
+
                   <div style={{ gridColumn: 'span 2', marginTop: 10 }}><h4 style={{ fontSize: 14, textTransform: 'uppercase', color: 'var(--primary)', letterSpacing: 1 }}>Academic</h4></div>
                   <div>
                     <label style={labelStyle}>Class</label>
@@ -300,6 +383,7 @@ export default function ManageStudents() {
             <table className="desktop-only">
               <thead>
                 <tr>
+                  {bulkStarMode && <th style={{ width: 40 }}></th>}
                   <th style={{ width: 50 }}>#</th>
                   <th>Name</th>
                   <th>Status</th>
@@ -311,7 +395,21 @@ export default function ManageStudents() {
               </thead>
               <tbody>
                 {filteredStudents.map((s, idx) => (
-                  <tr key={s.id}>
+                  <tr key={s.id} style={{
+                    borderBottom: '1px solid #27272A',
+                    background: selectedStudents.includes(s.id) ? 'rgba(212, 175, 55, 0.15)' : 'transparent',
+                    transition: 'background 0.2s'
+                  }}>
+                    {bulkStarMode && (
+                      <td>
+                        <input
+                          type="checkbox"
+                          checked={selectedStudents.includes(s.id)}
+                          onChange={() => toggleSelectStudent(s.id)}
+                          style={{ width: 18, height: 18, cursor: 'pointer', accentColor: 'var(--secondary)' }}
+                        />
+                      </td>
+                    )}
                     <td style={{ color: 'var(--text-muted)' }}>{idx + 1}</td>
                     <td>
                       <div style={{ display: 'flex', alignItems: 'center', gap: 15 }}>
@@ -410,23 +508,106 @@ export default function ManageStudents() {
         {/* --- Modals --- */}
 
         {/* Star Modal */}
-        {starModal && (
+        {starModal && (() => {
+          const student = students.find(s => s.id === starModal)
+          return (
+            <div style={modalOverlayStyle}>
+              <div className="card" style={{ width: 420, transform: 'translateY(0)' }}>
+                <h3 style={{ fontSize: 20, marginBottom: 5 }}>Award Points</h3>
+                <p style={{ fontSize: 14, color: 'var(--text-muted)', marginBottom: 20 }}>Recognize student achievement!</p>
+
+                {/* Student Info */}
+                {student && (
+                  <div style={{ background: '#18181B', padding: 15, borderRadius: 12, marginBottom: 20 }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 12 }}>
+                      <StudentProfileImage student={student} size={50} />
+                      <div>
+                        <div style={{ fontSize: 16, fontWeight: 700, color: 'white' }}>{student.firstName} {student.lastName}</div>
+                        <div style={{ fontSize: 13, color: '#A1A1AA' }}>{student.user?.email}</div>
+                      </div>
+                    </div>
+                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10, fontSize: 13 }}>
+                      {student.motherName && (
+                        <div>
+                          <div style={{ color: '#52525B', fontSize: 11, marginBottom: 2 }}>Mother</div>
+                          <div style={{ color: '#E4E4E7', fontWeight: 600 }}>{student.motherName}</div>
+                        </div>
+                      )}
+                      {student.fatherName && (
+                        <div>
+                          <div style={{ color: '#52525B', fontSize: 11, marginBottom: 2 }}>Father</div>
+                          <div style={{ color: '#E4E4E7', fontWeight: 600 }}>{student.fatherName}</div>
+                        </div>
+                      )}
+                      {student.parentPhone && (
+                        <div style={{ gridColumn: '1 / -1' }}>
+                          <div style={{ color: '#52525B', fontSize: 11, marginBottom: 2 }}>Parent Phone</div>
+                          <div style={{ color: '#E4E4E7', fontWeight: 600 }}>{student.parentPhone}</div>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                )}
+
+                <div style={{ marginBottom: 15 }}>
+                  <label style={labelStyle}>Reason</label>
+                  <input className="input-field" value={starData.reason} onChange={e => setStarData({ ...starData, reason: e.target.value })} />
+                </div>
+                <div style={{ marginBottom: 20 }}>
+                  <label style={labelStyle}>Points</label>
+                  <input type="number" className="input-field" value={starData.points} onChange={e => setStarData({ ...starData, points: e.target.value })} />
+                </div>
+                <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 10 }}>
+                  <button onClick={() => setStarModal(null)} className="btn btn-outline">Cancel</button>
+                  <button onClick={() => awardStar(starModal)} className="btn btn-primary">Award Star</button>
+                </div>
+              </div>
+            </div>
+          )
+        })()}
+
+        {/* Bulk Star Modal */}
+        {showBulkModal && (
           <div style={modalOverlayStyle}>
-            <div className="card" style={{ width: 350, transform: 'translateY(0)' }}>
-              <h3 style={{ fontSize: 20, marginBottom: 5 }}>Award Points</h3>
-              <p style={{ fontSize: 14, color: 'var(--text-muted)', marginBottom: 20 }}>Recognize student achievement!</p>
+            <div className="card" style={{ width: 450, transform: 'translateY(0)' }}>
+              <h3 style={{ fontSize: 20, marginBottom: 5 }}>Bulk Award Points</h3>
+              <p style={{ fontSize: 14, color: 'var(--text-muted)', marginBottom: 20 }}>Award points to {selectedStudents.length} selected student{selectedStudents.length !== 1 ? 's' : ''}</p>
+
+              {/* Selected Students Preview */}
+              <div style={{ background: '#18181B', padding: 15, borderRadius: 12, marginBottom: 20, maxHeight: 200, overflowY: 'auto' }}>
+                <div style={{ fontSize: 12, fontWeight: 700, color: '#52525B', marginBottom: 10, textTransform: 'uppercase' }}>Selected Students</div>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+                  {selectedStudents.map(id => {
+                    const student = students.find(s => s.id === id)
+                    return student ? (
+                      <div key={id} style={{ display: 'flex', alignItems: 'center', gap: 10, padding: 8, background: '#27272A', borderRadius: 8 }}>
+                        <StudentProfileImage student={student} size={32} />
+                        <div style={{ flex: 1 }}>
+                          <div style={{ fontSize: 14, fontWeight: 600, color: 'white' }}>{student.firstName} {student.lastName}</div>
+                          <div style={{ fontSize: 12, color: '#A1A1AA' }}>Current: {student.totalPoints || 0} points</div>
+                        </div>
+                      </div>
+                    ) : null
+                  })}
+                </div>
+              </div>
 
               <div style={{ marginBottom: 15 }}>
                 <label style={labelStyle}>Reason</label>
-                <input className="input-field" value={starData.reason} onChange={e => setStarData({ ...starData, reason: e.target.value })} />
+                <input className="input-field" value={bulkStarData.reason} onChange={e => setBulkStarData({ ...bulkStarData, reason: e.target.value })} />
               </div>
               <div style={{ marginBottom: 20 }}>
-                <label style={labelStyle}>Points</label>
-                <input type="number" className="input-field" value={starData.points} onChange={e => setStarData({ ...starData, points: e.target.value })} />
+                <label style={labelStyle}>Points (to each student)</label>
+                <input type="number" className="input-field" value={bulkStarData.points} onChange={e => setBulkStarData({ ...bulkStarData, points: e.target.value })} />
               </div>
+
+              <div style={{ background: 'rgba(212, 175, 55, 0.1)', padding: 12, borderRadius: 8, marginBottom: 20, fontSize: 13, color: '#D4AF37' }}>
+                ⭐ Total points to be awarded: {selectedStudents.length} × {bulkStarData.points} = {selectedStudents.length * Number(bulkStarData.points)} points
+              </div>
+
               <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 10 }}>
-                <button onClick={() => setStarModal(null)} className="btn btn-outline">Cancel</button>
-                <button onClick={() => awardStar(starModal)} className="btn btn-primary">Award Star</button>
+                <button onClick={() => setShowBulkModal(false)} className="btn btn-outline">Cancel</button>
+                <button onClick={awardBulkStars} className="btn btn-primary">Award Stars</button>
               </div>
             </div>
           </div>
@@ -493,3 +674,4 @@ const StatsCard = ({ icon: Icon, label, value }) => (
 const labelStyle = { display: 'block', fontSize: 12, fontWeight: 700, color: 'var(--text-muted)', marginBottom: 4, letterSpacing: 0.5 }
 const iconBtnStyle = { background: 'transparent', border: 'none', cursor: 'pointer', padding: 5, borderRadius: 8, transition: 'background 0.2s', display: 'flex', alignItems: 'center', justifyContent: 'center' }
 const modalOverlayStyle = { position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.4)', backdropFilter: 'blur(4px)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 60 }
+

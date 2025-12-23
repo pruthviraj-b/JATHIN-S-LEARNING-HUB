@@ -78,7 +78,10 @@ router.get('/leaderboard/students', authMiddleware(['ADMIN', 'STUDENT']), async 
       orderBy: { _sum: { points: 'desc' } }
     });
     const studentIds = agg.map(a => a.studentId).filter(Boolean);
-    const students = await prisma.student.findMany({ where: { id: { in: studentIds } } });
+    const students = await prisma.student.findMany({
+      where: { id: { in: studentIds } },
+      select: { id: true, firstName: true, lastName: true, profileUrl: true } // ONLY public info
+    });
     const mapStudents = Object.fromEntries(students.map(s => [s.id, s]));
     const out = agg.map(a => ({ studentId: a.studentId, points: a._sum.points || 0, student: mapStudents[a.studentId] || null }));
     res.json(out);

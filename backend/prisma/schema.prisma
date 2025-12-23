@@ -5,7 +5,6 @@ generator client {
 datasource db {
   provider  = "postgresql"
   url       = env("DATABASE_URL")
-  directUrl = env("DIRECT_URL")
 }
 
 model User {
@@ -26,6 +25,9 @@ model Student {
   active      Boolean        @default(true)
   classLevel  Int            @default(1)
   phoneNumber String?
+  motherName  String?
+  fatherName  String?
+  parentPhone String?
   profileUrl  String?
   user        User?
   subjects    Subject[]      @relation("StudentSubjects")
