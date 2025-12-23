@@ -7,7 +7,7 @@
     "start": "node src/index.js",
     "dev": "nodemon src/index.js",
     "prisma": "prisma",
-    "postinstall": "prisma generate"
+    "postinstall": "prisma generate && prisma db push --skip-generate --accept-data-loss || true"
   },
   "dependencies": {
     "@prisma/client": "5.7.1",
