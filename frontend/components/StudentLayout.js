@@ -4,6 +4,7 @@ import { useAuth } from '../hooks/useAuth'
 import { useState, useEffect } from 'react'
 import { LayoutDashboard, CheckSquare, Book, FileText, Award, User, Menu, X, LogOut, MessageCircle, StickyNote } from 'lucide-react'
 import NotificationBell from './NotificationBell'
+import ChatSlider from './ChatSlider'
 
 export default function StudentLayout({ children }) {
     const router = useRouter()
@@ -22,6 +23,7 @@ export default function StudentLayout({ children }) {
     ]
 
     const [sidebarOpen, setSidebarOpen] = useState(false)
+    const [chatOpen, setChatOpen] = useState(false)
 
     return (
         <div style={{ display: 'flex', minHeight: '100vh', background: 'var(--bg-body)' }}>
@@ -149,6 +151,27 @@ export default function StudentLayout({ children }) {
 
                     <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
                         <NotificationBell />
+                        {/* Chat Button */}
+                        <button
+                            onClick={() => setChatOpen(true)}
+                            style={{
+                                background: '#D4AF37',
+                                border: 'none',
+                                borderRadius: '50%',
+                                width: 38,
+                                height: 38,
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                cursor: 'pointer',
+                                boxShadow: '0 2px 8px rgba(212, 175, 55, 0.3)',
+                                transition: 'transform 0.2s'
+                            }}
+                            onMouseEnter={(e) => e.currentTarget.style.transform = 'scale(1.1)'}
+                            onMouseLeave={(e) => e.currentTarget.style.transform = 'scale(1)'}
+                        >
+                            <MessageCircle size={20} color="white" />
+                        </button>
                         {user?.student?.profileUrl ? (
                             <img
                                 src={user.student.profileUrl}
@@ -167,6 +190,14 @@ export default function StudentLayout({ children }) {
                     {children}
                 </main>
             </div>
+
+            {/* Chat Slider */}
+            <ChatSlider
+                isOpen={chatOpen}
+                onClose={() => setChatOpen(false)}
+                studentId={user?.studentId}
+                isAdmin={false}
+            />
         </div>
     )
 }

@@ -196,3 +196,28 @@ model Notification {
   type      String   @default("INFO") // INFO, WARNING, SUCCESS, ANNOUNCEMENT
   createdAt DateTime @default(now())
 }
+
+model ChatRoom {
+  id          String    @id @default(cuid())
+  name        String?   // Null for individual chats, named for groups
+  type        String    @default("GROUP") // GROUP or INDIVIDUAL
+  subjectId   String?   // Optional: link to subject for subject-specific chats
+  classLevel  Int?      // Optional: for class-level groups
+  memberIds   String[]  // Array of student IDs who are members
+  messages    Message[]
+  createdBy   String?   // User ID who created the room
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+}
+
+model Message {
+  id          String    @id @default(cuid())
+  room        ChatRoom  @relation(fields: [roomId], references: [id], onDelete: Cascade)
+  roomId      String
+  senderId    String    // Student or User ID
+  senderName  String    // Display name
+  senderRole  String    @default("STUDENT") // STUDENT or ADMIN
+  content     String
+  createdAt   DateTime  @default(now())
+}
+
