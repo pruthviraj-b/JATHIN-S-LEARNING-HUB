@@ -36,6 +36,7 @@ model Student {
   stars       Star[]
   tasks       Task[]
   badges      StudentBadge[]
+  notifications Notification[]
   
   // Global Leadership
   isCaptain     Boolean @default(false)
@@ -180,4 +181,15 @@ model StudentBadge {
   awardedAt DateTime @default(now())
 
   @@unique([studentId, badgeId]) // Prevent duplicate badges of same type for one student
+}
+
+model Notification {
+  id        String   @id @default(cuid())
+  student   Student  @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  studentId String
+  title     String
+  message   String
+  read      Boolean  @default(false)
+  type      String   @default("INFO") // INFO, WARNING, SUCCESS, ANNOUNCEMENT
+  createdAt DateTime @default(now())
 }

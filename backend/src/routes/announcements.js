@@ -24,6 +24,7 @@ router.post('/', authMiddleware(['ADMIN']), async (req, res) => {
         const { title, body, visibleTo } = req.body;
         if (!title || !body) return res.status(400).json({ error: 'Title and body required' });
 
+        // Create announcement
         const ann = await prisma.announcement.create({
             data: {
                 title,
@@ -31,6 +32,24 @@ router.post('/', authMiddleware(['ADMIN']), async (req, res) => {
                 visibleTo: visibleTo || 'STUDENT'
             }
         });
+
+        // Create notifications for all students
+        const students = await prisma.student.findMany({
+            where: { active: true },
+            select: { id: true }
+        });
+
+        if (students.length > 0) {
+            await prisma.notification.createMany({
+                data: students.map(s => ({
+                    studentId: s.id,
+                    title: `📢 ${title}`,
+                    message: body,
+                    type: 'ANNOUNCEMENT'
+                }))
+            });
+        }
+
         res.status(201).json(ann);
     } catch (err) {
         console.error(err);

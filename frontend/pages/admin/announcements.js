@@ -41,6 +41,7 @@ export default function ManageAnnouncements() {
                 method: 'POST',
                 body: JSON.stringify(formData)
             })
+            alert('Announcement posted! All students will be notified.')
             setShowForm(false)
             setFormData({ title: '', body: '', visibleTo: 'STUDENT' })
             await fetchData()
@@ -108,6 +109,9 @@ export default function ManageAnnouncements() {
                             >
                                 {submitting ? 'Posting...' : 'Post Announcement'}
                             </button>
+                            <div style={{ marginTop: 10, fontSize: 12, color: '#666' }}>
+                                ℹ️ All students will receive a website notification
+                            </div>
                         </form>
                     </div>
                 )}

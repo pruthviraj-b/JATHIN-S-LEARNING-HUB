@@ -1,64 +1,63 @@
 const express = require('express');
 const router = express.Router();
 const { PrismaClient } = require('@prisma/client');
+const { authMiddleware } = require('../middleware/auth');
 const prisma = new PrismaClient();
-const { sendNotification } = require('../services/notification');
 
-// GET /history: Get simple logs (For now mocked, or we can fetch from a log table if we add one. 
-// To keep it simple, we'll just return a static list or dummy data until we add a DB table for logs)
-router.get('/history', async (req, res) => {
-    // In a real app, you'd store every sent message in a 'NotificationLog' table
-    // For now, we'll return an empty list or mock
-    res.json([
-        { id: 1, date: new Date().toISOString(), recipientCount: 5, message: "Test Message", status: "Sent" }
-    ]);
-});
-
-// POST /send: Send to specific students
-// Body: { studentIds: [], message: "Hello {name}" }
-router.post('/send', async (req, res) => {
+// GET /notifications: Get notifications for logged-in student
+router.get('/', authMiddleware(['STUDENT']), async (req, res) => {
     try {
-        const { studentIds, message } = req.body;
+        const studentId = req.user.student?.id;
+        if (!studentId) return res.status(404).json({ error: 'No student profile linked' });
 
-        if (!studentIds || !Array.isArray(studentIds) || studentIds.length === 0) {
-            return res.status(400).json({ error: 'No students selected' });
-        }
-        if (!message) {
-            return res.status(400).json({ error: 'Message content is required' });
-        }
-
-        // Fetch student details (need phone numbers)
-        const students = await prisma.student.findMany({
-            where: { id: { in: studentIds } },
-            select: { id: true, firstName: true, phoneNumber: true }
+        const notifications = await prisma.notification.findMany({
+            where: { studentId },
+            orderBy: { createdAt: 'desc' },
+            take: 50
         });
-
-        const results = [];
-
-        // Send individually
-        for (const student of students) {
-            if (!student.phoneNumber) {
-                results.push({ id: student.id, name: student.firstName, status: 'Failed (No Phone)' });
-                continue;
-            }
-
-            // Replace variables like {name}
-            const personalizedMessage = message.replace(/{name}/g, student.firstName);
-
-            // Send
-            const result = await sendNotification(student.phoneNumber, personalizedMessage);
-            results.push({
-                id: student.id,
-                name: student.firstName,
-                status: result.success ? (result.mock ? 'Sent (Mock - Check Server Console)' : 'Sent') : `Failed (${result.error || 'Unknown'})`
-            });
-        }
-
-        res.json({ success: true, results });
-
+        res.json(notifications);
     } catch (error) {
         console.error('Notification Error:', error);
-        res.status(500).json({ error: 'Failed to send notifications' });
+        res.status(500).json({ error: 'Failed to fetch notifications' });
+    }
+});
+
+// PUT /notifications/:id/read: Mark notification as read
+router.put('/:id/read', authMiddleware(['STUDENT']), async (req, res) => {
+    try {
+        const { id } = req.params;
+        const studentId = req.user.student?.id;
+
+        const notification = await prisma.notification.updateMany({
+            where: {
+                id,
+                studentId // Ensure it belongs to this student
+            },
+            data: { read: true }
+        });
+
+        res.json({ ok: true });
+    } catch (error) {
+        console.error('Notification Error:', error);
+        res.status(500).json({ error: 'Failed to mark as read' });
+    }
+});
+
+// PUT /notifications/mark-all-read: Mark all as read
+router.put('/mark-all-read', authMiddleware(['STUDENT']), async (req, res) => {
+    try {
+        const studentId = req.user.student?.id;
+        if (!studentId) return res.status(404).json({ error: 'No student profile linked' });
+
+        await prisma.notification.updateMany({
+            where: { studentId, read: false },
+            data: { read: true }
+        });
+
+        res.json({ ok: true });
+    } catch (error) {
+        console.error('Notification Error:', error);
+        res.status(500).json({ error: 'Failed to mark all as read' });
     }
 });
 
