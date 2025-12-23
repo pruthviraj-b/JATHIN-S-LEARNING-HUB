@@ -8,6 +8,7 @@ export default function Login() {
   const [password, setPassword] = useState('')
   const [msg, setMsg] = useState('')
   const [loading, setLoading] = useState(false)
+  const [debugInfo, setDebugInfo] = useState('') // Debug state
 
   const submit = async (e) => {
     e.preventDefault()
@@ -18,9 +19,20 @@ export default function Login() {
     } catch (err) {
       console.error('Form error:', err)
       setMsg(err?.message || 'Login failed. Please check your credentials.')
+      setDebugInfo(`Error: ${err.message}`)
     } finally {
       setLoading(false)
     }
+  }
+
+  // Get API URL for debug display
+  const getDebugApiUrl = () => {
+    if (typeof window !== 'undefined') {
+      const hostname = window.location.hostname;
+      if (hostname === 'localhost' || hostname === '127.0.0.1') return 'http://localhost:4000/api';
+      return 'https://jathin-s-learning-hub.onrender.com/api';
+    }
+    return 'Server Side';
   }
 
   return (
@@ -167,7 +179,8 @@ export default function Login() {
       {/* Footer Text */}
       <div style={{ position: 'fixed', bottom: 20, color: '#94a3b8', fontSize: 12, width: '100%', textAlign: 'center' }}>
         © {new Date().getFullYear()} Jathin's Learning Hub <br />
-        <span style={{ opacity: 0.5, fontSize: 10 }}>API: {process.env.NEXT_PUBLIC_API_URL || 'Using Localhost'}</span>
+        <span style={{ opacity: 0.8, fontSize: 10, color: 'blue' }}>Target API: {getDebugApiUrl()}</span>
+        {debugInfo && <div style={{ color: 'red', marginTop: 5 }}>{debugInfo}</div>}
       </div>
 
       <style jsx global>{`
