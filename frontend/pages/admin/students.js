@@ -144,12 +144,12 @@ export default function ManageStudents() {
           <StatsCard icon={Users} label="Total Students" value={totalStudents} />
           <StatsCard icon={UserCheck} label="Active Students" value={activeStudents} />
           <StatsCard icon={StarIcon} label="Total Stars Awarded" value={totalStars} />
-          <div className="card" style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', padding: 24, background: '#18181B' }}>
+          <div className="card" style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', padding: 24 }}>
             <div>
-              <div style={{ fontSize: 14, opacity: 0.8, color: '#A1A1AA', fontWeight: 500 }}>New This Month</div>
-              <div style={{ fontSize: 24, fontWeight: 700, color: 'white', marginTop: 4 }}>+12</div>
+              <div style={{ fontSize: 14, opacity: 0.8, color: 'var(--text-muted)', fontWeight: 500 }}>New This Month</div>
+              <div style={{ fontSize: 24, fontWeight: 700, color: 'var(--text-main)', marginTop: 4 }}>+12</div>
             </div>
-            <div style={{ background: '#27272A', padding: 10, borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <div style={{ background: 'var(--secondary)', padding: 10, borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 4px 10px rgba(212, 175, 55, 0.3)' }}>
               <TrendingUp size={24} color="white" />
             </div>
           </div>
@@ -160,14 +160,14 @@ export default function ManageStudents() {
         {/* Action Bar */}
         {!showForm && (
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20 }}>
-            <div style={{ display: 'flex', alignItems: 'center', background: 'white', padding: '10px 20px', borderRadius: 30, boxShadow: 'var(--shadow-sm)', width: 300 }}>
-              <Search size={18} color="var(--secondary-grey)" />
+            <div style={{ display: 'flex', alignItems: 'center', background: 'white', padding: '10px 20px', borderRadius: 30, boxShadow: 'var(--shadow-sm)', width: 300, border: '1px solid #E4E4E7' }}>
+              <Search size={18} color="var(--text-muted)" />
               <input
                 type="text"
                 placeholder="Search students..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                style={{ border: 'none', outline: 'none', marginLeft: 10, width: '100%', fontSize: 14 }}
+                style={{ border: 'none', outline: 'none', marginLeft: 10, width: '100%', fontSize: 14, color: 'black' }}
               />
             </div>
             <button onClick={() => { setEditingId(null); setFormData(initialFormState); setShowForm(true) }} className="btn btn-primary" style={{ borderRadius: 30, padding: '12px 24px' }}>
@@ -344,12 +344,12 @@ export default function ManageStudents() {
                     <td>
                       <span style={{
                         padding: '6px 12px', borderRadius: 20, fontSize: 12, fontWeight: 700,
-                        background: s.active ? '#18181B' : '#000000',
-                        color: s.active ? '#FFFFFF' : '#71717A',
-                        border: s.active ? '1px solid #FFFFFF' : '1px solid #27272A',
+                        background: s.active ? '#ECFDF5' : '#FEF2F2',
+                        color: s.active ? '#059669' : '#DC2626',
+                        border: s.active ? '1px solid #A7F3D0' : '1px solid #FECACA',
                         display: 'inline-flex', alignItems: 'center', gap: 5
                       }}>
-                        <div style={{ width: 6, height: 6, borderRadius: '50%', background: s.active ? '#FFFFFF' : '#52525B' }}></div>
+                        <div style={{ width: 6, height: 6, borderRadius: '50%', background: s.active ? '#059669' : '#DC2626' }}></div>
                         {s.active ? 'Active' : 'Inactive'}
                       </span>
                     </td>
@@ -485,8 +485,8 @@ export default function ManageStudents() {
 // Sub-components & Styles
 
 const StatsCard = ({ icon: Icon, label, value }) => (
-  <div className="card" style={{ flexDirection: 'row', alignItems: 'center', gap: 15 }}>
-    <div className="stats-card-icon" style={{ width: 56, height: 56, borderRadius: '50%', background: '#18181B', display: 'flex', alignItems: 'center', justifyContent: 'center', border: '1px solid #27272A' }}>
+  <div className="card" style={{ flexDirection: 'row', alignItems: 'center', gap: 15, border: 'none', boxShadow: 'var(--shadow-md)' }}>
+    <div className="stats-card-icon" style={{ width: 56, height: 56, borderRadius: '50%', background: 'linear-gradient(135deg, #000 0%, #333 100%)', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 4px 10px rgba(0,0,0,0.2)' }}>
       <Icon size={24} color="white" />
     </div>
     <div>

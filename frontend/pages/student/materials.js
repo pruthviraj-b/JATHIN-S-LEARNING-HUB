@@ -43,36 +43,36 @@ export default function StudyMaterials() {
                 </div>
 
                 {loading ? <p>Loading...</p> : Object.keys(grouped).length === 0 ? (
-                    <div style={{ textAlign: 'center', padding: 40, background: '#09090B', borderRadius: 12, border: '1px solid #27272A' }}>
+                    <div style={{ textAlign: 'center', padding: 40, borderRadius: 12, border: '1px dashed #E4E4E7', background: '#F9FAFB' }}>
                         <p style={{ fontSize: 18, color: 'var(--text-muted)' }}>No study materials uploaded for your class yet.</p>
                     </div>
                 ) : (
                     <div style={{ display: 'flex', flexDirection: 'column', gap: 30 }}>
                         {Object.keys(grouped).map(subjectName => (
                             <div key={subjectName}>
-                                <h3 style={{ borderBottom: '1px solid #27272A', paddingBottom: 10, color: 'var(--text-main)' }}>{subjectName}</h3>
+                                <h3 style={{ borderBottom: '1px solid #E4E4E7', paddingBottom: 10, color: 'var(--text-main)', fontSize: 18 }}>{subjectName}</h3>
                                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: 20 }}>
                                     {grouped[subjectName].map(m => (
-                                        <div key={m.id} style={{
-                                            background: '#09090B', border: '1px solid #27272A', borderRadius: 12, padding: 20,
+                                        <div key={m.id} className="card" style={{
+                                            padding: 20,
                                             transition: 'transform 0.2s',
                                             display: 'flex', flexDirection: 'column', justifyContent: 'space-between'
-                                        }}
-                                            className="hover-card">
+                                        }}>
                                             <div>
                                                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 10 }}>
-                                                    <span style={{ fontSize: 10, fontWeight: 700, padding: '3px 8px', borderRadius: 6, background: '#18181B', color: 'white', border: '1px solid #27272A', textTransform: 'uppercase' }}>
+                                                    <span style={{ fontSize: 10, fontWeight: 700, padding: '3px 8px', borderRadius: 6, background: m.type === 'video' ? '#EFF6FF' : '#F4F4F5', color: m.type === 'video' ? '#1D4ED8' : 'var(--text-muted)', border: '1px solid', borderColor: m.type === 'video' ? '#DBEAFE' : '#E4E4E7', textTransform: 'uppercase' }}>
                                                         {m.type === 'video' ? 'VIDEO 🎥' : 'DOC 📄'}
                                                     </span>
                                                     <span style={{ fontSize: 11, color: 'var(--text-muted)' }}>{new Date(m.uploadedAt).toLocaleDateString()}</span>
                                                 </div>
-                                                <h4 style={{ margin: '0 0 10px 0', fontSize: 16 }}>{m.title}</h4>
+                                                <h4 style={{ margin: '0 0 10px 0', fontSize: 16, color: 'var(--text-main)' }}>{m.title}</h4>
                                             </div>
                                             <a href={m.url} target="_blank" rel="noreferrer" style={{
                                                 display: 'block', textAlign: 'center', padding: '10px',
-                                                background: '#18181B', color: 'white', borderRadius: 8,
+                                                background: 'var(--primary)', color: 'white', borderRadius: 8,
                                                 textDecoration: 'none', fontWeight: 600, fontSize: 13,
-                                                marginTop: 15, border: '1px solid #27272A'
+                                                marginTop: 15,
+                                                boxShadow: '0 2px 5px rgba(0,0,0,0.1)'
                                             }}>
                                                 Open Resource ↗
                                             </a>

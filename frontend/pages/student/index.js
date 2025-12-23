@@ -55,20 +55,20 @@ export default function StudentDashboard() {
     <ProtectedRoute requiredRole="STUDENT">
       <StudentLayout>
         <div style={{
-          background: 'linear-gradient(135deg, #18181B 0%, #09090B 100%)',
+          background: 'linear-gradient(135deg, #000 0%, #1a1a1a 100%)',
           borderRadius: 24,
           padding: '30px',
           marginBottom: 30,
           position: 'relative',
           overflow: 'hidden',
-          border: '1px solid #27272A',
+          border: '1px solid #333',
           boxShadow: '0 10px 30px -10px rgba(0,0,0,0.5)'
         }}>
           <div style={{ position: 'relative', zIndex: 2 }}>
-            <h1 style={{ margin: 0, fontSize: 28, fontWeight: 800, background: 'linear-gradient(to right, #fff, #a1a1aa)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
+            <h1 style={{ margin: 0, fontSize: 28, fontWeight: 800, color: 'white' }}>
               Welcome to Jathin's Hub, {studentName} 👋
             </h1>
-            <p style={{ color: '#A1A1AA', marginTop: 8, fontSize: 15 }}>
+            <p style={{ color: '#D4D4D8', marginTop: 8, fontSize: 15 }}>
               Track your progress and stay updated.
             </p>
           </div>
@@ -80,7 +80,7 @@ export default function StudentDashboard() {
             width: 150,
             height: 150,
             background: 'var(--secondary)',
-            opacity: 0.1,
+            opacity: 0.2,
             borderRadius: '50%',
             filter: 'blur(40px)'
           }} />
@@ -94,12 +94,12 @@ export default function StudentDashboard() {
           <DashCard title="🏆 Class Rank" value={loading ? '...' : stats.rank} icon="🎖️" />
 
           {/* Institute Leaders Card */}
-          <div style={{ padding: 24, background: '#09090B', borderRadius: 16, border: '1px solid #27272A', display: 'flex', flexDirection: 'column', gap: 15 }}>
+          <div className="card" style={{ padding: 24, display: 'flex', flexDirection: 'column', gap: 15 }}>
             <h4 style={{ margin: 0, fontSize: 13, textTransform: 'uppercase', color: 'var(--text-muted)' }}>Institute Leaders</h4>
 
             {/* Head Captain */}
             <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-              {stats.captain ? <StudentProfileImage student={stats.captain} size={40} /> : <div style={{ width: 40, height: 40, background: '#18181B', borderRadius: '50%' }} />}
+              {stats.captain ? <StudentProfileImage student={stats.captain} size={40} /> : <div style={{ width: 40, height: 40, background: '#F4F4F5', borderRadius: '50%' }} />}
               <div>
                 <div style={{ fontSize: 14, fontWeight: 700, color: '#D4AF37' }}>{stats.captain ? stats.captain.firstName : 'Vacant'}</div>
                 <div style={{ fontSize: 11, color: 'var(--text-muted)' }}>👑 Head Captain</div>
@@ -108,7 +108,7 @@ export default function StudentDashboard() {
 
             {/* Vice Captain */}
             <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-              {stats.viceCaptain ? <StudentProfileImage student={stats.viceCaptain} size={40} /> : <div style={{ width: 40, height: 40, background: '#18181B', borderRadius: '50%' }} />}
+              {stats.viceCaptain ? <StudentProfileImage student={stats.viceCaptain} size={40} /> : <div style={{ width: 40, height: 40, background: '#F4F4F5', borderRadius: '50%' }} />}
               <div>
                 <div style={{ fontSize: 14, fontWeight: 700, color: '#94A3B8' }}>{stats.viceCaptain ? stats.viceCaptain.firstName : 'Vacant'}</div>
                 <div style={{ fontSize: 11, color: 'var(--text-muted)' }}>🛡️ Vice Captain</div>
@@ -126,23 +126,24 @@ export default function StudentDashboard() {
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(180px, 1fr))', gap: 20 }}>
               {(stats.subjects || []).map((sub, i) => (
                 <div key={sub.id} style={{
-                  background: '#09090B',
+                  background: 'var(--bg-card)',
                   padding: 24,
                   borderRadius: 16,
                   display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', textAlign: 'center',
-                  border: '1px solid #27272A',
+                  border: '1px solid var(--glass-border)',
                   cursor: 'default',
                   transition: 'transform 0.2s',
+                  boxShadow: 'var(--shadow-sm)'
                 }}
-                  onMouseEnter={(e) => { e.currentTarget.style.transform = 'translateY(-3px)'; e.currentTarget.style.background = '#18181B' }}
-                  onMouseLeave={(e) => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.background = '#09090B' }}
+                  onMouseEnter={(e) => { e.currentTarget.style.transform = 'translateY(-3px)'; e.currentTarget.style.background = 'white' }}
+                  onMouseLeave={(e) => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.background = 'var(--bg-card)' }}
                 >
                   <div style={{
                     width: 50, height: 50, borderRadius: 12, marginBottom: 15,
-                    background: '#27272A',
+                    background: 'black',
                     color: 'white',
                     display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 24,
-                    border: '1px solid #3F3F46'
+                    border: '1px solid #333'
                   }}>
                     {sub.name.charAt(0)}
                   </div>
@@ -155,33 +156,33 @@ export default function StudentDashboard() {
         </div>
 
         <div className="dashboard-grid">
-          <div style={{ background: '#09090B', padding: 24, borderRadius: 12, border: '1px solid #27272A' }}>
+          <div className="card">
             <h3 style={{ marginTop: 0 }}>📅 Your Schedule</h3>
             {loading ? <p>Loading...</p> : (stats.classes || []).length === 0 ? (
               <p style={{ color: 'var(--text-muted)' }}>No upcoming classes scheduled.</p>
             ) : (
               <div style={{ display: 'flex', flexDirection: 'column', gap: 15 }}>
                 {(stats.classes || []).map(c => (
-                  <div key={c.id} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '10px', background: '#18181B', borderRadius: 8, border: '1px solid #27272A' }}>
+                  <div key={c.id} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '10px', background: '#F4F4F5', borderRadius: 8, border: '1px solid #E4E4E7' }}>
                     <div>
                       <div style={{ fontWeight: 'bold' }}>{c.subject?.name}: {c.title}</div>
                       <div style={{ fontSize: 12, color: 'var(--text-muted)' }}>{new Date(c.scheduledAt).toLocaleString()}</div>
                     </div>
-                    {c.meetingLink && <a href={c.meetingLink} target="_blank" rel="noreferrer" style={{ color: 'white', textDecoration: 'underline', fontWeight: 500 }}>Join</a>}
+                    {c.meetingLink && <a href={c.meetingLink} target="_blank" rel="noreferrer" style={{ color: 'var(--secondary)', textDecoration: 'underline', fontWeight: 700 }}>Join</a>}
                   </div>
                 ))}
               </div>
             )}
           </div>
 
-          <div style={{ background: '#09090B', padding: 24, borderRadius: 12, border: '1px solid #27272A' }}>
+          <div className="card">
             <h3 style={{ marginTop: 0 }}>📢 Latest Notices</h3>
             {loading ? <p>Loading...</p> : (stats.announcements || []).length === 0 ? (
               <p style={{ color: 'var(--text-muted)' }}>No new announcements.</p>
             ) : (
               <div style={{ display: 'flex', flexDirection: 'column', gap: 15 }}>
                 {(stats.announcements || []).map(a => (
-                  <div key={a.id} style={{ paddingBottom: 10, borderBottom: '1px solid #27272A' }}>
+                  <div key={a.id} style={{ paddingBottom: 10, borderBottom: '1px solid #F4F4F5' }}>
                     <div style={{ fontWeight: 500 }}>{a.title}</div>
                     <div style={{ fontSize: 12, color: 'var(--text-muted)', marginTop: 2 }}>{new Date(a.createdAt).toLocaleDateString()}</div>
                   </div>
@@ -198,12 +199,12 @@ export default function StudentDashboard() {
 
 function DashCard({ title, value, icon }) {
   return (
-    <div style={{ background: '#09090B', borderRadius: 12, padding: 24, display: 'flex', alignItems: 'center', justifyContent: 'space-between', border: '1px solid #27272A' }}>
+    <div className="card" style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
       <div>
         <div style={{ color: 'var(--text-muted)', fontSize: 13, fontWeight: 600, textTransform: 'uppercase' }}>{title}</div>
         <div style={{ fontSize: 24, fontWeight: 700, marginTop: 5, color: 'var(--text-main)' }}>{value}</div>
       </div>
-      <div style={{ width: 48, height: 48, background: '#18181B', color: 'white', borderRadius: 12, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 20, border: '1px solid #27272A' }}>
+      <div style={{ width: 48, height: 48, background: '#000', color: 'white', borderRadius: 12, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 20, boxShadow: '0 4px 10px rgba(0,0,0,0.2)' }}>
         {icon}
       </div>
     </div>

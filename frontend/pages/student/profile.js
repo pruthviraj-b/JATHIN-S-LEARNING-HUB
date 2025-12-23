@@ -7,11 +7,11 @@ import { apiCall } from '../../lib/api'
 // Simple Badge Component if not imported
 function BadgeCard({ badge, awardedAt, size }) {
     return (
-        <div style={{ background: '#18181B', padding: 10, borderRadius: 8, border: '1px solid #27272A', display: 'flex', alignItems: 'center', gap: 10 }}>
+        <div style={{ background: 'white', padding: 10, borderRadius: 8, border: '1px solid #E4E4E7', display: 'flex', alignItems: 'center', gap: 10, boxShadow: 'var(--shadow-sm)' }}>
             <div style={{ fontSize: 20 }}>{badge.icon}</div>
             <div>
-                <div style={{ fontWeight: 'bold', fontSize: 13, color: 'white' }}>{badge.name}</div>
-                <div style={{ fontSize: 10, color: '#A1A1AA' }}>{new Date(awardedAt).toLocaleDateString()}</div>
+                <div style={{ fontWeight: 'bold', fontSize: 13, color: 'var(--text-main)' }}>{badge.name}</div>
+                <div style={{ fontSize: 10, color: 'var(--text-muted)' }}>{new Date(awardedAt).toLocaleDateString()}</div>
             </div>
         </div>
     )
@@ -46,28 +46,29 @@ export default function Profile() {
         <ProtectedRoute>
             <StudentLayout>
                 <div className="animate-fade-in">
-                    <h1 style={{ marginBottom: 20 }}>My Profile</h1>
+                    <h1 style={{ marginBottom: 20, color: 'var(--text-main)' }}>My Profile</h1>
 
                     {/* Digital ID Card */}
                     <div className="id-card-container" style={{ marginBottom: 40 }}>
                         <div className="id-card" style={{
                             background: 'white',
                             borderRadius: 20,
-                            boxShadow: '0 10px 30px rgba(0,0,0,0.1)',
+                            boxShadow: 'var(--shadow-card)',
                             overflow: 'hidden',
                             maxWidth: 400,
                             margin: '0 auto',
                             position: 'relative',
-                            paddingBottom: 20
+                            paddingBottom: 20,
+                            border: '1px solid #E4E4E7'
                         }}>
                             {/* Header Gradient */}
-                            <div style={{ height: 100, background: 'linear-gradient(135deg, #1C2541, #0F172A)' }}></div>
+                            <div style={{ height: 100, background: 'linear-gradient(135deg, #000 0%, #333 100%)' }}></div>
 
                             {/* Avatar */}
                             <div style={{ marginTop: -50, display: 'flex', justifyContent: 'center', marginBottom: 15 }}>
                                 <div style={{ padding: 4, background: 'white', borderRadius: '50%' }}>
                                     <img
-                                        src={s.profileUrl || `https://ui-avatars.com/api/?name=${s.firstName}+${s.lastName}&background=0D8ABC&color=fff`}
+                                        src={s.profileUrl || `https://ui-avatars.com/api/?name=${s.firstName}+${s.lastName}&background=D4AF37&color=fff`}
                                         style={{ width: 100, height: 100, borderRadius: '50%', objectFit: 'cover' }}
                                         alt="Profile"
                                     />
@@ -76,14 +77,14 @@ export default function Profile() {
 
                             {/* Student Info */}
                             <div style={{ textAlign: 'center', padding: '0 20px 20px' }}>
-                                <h2 style={{ fontSize: 24, margin: '0 0 5px 0', color: '#111' }}>{s.firstName} {s.lastName}</h2>
-                                <p style={{ color: '#666', margin: 0, fontSize: 14 }}>{user.email}</p>
+                                <h2 style={{ fontSize: 24, margin: '0 0 5px 0', color: 'var(--text-main)' }}>{s.firstName} {s.lastName}</h2>
+                                <p style={{ color: 'var(--text-muted)', margin: 0, fontSize: 14 }}>{user.email}</p>
 
-                                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 15, marginTop: 25, textAlign: 'left', background: '#F8FAFC', padding: 20, borderRadius: 12 }}>
-                                    <IDItem label="Class" value={`Class ${s.classLevel || 'N/A'}`} color="#333" />
-                                    <IDItem label="DOB" value={s.dob ? new Date(s.dob).toLocaleDateString() : 'N/A'} color="#333" />
-                                    <IDItem label="Phone" value={s.phoneNumber || 'N/A'} color="#333" />
-                                    <IDItem label="Status" value={s.active ? 'Active' : 'Inactive'} color={s.active ? 'green' : 'red'} />
+                                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 15, marginTop: 25, textAlign: 'left', background: '#F8FAFC', padding: 20, borderRadius: 12, border: '1px solid #E4E4E7' }}>
+                                    <IDItem label="Class" value={`Class ${s.classLevel || 'N/A'}`} color="var(--text-main)" />
+                                    <IDItem label="DOB" value={s.dob ? new Date(s.dob).toLocaleDateString() : 'N/A'} color="var(--text-main)" />
+                                    <IDItem label="Phone" value={s.phoneNumber || 'N/A'} color="var(--text-main)" />
+                                    <IDItem label="Status" value={s.active ? 'Active' : 'Inactive'} color={s.active ? '#166534' : '#991B1B'} />
                                 </div>
                             </div>
 
@@ -104,10 +105,10 @@ export default function Profile() {
                         </div>
 
                         {/* Achievements Section */}
-                        <div style={{ paddingLeft: 40, flex: 1 }}>
-                            <h2 style={{ color: 'white', marginBottom: 20, display: 'flex', alignItems: 'center', gap: 10 }}>
+                        <div style={{ paddingLeft: 40, flex: 1, marginTop: 20 }}>
+                            <h2 style={{ color: 'var(--text-main)', marginBottom: 20, display: 'flex', alignItems: 'center', gap: 10 }}>
                                 Achievements
-                                <span style={{ fontSize: 12, background: '#27272A', padding: '2px 8px', borderRadius: 10, border: '1px solid #3F3F46' }}>{badges.length}</span>
+                                <span style={{ fontSize: 12, background: '#F4F4F5', padding: '2px 8px', borderRadius: 10, border: '1px solid #E4E4E7', color: 'var(--text-main)' }}>{badges.length}</span>
                             </h2>
 
                             <div style={{ display: 'flex', flexWrap: 'wrap', gap: 15 }}>
@@ -117,7 +118,7 @@ export default function Profile() {
                                 {badges.length === 0 && (
                                     <div style={{
                                         color: 'var(--text-muted)',
-                                        border: '1px dashed #27272A',
+                                        border: '1px dashed #E4E4E7',
                                         padding: 30,
                                         borderRadius: 12,
                                         width: '100%',
@@ -139,7 +140,7 @@ function IDItem({ label, value, color }) {
     return (
         <div>
             <div style={{ fontSize: 10, color: 'var(--text-muted)', fontWeight: 600, textTransform: 'uppercase' }}>{label}</div>
-            <div style={{ fontSize: 13, fontWeight: 700, color: color || 'white', marginTop: 1 }}>{value}</div>
+            <div style={{ fontSize: 13, fontWeight: 700, color: color || 'var(--text-main)', marginTop: 1 }}>{value}</div>
         </div>
     )
 }

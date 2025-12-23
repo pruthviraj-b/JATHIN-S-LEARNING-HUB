@@ -117,18 +117,18 @@ export default function ManageStars() {
                 {/* Header Stats */}
                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: 20, marginBottom: 30 }}>
                     <div className="card" style={{
-                        background: 'linear-gradient(135deg, #0f172a 0%, #09090b 100%)',
+                        background: 'linear-gradient(135deg, #000 0%, #333 100%)',
                         color: 'white',
-                        border: '1px solid #1e293b',
+                        border: '1px solid #000',
                         borderLeft: '4px solid #D4AF37', // Gold Accent
-                        boxShadow: '0 4px 20px rgba(0,0,0,0.2)'
+                        boxShadow: 'var(--shadow-card)'
                     }}>
                         <div style={{ display: 'flex', alignItems: 'center', gap: 15 }}>
-                            <div style={{ background: 'rgba(212, 175, 55, 0.1)', padding: 12, borderRadius: 12, border: '1px solid rgba(212, 175, 55, 0.2)' }}>
+                            <div style={{ background: 'rgba(212, 175, 55, 0.2)', padding: 12, borderRadius: 12, border: '1px solid rgba(212, 175, 55, 0.3)' }}>
                                 <Trophy size={24} color="#D4AF37" />
                             </div>
                             <div>
-                                <div style={{ fontSize: 13, opacity: 0.9, color: '#94A3B8' }}>Top Student</div>
+                                <div style={{ fontSize: 13, opacity: 0.9, color: '#D4D4D8' }}>Top Student</div>
                                 <div style={{ fontSize: 20, fontWeight: 700, color: 'white' }}>{topStudent ? `${topStudent.student?.firstName} ${topStudent.student?.lastName}` : '---'}</div>
                                 <div style={{ fontSize: 13, color: '#D4AF37', fontWeight: 600 }}>{topStudent?.points || 0} Points</div>
                             </div>
@@ -136,18 +136,18 @@ export default function ManageStars() {
                     </div>
 
                     <div className="card" style={{
-                        background: 'linear-gradient(135deg, #0f172a 0%, #09090b 100%)',
-                        border: '1px solid #1e293b',
+                        background: 'linear-gradient(135deg, #fff 0%, #f3f4f6 100%)',
+                        border: '1px solid var(--glass-border)',
                         borderLeft: '4px solid #3B82F6', // Blue Accent
-                        boxShadow: '0 4px 20px rgba(0,0,0,0.2)'
+                        boxShadow: 'var(--shadow-card)'
                     }}>
                         <div style={{ display: 'flex', alignItems: 'center', gap: 15 }}>
                             <div style={{ background: 'rgba(59, 130, 246, 0.1)', padding: 12, borderRadius: 12, border: '1px solid rgba(59, 130, 246, 0.2)' }}>
                                 <Crown size={24} color="#3B82F6" />
                             </div>
                             <div>
-                                <div style={{ fontSize: 13, color: '#94A3B8' }}>Top Team</div>
-                                <div style={{ fontSize: 20, fontWeight: 700, color: 'white' }}>{topTeam ? topTeam.team?.name : '---'}</div>
+                                <div style={{ fontSize: 13, color: 'var(--text-muted)' }}>Top Team</div>
+                                <div style={{ fontSize: 20, fontWeight: 700, color: 'var(--text-main)' }}>{topTeam ? topTeam.team?.name : '---'}</div>
                                 <div style={{ fontSize: 13, color: '#3B82F6', fontWeight: 600 }}>{topTeam?.points || 0} Points</div>
                             </div>
                         </div>
@@ -160,13 +160,13 @@ export default function ManageStars() {
                     <div style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
 
                         {/* Awarding Console */}
-                        <div className="card" style={{ border: '1px solid #27272A', background: '#09090B' }}>
+                        <div className="card">
                             <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 20 }}>
-                                <div style={{ background: '#D4AF37', padding: 8, borderRadius: 8, color: 'black' }}><Zap size={18} fill="currentColor" /></div>
-                                <h3 style={{ margin: 0, fontSize: 18, color: 'white' }}>Quick Award</h3>
+                                <div style={{ background: '#D4AF37', padding: 8, borderRadius: 8, color: 'white' }}><Zap size={18} fill="currentColor" /></div>
+                                <h3 style={{ margin: 0, fontSize: 18, color: 'var(--text-main)' }}>Quick Award</h3>
                             </div>
 
-                            <div style={{ display: 'flex', gap: 10, background: '#18181B', padding: 5, borderRadius: 12, width: 'fit-content', marginBottom: 20, border: '1px solid #27272A' }}>
+                            <div style={{ display: 'flex', gap: 10, background: '#F4F4F5', padding: 5, borderRadius: 12, width: 'fit-content', marginBottom: 20, border: '1px solid #E4E4E7' }}>
                                 <TabBtn active={!awardData.isTeam} onClick={() => setAwardData({ ...awardData, isTeam: false, targetId: '' })} label="Student" icon={User} />
                                 <TabBtn active={awardData.isTeam} onClick={() => setAwardData({ ...awardData, isTeam: true, targetId: '' })} label="Team" icon={Users} />
                             </div>
@@ -180,7 +180,7 @@ export default function ManageStars() {
                                             className="input-field"
                                             value={awardData.targetId}
                                             onChange={e => setAwardData({ ...awardData, targetId: e.target.value })}
-                                            style={{ height: 48, background: '#18181B', borderColor: '#27272A' }}
+                                            style={{ height: 48 }}
                                         >
                                             <option value="">Select {awardData.isTeam ? 'Team' : 'Student'}...</option>
                                             {!awardData.isTeam ?
@@ -197,7 +197,7 @@ export default function ManageStars() {
                                             className="input-field"
                                             value={awardData.points}
                                             onChange={e => setAwardData({ ...awardData, points: e.target.value })}
-                                            style={{ height: 48, background: '#18181B', borderColor: '#27272A' }}
+                                            style={{ height: 48 }}
                                         />
                                     </div>
                                 </div>
@@ -210,7 +210,7 @@ export default function ManageStars() {
                                             placeholder="e.g. Excellent presentation"
                                             value={awardData.reason}
                                             onChange={e => setAwardData({ ...awardData, reason: e.target.value })}
-                                            style={{ background: '#18181B', borderColor: '#27272A', flex: 1 }}
+                                            style={{ flex: 1 }}
                                         />
                                         <button
                                             type="submit"
@@ -219,9 +219,10 @@ export default function ManageStars() {
                                             style={{
                                                 minWidth: 100,
                                                 background: '#D4AF37',
-                                                color: 'black',
+                                                color: 'white',
                                                 fontWeight: 700,
-                                                border: 'none'
+                                                border: 'none',
+                                                boxShadow: '0 4px 10px rgba(212, 175, 55, 0.4)'
                                             }}
                                         >
                                             {loading[awardData.targetId] ? '...' : 'Award'}
@@ -234,14 +235,14 @@ export default function ManageStars() {
                                                 onClick={() => setAwardData({ ...awardData, reason: r })}
                                                 style={{
                                                     fontSize: 11,
-                                                    background: awardData.reason === r ? '#D4AF37' : '#18181B',
+                                                    background: awardData.reason === r ? '#D4AF37' : 'white',
                                                     padding: '6px 12px',
                                                     borderRadius: 20,
                                                     cursor: 'pointer',
-                                                    color: awardData.reason === r ? 'black' : '#94A3B8',
+                                                    color: awardData.reason === r ? 'white' : 'var(--text-muted)',
                                                     fontWeight: awardData.reason === r ? 700 : 500,
                                                     border: '1px solid',
-                                                    borderColor: awardData.reason === r ? '#D4AF37' : '#27272A',
+                                                    borderColor: awardData.reason === r ? '#D4AF37' : '#E4E4E7',
                                                     transition: 'all 0.2s'
                                                 }}
                                             >
@@ -254,25 +255,25 @@ export default function ManageStars() {
                         </div>
 
                         {/* Recent Activity */}
-                        <div className="card" style={{ background: '#09090B', border: '1px solid #27272A' }}>
+                        <div className="card">
                             <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 20 }}>
-                                <div style={{ background: '#18181B', padding: 8, borderRadius: 8, border: '1px solid #27272A' }}><History size={18} color="white" /></div>
-                                <h3 style={{ margin: 0, fontSize: 18 }}>Recent Activity</h3>
+                                <div style={{ background: 'var(--primary)', padding: 8, borderRadius: 8 }}><History size={18} color="white" /></div>
+                                <h3 style={{ margin: 0, fontSize: 18, color: 'var(--text-main)' }}>Recent Activity</h3>
                             </div>
 
                             <div style={{ display: 'flex', flexDirection: 'column' }}>
                                 {recentStars?.map((star, i) => (
                                     <div key={star.id || i} style={{
                                         display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-                                        padding: '12px 0', borderBottom: '1px solid #27272A'
+                                        padding: '12px 0', borderBottom: '1px solid #F4F4F5'
                                     }}>
                                         <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
                                             <div style={{
                                                 width: 32, height: 32, borderRadius: '50%',
-                                                background: star.points > 0 ? 'rgba(16, 185, 129, 0.1)' : 'rgba(239, 68, 68, 0.1)',
+                                                background: star.points > 0 ? '#ECFDF5' : '#FEF2F2',
                                                 border: '1px solid',
-                                                borderColor: star.points > 0 ? 'rgba(16, 185, 129, 0.2)' : 'rgba(239, 68, 68, 0.2)',
-                                                color: star.points > 0 ? '#10B981' : '#EF4444',
+                                                borderColor: star.points > 0 ? '#A7F3D0' : '#FECACA',
+                                                color: star.points > 0 ? '#059669' : '#DC2626',
                                                 display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 700, fontSize: 12
                                             }}>
                                                 {star.points > 0 ? '+' : ''}{star.points}
@@ -280,14 +281,14 @@ export default function ManageStars() {
                                             <div>
                                                 <div style={{ fontSize: 14, fontWeight: 700, color: 'var(--text-main)' }}>
                                                     {star.student?.firstName || star.team?.name || 'Unknown'}
-                                                    <span style={{ fontWeight: 400, color: '#64748B', fontSize: 12, marginLeft: 6 }}>
+                                                    <span style={{ fontWeight: 400, color: 'var(--text-muted)', fontSize: 12, marginLeft: 6 }}>
                                                         {star.teamId && !star.studentId ? '(Team)' : ''}
                                                     </span>
                                                 </div>
                                                 <div style={{ fontSize: 12, color: 'var(--text-muted)' }}>{star.reason}</div>
                                             </div>
                                         </div>
-                                        <div style={{ fontSize: 11, color: '#64748B', textAlign: 'right' }}>
+                                        <div style={{ fontSize: 11, color: 'var(--text-muted)', textAlign: 'right' }}>
                                             {new Date(star.createdAt).toLocaleDateString()}
                                             <div style={{ fontSize: 10 }}>{new Date(star.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</div>
                                         </div>
@@ -300,18 +301,18 @@ export default function ManageStars() {
                     </div>
 
                     {/* Right Column: Leaderboards */}
-                    <div className="card" style={{ height: 'fit-content', background: '#09090B', border: '1px solid #27272A' }}>
+                    <div className="card" style={{ height: 'fit-content' }}>
                         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 20, flexWrap: 'wrap', gap: 10 }}>
                             <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-                                <div style={{ background: '#18181B', padding: 8, borderRadius: 8, border: '1px solid #27272A' }}><TrendingUp size={18} color="white" /></div>
-                                <h3 style={{ margin: 0, fontSize: 18 }}>Leaderboard</h3>
+                                <div style={{ background: 'var(--primary)', padding: 8, borderRadius: 8 }}><TrendingUp size={18} color="white" /></div>
+                                <h3 style={{ margin: 0, fontSize: 18, color: 'var(--text-main)' }}>Leaderboard</h3>
                             </div>
 
                             <button
                                 onClick={updateWeeklyCaptains}
                                 disabled={loading.captains}
                                 style={{
-                                    background: '#18181B',
+                                    background: 'transparent',
                                     border: '1px solid #D4AF37',
                                     color: '#D4AF37',
                                     padding: '8px 12px',
@@ -327,7 +328,7 @@ export default function ManageStars() {
                             </button>
                         </div>
 
-                        <div style={{ display: 'flex', gap: 15, borderBottom: '1px solid #27272A', marginBottom: 15 }}>
+                        <div style={{ display: 'flex', gap: 15, borderBottom: '1px solid #E4E4E7', marginBottom: 15 }}>
                             <span
                                 onClick={() => setActiveTab('students')}
                                 style={{
@@ -355,15 +356,16 @@ export default function ManageStars() {
                                 <div key={idx} style={{
                                     display: 'flex', alignItems: 'center', justifyContent: 'space-between',
                                     padding: '12px 15px',
-                                    background: entry.rank <= 3 ? 'linear-gradient(to right, #18181B, #09090B)' : 'transparent',
+                                    background: entry.rank <= 3 ? 'linear-gradient(to right, #000, #333)' : 'transparent',
                                     borderRadius: 12,
-                                    border: entry.rank === 1 ? '1px solid #D4AF37' : entry.rank <= 3 ? '1px solid #27272A' : '1px solid transparent'
+                                    border: entry.rank === 1 ? '1px solid #D4AF37' : entry.rank <= 3 ? '1px solid #333' : '1px solid transparent',
+                                    boxShadow: entry.rank <= 3 ? '0 4px 10px rgba(0,0,0,0.3)' : 'none'
                                 }}>
                                     <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
                                         <div style={{
                                             fontWeight: 700, fontSize: 14, width: 24, height: 24, borderRadius: '50%',
                                             display: 'flex', alignItems: 'center', justifyContent: 'center',
-                                            background: entry.rank === 1 ? '#D4AF37' : entry.rank === 2 ? '#94A3B8' : entry.rank === 3 ? '#B45309' : '#18181B',
+                                            background: entry.rank === 1 ? '#D4AF37' : entry.rank === 2 ? '#94A3B8' : entry.rank === 3 ? '#B45309' : '#F4F4F5',
                                             color: entry.rank <= 3 ? 'white' : 'var(--text-muted)',
                                             boxShadow: entry.rank <= 3 ? '0 2px 5px rgba(0,0,0,0.2)' : 'none'
                                         }}>
@@ -371,13 +373,13 @@ export default function ManageStars() {
                                         </div>
                                         {activeTab === 'students' && entry.student ?
                                             <StudentProfileImage student={entry.student} size={32} /> :
-                                            <div style={{ width: 32, height: 32, borderRadius: '50%', background: '#1E293B', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 12 }}>👥</div>
+                                            <div style={{ width: 32, height: 32, borderRadius: '50%', background: '#E4E4E7', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 12 }}>👥</div>
                                         }
-                                        <div style={{ fontSize: 14, fontWeight: 600, color: 'white' }}>
+                                        <div style={{ fontSize: 14, fontWeight: 600, color: entry.rank <= 3 ? 'white' : 'var(--text-main)' }}>
                                             {activeTab === 'students' ? `${entry.student?.firstName} ${entry.student?.lastName}` : entry.team?.name}
                                         </div>
                                     </div>
-                                    <div style={{ fontWeight: 700, color: idx === 0 ? '#D4AF37' : 'var(--text-muted)', fontSize: 14 }}>
+                                    <div style={{ fontWeight: 700, color: idx === 0 ? '#D4AF37' : entry.rank <= 3 ? '#E4E4E7' : 'var(--text-muted)', fontSize: 14 }}>
                                         {entry.points} ⭐
                                     </div>
                                 </div>
@@ -398,14 +400,14 @@ export default function ManageStars() {
 const TabBtn = ({ label, icon: Icon, active, onClick }) => (
     <button onClick={onClick} style={{
         display: 'flex', alignItems: 'center', gap: 8, padding: '8px 16px', borderRadius: 10, border: 'none', cursor: 'pointer',
-        background: active ? '#27272A' : 'transparent',
-        color: active ? 'white' : 'var(--text-muted)',
+        background: active ? 'white' : 'transparent',
+        color: active ? 'black' : 'var(--text-muted)',
         fontWeight: active ? 700 : 500,
-        boxShadow: active ? '0 2px 5px rgba(0,0,0,0.5)' : 'none',
+        boxShadow: active ? '0 2px 5px rgba(0,0,0,0.1)' : 'none',
         transition: 'all 0.2s',
         fontSize: 13
     }}>
-        <Icon size={16} color={active ? 'white' : 'currentColor'} />
+        <Icon size={16} color={active ? 'black' : 'currentColor'} />
         {label}
     </button>
 )

@@ -40,11 +40,11 @@ export default function StudentTests() {
                             const canTake = isOnline && !hasResult && new Date() >= new Date(t.scheduledAt)
 
                             return (
-                                <div key={t.id} className="card" style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
+                                <div key={t.id} className="card" style={{ display: 'flex', flexDirection: 'column', height: '100%', padding: 20 }}>
                                     <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 12, alignItems: 'flex-start' }}>
                                         <h3 style={{ margin: 0, fontSize: 18, color: 'var(--text-main)' }}>{t.title}</h3>
                                         <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: 4 }}>
-                                            {isOnline && <span style={{ fontSize: 10, background: '#18181B', color: 'white', padding: '2px 6px', borderRadius: 4, fontWeight: 600, border: '1px solid #27272A' }}>ONLINE</span>}
+                                            {isOnline && <span style={{ fontSize: 10, background: '#EFF6FF', color: '#1D4ED8', padding: '2px 6px', borderRadius: 4, fontWeight: 600, border: '1px solid #DBEAFE' }}>ONLINE</span>}
                                             <span style={{ fontSize: 11, color: 'var(--text-muted)' }}>
                                                 {new Date(t.scheduledAt).toLocaleDateString()}
                                             </span>
@@ -53,15 +53,15 @@ export default function StudentTests() {
 
                                     <div style={{ marginBottom: 20 }}>
                                         <div style={{ fontSize: 13, color: 'var(--text-muted)', marginBottom: 4 }}>Subject</div>
-                                        <div style={{ fontWeight: 600 }}>{t.subject?.name}</div>
+                                        <div style={{ fontWeight: 600, color: 'var(--text-main)' }}>{t.subject?.name}</div>
                                     </div>
 
-                                    <div style={{ marginTop: 'auto', borderTop: '1px solid #27272A', paddingTop: 16 }}>
+                                    <div style={{ marginTop: 'auto', borderTop: '1px solid #E4E4E7', paddingTop: 16 }}>
                                         <div style={{ fontSize: 12, textTransform: 'uppercase', color: 'var(--text-muted)', marginBottom: 5 }}>Your Score</div>
                                         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end' }}>
                                             {hasResult ? (
                                                 <div>
-                                                    <div style={{ fontSize: 24, fontWeight: 'bold', color: 'white' }}>
+                                                    <div style={{ fontSize: 24, fontWeight: 'bold', color: 'var(--text-main)' }}>
                                                         {marks} <span style={{ fontSize: 14, color: 'var(--text-muted)', fontWeight: 'normal' }}>/ {t.maxMarks}</span>
                                                     </div>
                                                     {isOnline && <div style={{ fontSize: 11, color: 'var(--text-muted)', marginTop: 2 }}>{new Date(result.createdAt).toLocaleDateString()}</div>}

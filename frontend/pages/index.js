@@ -132,14 +132,15 @@ export default function Login() {
               padding: '12px',
               borderRadius: 8,
               border: 'none',
-              background: '#000000', // Pure black button
+              background: 'var(--primary)', // Pure black button
               color: 'white',
               fontSize: 14,
               fontWeight: 600,
               cursor: loading ? 'not-allowed' : 'pointer',
               display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 10,
               opacity: loading ? 0.7 : 1,
-              transition: 'transform 0.1s'
+              transition: 'transform 0.1s',
+              boxShadow: 'var(--shadow-md)'
             }}
           >
             {loading ? <Loader2 size={18} className="animate-spin" /> : <>Sign In <ArrowRight size={18} /></>}

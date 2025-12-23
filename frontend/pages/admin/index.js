@@ -36,21 +36,22 @@ export default function AdminDashboard() {
 
         {/* Welcome Banner - Forced Inline Styles to fix visibility */}
         <div style={{
-          background: 'linear-gradient(135deg, #18181B 0%, #09090B 100%)',
+          background: 'linear-gradient(135deg, #000000 0%, #1a1a1a 100%)',
           borderRadius: 24,
           padding: 30,
           marginBottom: 30,
           position: 'relative',
           overflow: 'hidden',
-          border: '1px solid #27272A',
+          border: '1px solid #333',
           boxShadow: '0 10px 30px -10px rgba(0,0,0,0.5)',
-          display: 'block' // Ensure display
+          display: 'block',
+          color: 'white'
         }}>
           <div style={{ position: 'relative', zIndex: 2 }}>
-            <h1 style={{ margin: 0, fontSize: 'clamp(24px, 5vw, 32px)', fontWeight: 800, background: 'linear-gradient(to right, #fff, #a1a1aa)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
+            <h1 style={{ margin: 0, fontSize: 'clamp(24px, 5vw, 32px)', fontWeight: 800, color: 'white' }}>
               Welcome to Jathin's Hub
             </h1>
-            <p style={{ color: '#A1A1AA', marginTop: 10, fontSize: 16 }}>
+            <p style={{ color: '#D4D4D8', marginTop: 10, fontSize: 16 }}>
               Manage your institute efficiently.
             </p>
           </div>
@@ -62,7 +63,7 @@ export default function AdminDashboard() {
             width: 200,
             height: 200,
             background: 'var(--secondary)',
-            opacity: 0.1,
+            opacity: 0.2,
             borderRadius: '50%',
             filter: 'blur(40px)'
           }} />
@@ -101,7 +102,7 @@ export default function AdminDashboard() {
         {/* Institute Leaders */}
         <div className="card" style={{ marginBottom: 30 }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 20 }}>
-            <div style={{ background: '#18181B', padding: 8, borderRadius: 10 }}>
+            <div style={{ background: 'linear-gradient(135deg, #000 0%, #333 100%)', padding: 8, borderRadius: 10 }}>
               <div style={{ fontSize: 18 }}>👑</div>
             </div>
             <h3 style={{ margin: 0, fontSize: 18, color: 'var(--text-main)' }}>Institute Leaders</h3>
@@ -132,7 +133,7 @@ export default function AdminDashboard() {
           <div className="card" style={{ minHeight: 300 }}>
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 20 }}>
               <h3 style={{ margin: 0, fontSize: 18, color: 'var(--text-main)' }}>Quick Actions</h3>
-              <div style={{ background: '#18181B', padding: 8, borderRadius: 10 }}>
+              <div style={{ background: 'var(--primary)', padding: 8, borderRadius: 10 }}>
                 <Zap size={18} color="white" />
               </div>
             </div>
@@ -149,7 +150,7 @@ export default function AdminDashboard() {
           <div className="card" style={{ minHeight: 300 }}>
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 20 }}>
               <h3 style={{ margin: 0, fontSize: 18, color: 'var(--text-main)' }}>System Status</h3>
-              <div style={{ background: '#18181B', padding: 8, borderRadius: 10 }}>
+              <div style={{ background: 'var(--primary)', padding: 8, borderRadius: 10 }}>
                 <Activity size={18} color="white" />
               </div>
             </div>
@@ -160,7 +161,7 @@ export default function AdminDashboard() {
               <StatusItem label="Star System" status="Active" />
             </div>
 
-            <div style={{ marginTop: 'auto', padding: 15, background: '#18181B', borderRadius: 12, fontSize: 13, color: 'var(--text-muted)', display: 'flex', gap: 10, alignItems: 'start', border: '1px solid #27272A' }}>
+            <div style={{ marginTop: 'auto', padding: 15, background: 'rgba(212, 175, 55, 0.1)', borderRadius: 12, fontSize: 13, color: 'var(--text-main)', display: 'flex', gap: 10, alignItems: 'start', border: '1px solid var(--secondary)' }}>
               <span>💡</span>
               <span>Tip: Award stars weekly to keep students engaged and motivated!</span>
             </div>
@@ -175,8 +176,8 @@ export default function AdminDashboard() {
 
 function StatsCard({ label, value, icon: Icon, href }) {
   const Content = (
-    <div className="card" style={{ flexDirection: 'row', alignItems: 'center', gap: 15, transition: 'transform 0.2s', cursor: href ? 'pointer' : 'default' }}>
-      <div className="stats-card-icon" style={{ width: 56, height: 56, borderRadius: '50%', background: '#18181B', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, border: '1px solid #27272A' }}>
+    <div className="card" style={{ flexDirection: 'row', alignItems: 'center', gap: 15, transition: 'transform 0.2s', cursor: href ? 'pointer' : 'default', border: 'none', boxShadow: 'var(--shadow-md)' }}>
+      <div className="stats-card-icon" style={{ width: 56, height: 56, borderRadius: '50%', background: 'linear-gradient(135deg, #000 0%, #333 100%)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, boxShadow: '0 4px 10px rgba(0,0,0,0.2)' }}>
         <Icon size={24} color="white" />
       </div>
       <div>
@@ -193,20 +194,20 @@ function QuickAction({ href, label, icon: Icon }) {
   return (
     <Link href={href} style={{ textDecoration: 'none' }}>
       <div style={{
-        background: '#09090B',
+        background: 'rgba(255, 255, 255, 0.5)',
         borderRadius: 16,
         padding: 20,
         display: 'flex',
         alignItems: 'center',
         gap: 12,
         transition: 'all 0.2s',
-        border: '1px solid #27272A',
+        border: '1px solid #E4E4E7',
         cursor: 'pointer'
       }}
-        onMouseOver={(e) => { e.currentTarget.style.borderColor = 'white'; e.currentTarget.style.background = '#000000'; }}
-        onMouseOut={(e) => { e.currentTarget.style.borderColor = '#27272A'; e.currentTarget.style.background = '#09090B'; }}
+        onMouseOver={(e) => { e.currentTarget.style.borderColor = 'var(--secondary)'; e.currentTarget.style.background = 'white'; e.currentTarget.style.transform = 'translateY(-2px)' }}
+        onMouseOut={(e) => { e.currentTarget.style.borderColor = '#E4E4E7'; e.currentTarget.style.background = 'rgba(255, 255, 255, 0.5)'; e.currentTarget.style.transform = 'none' }}
       >
-        <div style={{ background: '#18181B', padding: 8, borderRadius: 8, border: '1px solid #27272A' }}>
+        <div style={{ background: 'var(--text-main)', padding: 8, borderRadius: 8 }}>
           <Icon size={18} color="white" />
         </div>
         <span style={{ fontSize: 14, fontWeight: 700, color: 'var(--text-main)' }}>{label}</span>
@@ -219,7 +220,7 @@ function LeaderDisplay({ title, student, color, icon }) {
   return (
     <div style={{
       flex: 1, minWidth: 200,
-      background: `linear-gradient(135deg, ${color}11 0%, transparent 100%)`,
+      background: 'rgba(255,255,255,0.5)',
       border: `1px solid ${color}33`,
       borderRadius: 16,
       padding: 20,
@@ -228,11 +229,11 @@ function LeaderDisplay({ title, student, color, icon }) {
       {student ? (
         <StudentProfileImage student={student} size={60} />
       ) : (
-        <div style={{ width: 60, height: 60, borderRadius: '50%', background: '#18181B', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 24, border: '1px dashed #333' }}>❓</div>
+        <div style={{ width: 60, height: 60, borderRadius: '50%', background: '#E4E4E7', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 24, border: '1px dashed #A1A1AA' }}>❓</div>
       )}
       <div>
         <div style={{ fontSize: 12, color: color, fontWeight: 700, textTransform: 'uppercase', marginBottom: 4 }}>{icon} {title}</div>
-        <div style={{ fontSize: 18, fontWeight: 700, color: 'white' }}>{student ? `${student.firstName} ${student.lastName || ''}` : 'Vacant'}</div>
+        <div style={{ fontSize: 18, fontWeight: 700, color: 'var(--text-main)' }}>{student ? `${student.firstName} ${student.lastName || ''}` : 'Vacant'}</div>
       </div>
     </div>
   )
@@ -240,11 +241,11 @@ function LeaderDisplay({ title, student, color, icon }) {
 
 function StatusItem({ label, status }) {
   return (
-    <div style={{ display: 'flex', items: 'center', justifyContent: 'space-between', padding: '10px 0', borderBottom: '1px dashed #27272A' }}>
+    <div style={{ display: 'flex', items: 'center', justifyContent: 'space-between', padding: '10px 0', borderBottom: '1px dashed #E4E4E7' }}>
       <span style={{ fontSize: 14, fontWeight: 600, color: 'var(--text-main)' }}>{label}</span>
       <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-        <div style={{ width: 6, height: 6, borderRadius: '50%', background: 'white' }}></div>
-        <span style={{ fontSize: 13, fontWeight: 700, color: 'white' }}>{status}</span>
+        <div style={{ width: 6, height: 6, borderRadius: '50%', background: '#059669' }}></div>
+        <span style={{ fontSize: 13, fontWeight: 700, color: '#059669' }}>{status}</span>
       </div>
     </div>
   )

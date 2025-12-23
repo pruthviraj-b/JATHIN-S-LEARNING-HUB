@@ -53,7 +53,7 @@ export default function AdminLayout({ children }) {
                     <button
                         className="lg:hidden"
                         onClick={() => setSidebarOpen(false)}
-                        style={{ background: 'none', border: 'none', color: 'white', cursor: 'pointer' }}
+                        style={{ background: 'none', border: 'none', color: 'var(--primary)', cursor: 'pointer' }}
                         aria-label="Close Sidebar"
                     >
                         <X size={24} />

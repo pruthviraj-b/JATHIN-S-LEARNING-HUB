@@ -104,7 +104,7 @@ function RoleCard({ title, role, currentHolder, students, onUpdate, color, loadi
     return (
         <div className="card" style={{
             borderTop: `4px solid ${color}`,
-            background: 'linear-gradient(180deg, rgba(255,255,255,0.01) 0%, rgba(255,255,255,0) 100%)',
+            background: 'var(--bg-card)',
             minHeight: 350,
             display: 'flex', flexDirection: 'column'
         }}>
@@ -117,7 +117,7 @@ function RoleCard({ title, role, currentHolder, students, onUpdate, color, loadi
                 flex: 1,
                 display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
                 padding: 30,
-                background: currentHolder ? `linear-gradient(135deg, ${color}11 0%, transparent 100%)` : '#18181B',
+                background: currentHolder ? `linear-gradient(135deg, ${color}11 0%, transparent 100%)` : 'rgba(0,0,0,0.03)',
                 borderRadius: 16,
                 border: `1px solid ${color}33`,
                 marginBottom: 20
@@ -125,14 +125,14 @@ function RoleCard({ title, role, currentHolder, students, onUpdate, color, loadi
                 {currentHolder ? (
                     <>
                         <StudentProfileImage student={currentHolder} size={100} />
-                        <div style={{ fontSize: 22, fontWeight: 700, marginTop: 15, color: 'white' }}>
+                        <div style={{ fontSize: 22, fontWeight: 700, marginTop: 15, color: 'var(--text-main)' }}>
                             {currentHolder.firstName} {currentHolder.lastName}
                         </div>
                         <div style={{ fontSize: 13, color: 'var(--text-muted)' }}>Class {currentHolder.classLevel}</div>
                     </>
                 ) : (
                     <>
-                        <div style={{ width: 80, height: 80, borderRadius: '50%', border: '2px dashed #333', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 30, opacity: 0.5 }}>
+                        <div style={{ width: 80, height: 80, borderRadius: '50%', border: '2px dashed #D4D4D8', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 30, opacity: 0.5 }}>
                             ❓
                         </div>
                         <div style={{ marginTop: 10, color: 'var(--text-muted)' }}>No Active Leader</div>
@@ -161,9 +161,9 @@ function RoleCard({ title, role, currentHolder, students, onUpdate, color, loadi
                 {search && (
                     <div style={{
                         position: 'absolute', top: '100%', left: 0, right: 0,
-                        background: '#18181B', border: '1px solid #27272A',
+                        background: 'white', border: '1px solid #E4E4E7',
                         borderRadius: 12, marginTop: 5, zIndex: 10,
-                        boxShadow: '0 10px 40px rgba(0,0,0,0.5)',
+                        boxShadow: '0 10px 40px rgba(0,0,0,0.1)',
                         overflow: 'hidden'
                     }}>
                         {filteredStudents.map(s => (
@@ -174,14 +174,14 @@ function RoleCard({ title, role, currentHolder, students, onUpdate, color, loadi
                                     padding: '10px 15px',
                                     display: 'flex', alignItems: 'center', gap: 10,
                                     cursor: 'pointer',
-                                    borderBottom: '1px solid #27272A'
+                                    borderBottom: '1px solid #F4F4F5'
                                 }}
-                                onMouseEnter={e => e.currentTarget.style.background = '#27272A'}
+                                onMouseEnter={e => e.currentTarget.style.background = '#F4F4F5'}
                                 onMouseLeave={e => e.currentTarget.style.background = 'transparent'}
                             >
                                 <StudentProfileImage student={s} size={30} />
                                 <div>
-                                    <div style={{ fontSize: 13, fontWeight: 600, color: 'white' }}>{s.firstName} {s.lastName}</div>
+                                    <div style={{ fontSize: 13, fontWeight: 600, color: 'black' }}>{s.firstName} {s.lastName}</div>
                                 </div>
                             </div>
                         ))}

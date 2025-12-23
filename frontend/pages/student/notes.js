@@ -58,8 +58,8 @@ export default function Notes() {
                 </div>
 
                 <div className="card" style={{
-                    background: '#09090B', borderRadius: 16,
-                    border: '1px solid #27272A', overflow: 'hidden', padding: 24,
+                    borderRadius: 16,
+                    border: '1px solid #E4E4E7', overflow: 'hidden', padding: 24,
                     maxWidth: 600
                 }}>
                     <form onSubmit={handleAdd} style={{ display: 'flex', gap: 10, marginBottom: 20 }}>
@@ -67,20 +67,23 @@ export default function Notes() {
                             value={newTask}
                             onChange={e => setNewTask(e.target.value)}
                             placeholder="Add a new task..."
+                            className="input-field"
                             style={{
                                 flex: 1, padding: 12, borderRadius: 8,
-                                border: '1px solid #27272A', fontFamily: 'inherit', outline: 'none',
-                                background: '#18181B', color: 'white'
+                                border: '1px solid #E4E4E7', fontFamily: 'inherit', outline: 'none',
+                                background: 'white', color: 'var(--text-main)',
+                                boxShadow: 'var(--shadow-sm)'
                             }}
                         />
                         <button
                             type="submit"
                             disabled={!newTask.trim() || adding}
                             style={{
-                                background: 'white', color: 'black', border: 'none',
+                                background: 'var(--primary)', color: 'white', border: 'none',
                                 borderRadius: 8, padding: '0 20px', fontWeight: 600,
                                 cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 6,
-                                opacity: (!newTask.trim() || adding) ? 0.5 : 1
+                                opacity: (!newTask.trim() || adding) ? 0.7 : 1,
+                                boxShadow: 'var(--shadow-sm)'
                             }}
                         >
                             <Plus size={18} /> Add
@@ -91,20 +94,20 @@ export default function Notes() {
                         {tasks?.map(task => (
                             <div key={task.id} style={{
                                 display: 'flex', alignItems: 'center', gap: 12,
-                                padding: 12, borderRadius: 8, background: '#18181B',
-                                border: '1px solid #27272A',
+                                padding: 12, borderRadius: 8, background: '#F4F4F5',
+                                border: '1px solid #E4E4E7',
                                 opacity: task.completed ? 0.6 : 1,
                                 textDecoration: task.completed ? 'line-through' : 'none',
                                 transition: 'all 0.2s'
                             }}>
                                 <button
                                     onClick={() => toggleTask(task.id)}
-                                    style={{ background: 'none', border: 'none', cursor: 'pointer', color: task.completed ? 'white' : 'var(--text-muted)' }}
+                                    style={{ background: 'none', border: 'none', cursor: 'pointer', color: task.completed ? '#10B981' : 'var(--text-muted)' }}
                                 >
                                     {task.completed ? <CheckSquare size={20} /> : <Square size={20} />}
                                 </button>
 
-                                <span style={{ flex: 1, fontWeight: 500, color: 'white' }}>{task.text}</span>
+                                <span style={{ flex: 1, fontWeight: 500, color: 'var(--text-main)' }}>{task.text}</span>
 
                                 <button
                                     onClick={() => deleteTask(task.id)}

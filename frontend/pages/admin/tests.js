@@ -160,48 +160,48 @@ export default function ManageTests() {
 
                 <button
                     onClick={() => setShowForm(!showForm)}
-                    style={{ marginBottom: 20, padding: '10px 20px', background: '#3699ff', color: 'white', border: 'none', borderRadius: 6, cursor: 'pointer', fontWeight: 500 }}
+                    style={{ marginBottom: 20, padding: '10px 20px', background: 'var(--primary)', color: 'white', border: 'none', borderRadius: 6, cursor: 'pointer', fontWeight: 500, boxShadow: 'var(--shadow-sm)' }}
                 >
                     {showForm ? 'Cancel' : '+ Schedule New Test'}
                 </button>
 
                 {showForm && (
-                    <div style={{ background: '#f5f5f5', padding: 20, borderRadius: 8, marginBottom: 30 }}>
-                        <h2>New Test</h2>
+                    <div className="card" style={{ padding: 20, marginBottom: 30 }}>
+                        <h2 style={{ marginTop: 0 }}>New Test</h2>
                         <form onSubmit={handleSubmit}>
                             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 15 }}>
                                 <div>
-                                    <label>Subject</label>
-                                    <select value={formData.subjectId} onChange={e => setFormData({ ...formData, subjectId: e.target.value })} required style={{ width: '100%', padding: 8 }}>
+                                    <label style={{ fontWeight: 600, fontSize: 13, marginBottom: 5, display: 'block' }}>Subject</label>
+                                    <select value={formData.subjectId} onChange={e => setFormData({ ...formData, subjectId: e.target.value })} required style={{ width: '100%', padding: 10, borderRadius: 6, border: '1px solid #E2E8F0' }}>
                                         <option value="">-- Select --</option>
                                         {subjects?.map(s => <option key={s.id} value={s.id}>{s.name} (Class {s.classLevel})</option>)}
                                     </select>
                                 </div>
                                 <div>
-                                    <label>Test Title</label>
-                                    <input type="text" value={formData.title} onChange={e => setFormData({ ...formData, title: e.target.value })} placeholder="Mid-term Exam" required style={{ width: '100%', padding: 8 }} />
+                                    <label style={{ fontWeight: 600, fontSize: 13, marginBottom: 5, display: 'block' }}>Test Title</label>
+                                    <input type="text" value={formData.title} onChange={e => setFormData({ ...formData, title: e.target.value })} placeholder="Mid-term Exam" required style={{ width: '100%', padding: 10, borderRadius: 6, border: '1px solid #E2E8F0' }} />
                                 </div>
                                 <div>
-                                    <label>Date</label>
-                                    <input type="date" value={formData.date} onChange={e => setFormData({ ...formData, date: e.target.value })} required style={{ width: '100%', padding: 8 }} />
+                                    <label style={{ fontWeight: 600, fontSize: 13, marginBottom: 5, display: 'block' }}>Date</label>
+                                    <input type="date" value={formData.date} onChange={e => setFormData({ ...formData, date: e.target.value })} required style={{ width: '100%', padding: 10, borderRadius: 6, border: '1px solid #E2E8F0' }} />
                                 </div>
                                 <div>
-                                    <label>Test Type</label>
-                                    <select value={formData.type} onChange={e => setFormData({ ...formData, type: e.target.value })} style={{ width: '100%', padding: 8 }}>
+                                    <label style={{ fontWeight: 600, fontSize: 13, marginBottom: 5, display: 'block' }}>Test Type</label>
+                                    <select value={formData.type} onChange={e => setFormData({ ...formData, type: e.target.value })} style={{ width: '100%', padding: 10, borderRadius: 6, border: '1px solid #E2E8F0' }}>
                                         <option value="OFFLINE">Offline (Manual Marks)</option>
                                         <option value="ONLINE">Online Quiz (Auto-grade)</option>
                                     </select>
                                 </div>
                                 {formData.type === 'OFFLINE' && (
                                     <div>
-                                        <label>Max Marks</label>
-                                        <input type="number" value={formData.maxMarks} onChange={e => setFormData({ ...formData, maxMarks: e.target.value })} style={{ width: '100%', padding: 8 }} />
+                                        <label style={{ fontWeight: 600, fontSize: 13, marginBottom: 5, display: 'block' }}>Max Marks</label>
+                                        <input type="number" value={formData.maxMarks} onChange={e => setFormData({ ...formData, maxMarks: e.target.value })} style={{ width: '100%', padding: 10, borderRadius: 6, border: '1px solid #E2E8F0' }} />
                                     </div>
                                 )}
                             </div>
 
                             {formData.type === 'ONLINE' && (
-                                <div style={{ background: 'white', padding: 15, marginTop: 20, borderRadius: 8, border: '1px solid #ddd' }}>
+                                <div style={{ background: '#F8FAFC', padding: 15, marginTop: 20, borderRadius: 8, border: '1px solid #E2E8F0' }}>
                                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 15 }}>
                                         <h4 style={{ margin: 0 }}>Quiz Questions ({formData.questions.length})</h4>
                                         <button
@@ -209,9 +209,10 @@ export default function ManageTests() {
                                             onClick={generateAIQuiz}
                                             disabled={generating || !formData.subjectId}
                                             style={{
-                                                background: '#8950fc', color: 'white', border: 'none', padding: '8px 15px', borderRadius: 6,
+                                                background: 'var(--secondary)', color: 'white', border: 'none', padding: '8px 15px', borderRadius: 6,
                                                 cursor: !formData.subjectId ? 'not-allowed' : 'pointer', opacity: !formData.subjectId ? 0.6 : 1,
-                                                display: 'flex', alignItems: 'center', gap: 6, fontSize: 13, fontWeight: 600
+                                                display: 'flex', alignItems: 'center', gap: 6, fontSize: 13, fontWeight: 600,
+                                                color: 'black'
                                             }}
                                         >
                                             {generating ? '✨ Generating...' : '✨ Auto-Generate with AI'}
@@ -221,11 +222,11 @@ export default function ManageTests() {
                                     {/* List added questions */}
                                     <div style={{ marginBottom: 15 }}>
                                         {formData.questions.map((q, i) => (
-                                            <div key={q.text + i} style={{ padding: 10, background: '#fafafa', borderBottom: '1px solid #eee' }}>
+                                            <div key={q.text + i} style={{ padding: 10, background: 'white', border: '1px solid #E2E8F0', borderRadius: 6, marginBottom: 8 }}>
                                                 <strong>{i + 1}. {q.text}</strong>
-                                                <div style={{ fontSize: 12, color: '#666', marginTop: 5 }}>
+                                                <div style={{ fontSize: 12, color: 'var(--text-muted)', marginTop: 5 }}>
                                                     {q.options.map((opt, oi) => (
-                                                        <span key={oi} style={{ marginRight: 10, color: opt.isCorrect ? 'green' : 'inherit', fontWeight: opt.isCorrect ? 'bold' : 'normal' }}>
+                                                        <span key={oi} style={{ marginRight: 10, color: opt.isCorrect ? '#166534' : 'inherit', fontWeight: opt.isCorrect ? 'bold' : 'normal' }}>
                                                             {opt.isCorrect ? 'Example: (Correct)' : ''} {opt.text}
                                                         </span>
                                                     ))}
@@ -234,27 +235,27 @@ export default function ManageTests() {
                                         ))}
                                     </div>
 
-                                    <div style={{ border: '1px dashed #ccc', padding: 15, borderRadius: 8 }}>
+                                    <div style={{ border: '1px dashed #CBD5E1', padding: 15, borderRadius: 8, background: 'white' }}>
                                         <label style={{ display: 'block', marginBottom: 5, fontSize: 12, fontWeight: 'bold' }}>Question Text</label>
-                                        <input type="text" value={qForm.text} onChange={e => setQForm({ ...qForm, text: e.target.value })} placeholder="e.g. What is 2+2?" style={{ width: '100%', padding: 8, marginBottom: 10 }} />
+                                        <input type="text" value={qForm.text} onChange={e => setQForm({ ...qForm, text: e.target.value })} placeholder="e.g. What is 2+2?" style={{ width: '100%', padding: 8, marginBottom: 10, border: '1px solid #E2E8F0', borderRadius: 4 }} />
 
                                         <label style={{ display: 'block', marginBottom: 5, fontSize: 12, fontWeight: 'bold' }}>Options</label>
                                         {qForm.options.map((opt, i) => (
                                             <div key={i} style={{ display: 'flex', gap: 10, marginBottom: 5 }}>
                                                 <input type="radio" name="correctOpt" checked={opt.isCorrect} onChange={(e) => updateOption(i, 'isCorrect', true)} />
-                                                <input type="text" value={opt.text} onChange={(e) => updateOption(i, 'text', e.target.value)} placeholder={`Option ${i + 1}`} style={{ flex: 1, padding: 5 }} />
+                                                <input type="text" value={opt.text} onChange={(e) => updateOption(i, 'text', e.target.value)} placeholder={`Option ${i + 1}`} style={{ flex: 1, padding: 5, border: '1px solid #E2E8F0', borderRadius: 4 }} />
                                             </div>
                                         ))}
-                                        <button type="button" onClick={addOption} style={{ fontSize: 12, background: 'none', border: 'none', color: '#3699ff', cursor: 'pointer' }}>+ Add Option</button>
+                                        <button type="button" onClick={addOption} style={{ fontSize: 12, background: 'none', border: 'none', color: 'var(--primary)', cursor: 'pointer', fontWeight: 600 }}>+ Add Option</button>
 
                                         <div style={{ marginTop: 10 }}>
-                                            <button type="button" onClick={saveQuestion} disabled={!qForm.text} style={{ background: '#c9f7f5', color: '#1bc5bd', border: 'none', padding: '8px 15px', borderRadius: 4, fontWeight: 'bold', cursor: 'pointer' }}>Add Question to Test</button>
+                                            <button type="button" onClick={saveQuestion} disabled={!qForm.text} style={{ background: '#F1F5F9', color: 'var(--text-main)', border: '1px solid #E2E8F0', padding: '8px 15px', borderRadius: 4, fontWeight: 'bold', cursor: 'pointer' }}>Add Question to Test</button>
                                         </div>
                                     </div>
                                 </div>
                             )}
 
-                            <button type="submit" style={{ marginTop: 25, padding: '12px 24px', background: '#3699ff', color: 'white', border: 'none', borderRadius: 6 }}>
+                            <button type="submit" style={{ marginTop: 25, padding: '12px 24px', background: 'var(--primary)', color: 'white', border: 'none', borderRadius: 6, fontWeight: 600, boxShadow: 'var(--shadow-md)' }}>
                                 {formData.type === 'ONLINE' ? 'Create Online Quiz' : 'Schedule Offline Test'}
                             </button>
                         </form>
@@ -262,43 +263,47 @@ export default function ManageTests() {
                 )}
 
                 {loading ? <div>Loading...</div> : (
-                    <table style={{ width: '100%', borderCollapse: 'collapse', marginTop: 20 }}>
-                        <thead style={{ background: '#f5f5f5' }}>
-                            <tr>
-                                <th style={{ padding: 12, textAlign: 'left' }}>Date</th>
-                                <th style={{ padding: 12, textAlign: 'left' }}>Subject</th>
-                                <th style={{ padding: 12, textAlign: 'left' }}>Title</th>
-                                <th style={{ padding: 12, textAlign: 'left' }}>Max Marks</th>
-                                <th style={{ padding: 12, textAlign: 'left' }}>Results</th>
-                                <th style={{ padding: 12, textAlign: 'right' }}>Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {tests?.map(t => (
-                                <tr key={t.id} style={{ borderBottom: '1px solid #eee' }}>
-                                    <td style={{ padding: 12 }}>{new Date(t.scheduledAt).toLocaleDateString()}</td>
-                                    <td style={{ padding: 12 }}>{t.subject?.name}</td>
-                                    <td style={{ padding: 12 }}>{t.title}</td>
-                                    <td style={{ padding: 12 }}>{t.maxMarks}</td>
-                                    <td style={{ padding: 12 }}>
-                                        <Link href={`/admin/results?testId=${t.id}`}>
-                                            <button style={{ padding: '4px 8px', fontSize: 12, cursor: 'pointer' }}>
-                                                Enter Marks ({t._count?.results || 0})
-                                            </button>
-                                        </Link>
-                                    </td>
-                                    <td style={{ padding: 12, textAlign: 'right' }}>
-                                        <button onClick={() => handleDelete(t.id)} style={{ color: 'red', border: 'none', background: 'none', cursor: 'pointer' }}>🗑️</button>
-                                    </td>
-                                </tr>
-                            ))}
-                            {tests?.length === 0 && (
+                    <div className="card" style={{ padding: 0, overflow: 'hidden' }}>
+                        <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+                            <thead style={{ background: '#F8FAFC', borderBottom: '1px solid #E2E8F0' }}>
                                 <tr>
-                                    <td colSpan="6" style={{ padding: 20, textAlign: 'center', color: '#999' }}>No tests scheduled via this system yet.</td>
+                                    <th style={{ padding: 16, textAlign: 'left', fontSize: 13, color: 'var(--text-account)' }}>Date</th>
+                                    <th style={{ padding: 16, textAlign: 'left', fontSize: 13, color: 'var(--text-account)' }}>Subject</th>
+                                    <th style={{ padding: 16, textAlign: 'left', fontSize: 13, color: 'var(--text-account)' }}>Title</th>
+                                    <th style={{ padding: 16, textAlign: 'left', fontSize: 13, color: 'var(--text-account)' }}>Max Marks</th>
+                                    <th style={{ padding: 16, textAlign: 'left', fontSize: 13, color: 'var(--text-account)' }}>Results</th>
+                                    <th style={{ padding: 16, textAlign: 'right', fontSize: 13, color: 'var(--text-account)' }}>Actions</th>
                                 </tr>
-                            )}
-                        </tbody>
-                    </table>
+                            </thead>
+                            <tbody>
+                                {tests?.map(t => (
+                                    <tr key={t.id} style={{ borderBottom: '1px solid #F1F5F9' }}>
+                                        <td style={{ padding: 16 }}>{new Date(t.scheduledAt).toLocaleDateString()}</td>
+                                        <td style={{ padding: 16 }}>{t.subject?.name}</td>
+                                        <td style={{ padding: 16, fontWeight: 500 }}>{t.title}</td>
+                                        <td style={{ padding: 16 }}>{t.maxMarks}</td>
+                                        <td style={{ padding: 16 }}>
+                                            <Link href={`/admin/results?testId=${t.id}`}>
+                                                <button style={{ padding: '6px 12px', fontSize: 12, cursor: 'pointer', background: 'white', border: '1px solid #E2E8F0', borderRadius: 4 }}>
+                                                    Enter Marks ({t._count?.results || 0})
+                                                </button>
+                                            </Link>
+                                        </td>
+                                        <td style={{ padding: 16, textAlign: 'right' }}>
+                                            <button onClick={() => handleDelete(t.id)} style={{ color: '#EF4444', border: 'none', background: 'none', cursor: 'pointer', padding: 4 }}>
+                                                <div style={{ fontSize: 18 }}>🗑️</div>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                ))}
+                                {tests?.length === 0 && (
+                                    <tr>
+                                        <td colSpan="6" style={{ padding: 40, textAlign: 'center', color: 'var(--text-muted)' }}>No tests scheduled via this system yet.</td>
+                                    </tr>
+                                )}
+                            </tbody>
+                        </table>
+                    </div>
                 )}
             </AdminLayout>
         </ProtectedRoute>
