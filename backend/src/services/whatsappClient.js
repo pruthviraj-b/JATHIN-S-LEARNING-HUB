@@ -1,19 +1,34 @@
-const { Client, LocalAuth } = require('whatsapp-web.js');
-const qrcode = require('qrcode');
-
+let Client, LocalAuth;
 let client;
 let qrCodeData = null;
-let customStatus = 'initializing'; // initializing, qr_ready, ready, disconnected
+let customStatus = 'disconnected';
+
+try {
+    // Vercel Serverless usually fails here or doesn't have chromium
+    if (process.env.VERCEL) throw new Error('WhatsApp not supported on Vercel Serverless');
+    const ww = require('whatsapp-web.js');
+    Client = ww.Client;
+    LocalAuth = ww.LocalAuth;
+} catch (e) {
+    console.log('WhatsApp Bot disabled (Serverless/Missing Dep):', e.message);
+}
 
 const initializeWhatsApp = () => {
+    if (!Client) {
+        console.log('Skipping WhatsApp Init: Library not loaded.');
+        customStatus = 'disconnected';
+        return;
+    }
     console.log('Initializing WhatsApp Client...');
     client = new Client({
-        authStrategy: new LocalAuth({ dataPath: './.wwebjs_auth' }), // Persists session
+        authStrategy: new LocalAuth({ dataPath: './.wwebjs_auth' }),
         puppeteer: {
             headless: true,
             args: ['--no-sandbox', '--disable-setuid-sandbox']
         }
     });
+    // ... rest of listeners
+
 
     client.on('qr', (qr) => {
         console.log('QR RECEIVED', qr);
