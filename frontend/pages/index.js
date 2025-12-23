@@ -178,7 +178,7 @@ export default function Login() {
 
       {/* Footer Text */}
       <div style={{ position: 'fixed', bottom: 20, color: '#94a3b8', fontSize: 12, width: '100%', textAlign: 'center' }}>
-        © {new Date().getFullYear()} Jathin's Learning Hub <br />
+        © {new Date().getFullYear()} Jathin's Learning Hub (v2.0) <br />
         <span style={{ opacity: 0.8, fontSize: 10, color: 'blue' }}>Target API: {getDebugApiUrl()}</span>
         {debugInfo && <div style={{ color: 'red', marginTop: 5 }}>{debugInfo}</div>}
       </div>
