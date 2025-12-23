@@ -85,8 +85,8 @@ export default function ImageCropModal({ imageUrl, onComplete, onCancel }) {
                         image={imageUrl}
                         crop={crop}
                         zoom={zoom}
-                        aspect={1}
-                        cropShape="round"
+                        aspect={3 / 4}
+                        cropShape="rect"
                         showGrid={false}
                         onCropChange={setCrop}
                         onCropComplete={onCropComplete}
