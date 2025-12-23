@@ -86,7 +86,7 @@ export default function AdminBadges() {
             {/* Create Badge Form (Inline for simplicity) */}
             {showCreate && (
                 <div className="card" style={{ marginBottom: 24, padding: 20 }}>
-                    <h3 style={{ marginBottom: 15 }}>Create New Badge</h3>
+                    <h3 style={{ marginBottom: 15, color: 'var(--text-main)' }}>Create New Badge</h3>
                     <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 15 }}>
                         <input className="input-field" placeholder="Badge Name" value={newBadge.name} onChange={e => setNewBadge({ ...newBadge, name: e.target.value })} />
                         <select className="input-field" value={newBadge.tier} onChange={e => setNewBadge({ ...newBadge, tier: e.target.value })}>
@@ -111,13 +111,13 @@ export default function AdminBadges() {
                     <div key={badge.id} className="card" style={{ flexDirection: 'row', alignItems: 'center', gap: 15, padding: 15 }}>
                         <BadgeCard badge={badge} />
                         <div style={{ flex: 1 }}>
-                            <div style={{ fontWeight: 700, fontSize: 16 }}>{badge.name}</div>
+                            <div style={{ fontWeight: 700, fontSize: 16, color: 'var(--text-main)' }}>{badge.name}</div>
                             <div style={{ fontSize: 12, color: 'var(--text-muted)' }}>{badge.description}</div>
                             <div style={{ marginTop: 10, display: 'flex', gap: 8 }}>
                                 <button className="btn btn-secondary" style={{ padding: '6px 10px', fontSize: 12 }} onClick={() => setAssignTarget(badge.id)}>
                                     <UserPlus size={14} /> Assign
                                 </button>
-                                <button className="btn btn-secondary" style={{ padding: '6px 10px', fontSize: 12, color: 'var(--danger)' }} onClick={() => handleDelete(badge.id)}>
+                                <button className="btn btn-secondary" style={{ padding: '6px 10px', fontSize: 12, color: 'white', background: 'var(--danger)', boxShadow: 'none' }} onClick={() => handleDelete(badge.id)}>
                                     <Trash2 size={14} />
                                 </button>
                             </div>
@@ -128,17 +128,17 @@ export default function AdminBadges() {
 
             {/* Assignment Modal Overhead (Simple Implementation) */}
             {assignTarget && (
-                <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.5)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 100 }}>
-                    <div className="card" style={{ width: 400, maxHeight: '80vh', display: 'flex', flexDirection: 'column' }}>
-                        <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 15 }}>
-                            <h3>Assign Badge</h3>
-                            <button onClick={() => setAssignTarget(null)} style={{ background: 'none', border: 'none', cursor: 'pointer' }}>✖</button>
+                <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.5)', backdropFilter: 'blur(4px)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 100 }}>
+                    <div className="card" style={{ width: 400, maxHeight: '80vh', display: 'flex', flexDirection: 'column', background: 'var(--bg-card)' }}>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 15, alignItems: 'center' }}>
+                            <h3 style={{ margin: 0, color: 'var(--text-main)' }}>Assign Badge</h3>
+                            <button onClick={() => setAssignTarget(null)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--text-muted)' }}>✖</button>
                         </div>
 
-                        <div style={{ display: 'flex', alignItems: 'center', background: 'var(--bg-body)', borderRadius: 8, padding: '0 10px', marginBottom: 15 }}>
-                            <Search size={16} />
+                        <div style={{ display: 'flex', alignItems: 'center', background: 'rgba(255,255,255,0.5)', borderRadius: 8, padding: '0 10px', marginBottom: 15, border: '1px solid var(--glass-border)' }}>
+                            <Search size={16} color="var(--text-muted)" />
                             <input
-                                style={{ border: 'none', background: 'transparent', padding: 10, outline: 'none', width: '100%' }}
+                                style={{ border: 'none', background: 'transparent', padding: 10, outline: 'none', width: '100%', color: 'var(--text-main)' }}
                                 placeholder="Search student..."
                                 value={searchQuery}
                                 onChange={e => setSearchQuery(e.target.value)}
@@ -147,11 +147,11 @@ export default function AdminBadges() {
 
                         <div style={{ overflowY: 'auto', flex: 1 }}>
                             {filteredStudents.map(s => (
-                                <div key={s.id} onClick={() => handleAssign(s.id)} style={{ padding: '10px', borderBottom: '1px solid var(--bg-body)', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 10 }}>
+                                <div key={s.id} onClick={() => handleAssign(s.id)} style={{ padding: '10px', borderBottom: '1px solid var(--glass-border)', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 10, transition: 'background 0.2s' }} onMouseEnter={e => e.currentTarget.style.background = 'rgba(0,0,0,0.02)'} onMouseLeave={e => e.currentTarget.style.background = 'transparent'}>
                                     <div style={{ width: 30, height: 30, borderRadius: '50%', background: '#eee', overflow: 'hidden' }}>
-                                        {s.profileUrl ? <img src={s.profileUrl} style={{ width: '100%', height: '100%' }} /> : null}
+                                        {s.profileUrl ? <img src={s.profileUrl} style={{ width: '100%', height: '100%', objectFit: 'cover' }} /> : null}
                                     </div>
-                                    <div>{s.firstName} {s.lastName}</div>
+                                    <div style={{ color: 'var(--text-main)' }}>{s.firstName} {s.lastName}</div>
                                 </div>
                             ))}
                         </div>
