@@ -5,6 +5,7 @@ import ProtectedRoute from '../../components/ProtectedRoute'
 import { apiCall } from '../../lib/api'
 import AdminLayout from '../../components/AdminLayout'
 import StudentProfileImage from '../../components/StudentProfileImage'
+import ImageCropModal from '../../components/ImageCropModal'
 import { Search, Filter, Plus, MoreHorizontal, TrendingUp, Users, UserCheck, Star as StarIcon } from 'lucide-react'
 
 export default function ManageStudents() {
@@ -28,6 +29,8 @@ export default function ManageStudents() {
   const [editingId, setEditingId] = useState(null)
 
   const [uploading, setUploading] = useState(false)
+  const [cropImage, setCropImage] = useState(null) // Image to crop
+  const [showCropper, setShowCropper] = useState(false)
   const [searchQuery, setSearchQuery] = useState('')
   const router = useRouter()
 
@@ -120,6 +123,29 @@ export default function ManageStudents() {
     } catch (err) { setError(err.message) }
   }
 
+  const handleCroppedImage = async (croppedFile) => {
+    setShowCropper(false);
+    setCropImage(null);
+
+    try {
+      setUploading(true);
+      const data = new FormData();
+      data.append('file', croppedFile, 'profile.jpg');
+
+      const res = await apiCall('/upload', { method: 'POST', body: data });
+      if (res?.url) {
+        setFormData(prev => ({ ...prev, profileUrl: res.url }));
+      } else {
+        throw new Error('No URL returned from server');
+      }
+    } catch (err) {
+      console.error('Upload Error:', err);
+      alert('Upload Failed: ' + (err.message || 'Unknown Error'));
+    } finally {
+      setUploading(false);
+    }
+  };
+
   const initialFormState = { firstName: '', lastName: '', email: '', password: '', dob: '', profileUrl: '', active: true, classLevel: 1, teamId: '', phoneNumber: '' }
 
   // Stats Calculation
@@ -206,62 +232,17 @@ export default function ManageStudents() {
                         <span style={{ position: 'absolute', bottom: -15, right: 0, fontSize: 9, color: '#A1A1AA' }}>v1.3</span>
 
                         <input type="file" accept="image/*" hidden onChange={async (e) => {
-                          // 1. Detach file immediately
                           const file = e.target.files?.[0];
                           if (!file) return;
-
-                          // 2. Reset input valid immediately to allow retry
                           e.target.value = '';
 
-                          try {
-                            setUploading(true);
-                            console.log('Start Upload v1.3:', file.name, file.size);
-
-                            // Helper: Compress
-                            const compressImage = (f) => new Promise((resolve, reject) => {
-                              const reader = new FileReader();
-                              reader.readAsDataURL(f);
-                              reader.onload = (event) => {
-                                const img = new Image();
-                                img.src = event.target.result;
-                                img.onload = () => {
-                                  const canvas = document.createElement('canvas');
-                                  const MAX_WIDTH = 600; // Reduced from 800 for speed
-                                  const scaleSize = MAX_WIDTH / img.width;
-                                  canvas.width = MAX_WIDTH;
-                                  canvas.height = img.height * scaleSize;
-                                  const ctx = canvas.getContext('2d');
-                                  ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-                                  canvas.toBlob((blob) => {
-                                    if (!blob) reject(new Error('Canvas blob failed'));
-                                    resolve(new File([blob], f.name, { type: 'image/jpeg' }));
-                                  }, 'image/jpeg', 0.6); // Reduced quality for speed
-                                };
-                                img.onerror = (err) => reject(new Error('Image load failed'));
-                              };
-                              reader.onerror = (err) => reject(new Error('FileReader failed'));
-                            });
-
-                            const compressed = await compressImage(file);
-                            console.log('Compressed:', compressed.size);
-
-                            const data = new FormData();
-                            data.append('file', compressed, 'profile.jpg');
-
-                            const res = await apiCall('/upload', { method: 'POST', body: data });
-                            if (res?.url) {
-                              setFormData(prev => ({ ...prev, profileUrl: res.url }));
-                              // alert('Upload Success!'); 
-                            } else {
-                              throw new Error('No URL returned from server');
-                            }
-
-                          } catch (err) {
-                            console.error('Upload Error:', err);
-                            alert('Upload Failed: ' + (err.message || 'Unknown Error'));
-                          } finally {
-                            setUploading(false);
-                          }
+                          // Show cropper
+                          const reader = new FileReader();
+                          reader.onload = () => {
+                            setCropImage(reader.result);
+                            setShowCropper(true);
+                          };
+                          reader.readAsDataURL(file);
                         }} />
                       </label>
                     </div>
@@ -477,7 +458,20 @@ export default function ManageStudents() {
           </div>
         )}
 
+
       </AdminLayout>
+
+      {/* Image Crop Modal */}
+      {showCropper && cropImage && (
+        <ImageCropModal
+          imageUrl={cropImage}
+          onComplete={handleCroppedImage}
+          onCancel={() => {
+            setShowCropper(false);
+            setCropImage(null);
+          }}
+        />
+      )}
     </ProtectedRoute>
   )
 }
