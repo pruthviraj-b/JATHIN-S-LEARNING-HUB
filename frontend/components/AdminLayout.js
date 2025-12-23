@@ -123,31 +123,40 @@ export default function AdminLayout({ children }) {
                             />
                         </div>
 
-                        {/* Header Actions */}
+                        {/* Header Actions (Hidden on Mobile, except explicitly separate buttons) */}
                         <div style={{ display: 'flex', alignItems: 'center', gap: 15 }} className="header-actions">
                             <button style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 0 }} aria-label="Notifications">
                                 <Bell size={20} color="var(--text-muted)" />
-                            </button>
-                            {/* Chat Toggle Button */}
-                            <button
-                                onClick={() => setChatOpen(true)}
-                                style={{
-                                    background: 'var(--primary)', // Navy
-                                    border: 'none',
-                                    cursor: 'pointer',
-                                    padding: 8,
-                                    borderRadius: '50%',
-                                    display: 'flex', alignItems: 'center', justifyContent: 'center',
-                                    color: 'var(--secondary)' // Gold icon
-                                }}
-                                aria-label="Open Chat"
-                            >
-                                <MessageCircle size={20} fill="currentColor" />
                             </button>
                             <div style={{ width: 35, height: 35, background: 'white', borderRadius: '50%', color: 'black', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 14, fontWeight: 700 }}>
                                 AP
                             </div>
                         </div>
+
+                        {/* ALWAYS VISIBLE Chat Toggle */}
+                        <button
+                            onClick={() => setChatOpen(true)}
+                            style={{
+                                background: 'transparent', // Using icon color instead of bg
+                                border: 'none',
+                                cursor: 'pointer',
+                                padding: 0,
+                                margin: '0 10px',
+                                display: 'flex', alignItems: 'center',
+                                color: 'var(--primary)'
+                            }}
+                            aria-label="Open Chat"
+                        >
+                            <div style={{
+                                width: 36, height: 36,
+                                background: 'var(--primary)',
+                                borderRadius: '50%',
+                                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                                boxShadow: '0 4px 10px rgba(0,0,0,0.2)'
+                            }}>
+                                <MessageCircle size={18} color="var(--secondary)" fill="currentColor" />
+                            </div>
+                        </button>
 
                         {/* Mobile Menu Button */}
                         <button
