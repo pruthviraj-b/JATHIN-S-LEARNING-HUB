@@ -22,6 +22,11 @@ export default function ManageStars() {
     const [awardData, setAwardData] = useState({ points: 5, reason: 'Homework Excellence', targetId: '', isTeam: false })
     const [filterQuery, setFilterQuery] = useState('')
 
+    // Bulk Award
+    const [bulkMode, setBulkMode] = useState(false)
+    const [selectedStudents, setSelectedStudents] = useState([])
+    const [bulkData, setBulkData] = useState({ points: 5, reason: 'Homework Excellence' })
+
     // Computations
     const refreshAll = () => { mutateStudents(); mutateStars(); mutateSL(); mutateTL(); }
 
@@ -56,6 +61,44 @@ export default function ManageStars() {
         try {
             alert("To undo, please award negative points.")
         } catch (e) { }
+    }
+
+    const performBulkAward = async () => {
+        if (selectedStudents.length === 0) return alert('Please select at least one student')
+        if (!bulkData.reason) return alert('Please enter a reason')
+
+        try {
+            await Promise.all(selectedStudents.map(studentId =>
+                apiCall('/stars', {
+                    method: 'POST', body: JSON.stringify({
+                        studentId,
+                        points: Number(bulkData.points),
+                        reason: bulkData.reason,
+                        date
+                    })
+                })
+            ))
+            alert(`✅ Awarded ${bulkData.points} points to ${selectedStudents.length} students!`)
+            setSelectedStudents([])
+            setBulkMode(false)
+            refreshAll()
+        } catch (err) {
+            alert(err.message)
+        }
+    }
+
+    const toggleSelectStudent = (studentId) => {
+        setSelectedStudents(prev =>
+            prev.includes(studentId) ? prev.filter(id => id !== studentId) : [...prev, studentId]
+        )
+    }
+
+    const toggleSelectAll = () => {
+        if (selectedStudents.length === studentOptions.length) {
+            setSelectedStudents([])
+        } else {
+            setSelectedStudents(studentOptions.map(s => s.id))
+        }
     }
 
     const updateWeeklyCaptains = async () => {
@@ -252,7 +295,132 @@ export default function ManageStars() {
                                     </div>
                                 </div>
                             </form>
+
+                            {/* Bulk Award Toggle */}
+                            <div style={{ marginTop: 20, paddingTop: 20, borderTop: '1px solid #E4E4E7' }}>
+                                <button
+                                    onClick={() => { setBulkMode(!bulkMode); setSelectedStudents([]) }}
+                                    className="btn"
+                                    style={{
+                                        width: '100%',
+                                        background: bulkMode ? '#DC2626' : '#D4AF37',
+                                        color: 'white',
+                                        fontWeight: 700,
+                                        border: 'none'
+                                    }}
+                                >
+                                    {bulkMode ? '❌ Cancel Bulk Mode' : '⭐ Bulk Award to Multiple Students'}
+                                </button>
+                            </div>
                         </div>
+
+                        {/* Bulk Award Panel */}
+                        {bulkMode && (
+                            <div className="card" style={{ borderLeft: '4px solid #D4AF37' }}>
+                                <h3 style={{ margin: '0 0 20px 0', fontSize: 18, color: 'var(--text-main)' }}>
+                                    Bulk Award - Select Students
+                                </h3>
+
+                                {/* Select All / Points / Reason */}
+                                <div style={{ display: 'grid', gridTemplateColumns: '1fr 100px', gap: 15, marginBottom: 20 }}>
+                                    <div>
+                                        <label style={labelStyle}>Reason</label>
+                                        <input
+                                            className="input-field"
+                                            placeholder="e.g. Excellent presentation"
+                                            value={bulkData.reason}
+                                            onChange={e => setBulkData({ ...bulkData, reason: e.target.value })}
+                                        />
+                                    </div>
+                                    <div>
+                                        <label style={labelStyle}>Points</label>
+                                        <input
+                                            type="number"
+                                            className="input-field"
+                                            value={bulkData.points}
+                                            onChange={e => setBulkData({ ...bulkData, points: e.target.value })}
+                                        />
+                                    </div>
+                                </div>
+
+                                {/* Select All Button */}
+                                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 15 }}>
+                                    <button
+                                        onClick={toggleSelectAll}
+                                        className="btn btn-outline"
+                                        style={{ fontSize: 13, padding: '8px 16px' }}
+                                    >
+                                        {selectedStudents.length === studentOptions.length ? 'Deselect All' : 'Select All'} ({studentOptions.length})
+                                    </button>
+                                    <span style={{ fontSize: 14, color: 'var(--text-muted)', fontWeight: 600 }}>
+                                        {selectedStudents.length} selected
+                                    </span>
+                                </div>
+
+                                {/* Student Checkbox List */}
+                                <div style={{
+                                    maxHeight: 300,
+                                    overflowY: 'auto',
+                                    border: '1px solid #E4E4E7',
+                                    borderRadius: 8,
+                                    marginBottom: 20
+                                }}>
+                                    {studentOptions.map(student => (
+                                        <label
+                                            key={student.id}
+                                            style={{
+                                                display: 'flex',
+                                                alignItems: 'center',
+                                                gap: 12,
+                                                padding: 12,
+                                                borderBottom: '1px solid #F4F4F5',
+                                                cursor: 'pointer',
+                                                background: selectedStudents.includes(student.id) ? 'rgba(212, 175, 55, 0.1)' : 'white',
+                                                transition: 'background 0.2s'
+                                            }}
+                                        >
+                                            <input
+                                                type="checkbox"
+                                                checked={selectedStudents.includes(student.id)}
+                                                onChange={() => toggleSelectStudent(student.id)}
+                                                style={{ width: 18, height: 18, cursor: 'pointer', accentColor: '#D4AF37' }}
+                                            />
+                                            <StudentProfileImage student={student} size={32} />
+                                            <div style={{ flex: 1 }}>
+                                                <div style={{ fontSize: 14, fontWeight: 600, color: 'var(--text-main)' }}>
+                                                    {student.firstName} {student.lastName}
+                                                </div>
+                                                <div style={{ fontSize: 12, color: 'var(--text-muted)' }}>
+                                                    Current: {student.totalPoints || 0} points
+                                                </div>
+                                            </div>
+                                        </label>
+                                    ))}
+                                    {studentOptions.length === 0 && (
+                                        <div style={{ padding: 20, textAlign: 'center', color: 'var(--text-muted)' }}>
+                                            No students found
+                                        </div>
+                                    )}
+                                </div>
+
+                                {/* Award Button */}
+                                <button
+                                    onClick={performBulkAward}
+                                    disabled={selectedStudents.length === 0}
+                                    className="btn"
+                                    style={{
+                                        width: '100%',
+                                        background: '#D4AF37',
+                                        color: 'white',
+                                        fontWeight: 700,
+                                        border: 'none',
+                                        opacity: selectedStudents.length === 0 ? 0.5 : 1
+                                    }}
+                                >
+                                    Award {bulkData.points} Points to {selectedStudents.length} Student{selectedStudents.length !== 1 ? 's' : ''}
+                                </button>
+                            </div>
+                        )}
 
                         {/* Leaderboard - Now in Left Column */}
                         <div className="card" style={{ height: 'fit-content' }}>
