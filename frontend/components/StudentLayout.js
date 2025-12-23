@@ -3,6 +3,7 @@ import { useRouter } from 'next/router'
 import { useAuth } from '../hooks/useAuth'
 import { useState, useEffect } from 'react'
 import { LayoutDashboard, CheckSquare, Book, FileText, Award, User, Menu, X, LogOut, MessageCircle, StickyNote } from 'lucide-react'
+import NotificationBell from './NotificationBell'
 
 export default function StudentLayout({ children }) {
     const router = useRouter()
@@ -147,6 +148,7 @@ export default function StudentLayout({ children }) {
                     </div>
 
                     <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                        <NotificationBell />
                         {user?.student?.profileUrl ? (
                             <img
                                 src={user.student.profileUrl}
