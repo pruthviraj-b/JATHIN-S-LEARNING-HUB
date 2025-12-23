@@ -77,7 +77,7 @@ export default function AdminBadges() {
     return (
         <AdminLayout>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 24 }}>
-                <h1 style={{ fontSize: 24, fontWeight: 700, color: 'var(--text-main)', margin: 0 }}>Badge Management</h1>
+                <h1 style={{ fontSize: 24, fontWeight: 700, color: 'var(--text-main)', margin: 0 }}>Badge Management <span style={{ fontSize: 12, color: 'red' }}>(v2.1 White Theme)</span></h1>
                 <button onClick={() => setShowCreate(true)} className="btn btn-primary" style={{ background: 'var(--secondary)', color: 'white', border: 'none' }}>
                     <Plus size={18} /> Create Badge
                 </button>
