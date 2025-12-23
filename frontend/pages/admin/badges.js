@@ -107,7 +107,7 @@ export default function AdminBadges() {
 
             {/* Badges Grid */}
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(250px, 1fr))', gap: 20 }}>
-                {Array.isArray(badges) && badges.map(badge => (
+                {Array.isArray(badges) && badges.filter(Boolean).map(badge => (
                     <div key={badge.id} className="card" style={{ flexDirection: 'row', alignItems: 'center', gap: 15, padding: 15 }}>
                         <BadgeCard badge={badge} />
                         <div style={{ flex: 1 }}>

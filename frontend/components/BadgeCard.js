@@ -19,6 +19,8 @@ const TIER_BORDER = {
 export default function BadgeCard({ badge, size = 'md' }) {
     // size: 'sm' (list view), 'md' (profile view), 'lg' (modal)
 
+    if (!badge) return null;
+
     const isSmall = size === 'sm';
     const bg = TIER_COLORS[badge.tier] || TIER_COLORS.BRONZE;
     const border = TIER_BORDER[badge.tier] || TIER_BORDER.BRONZE;
