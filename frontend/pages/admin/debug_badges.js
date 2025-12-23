@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import AdminLayout from '../../components/AdminLayout';
-import ProtectedRoute from '../../components/ProtectedRoute'; // Security Wrapper
+import ProtectedRoute from '../../components/ProtectedRoute';
 import { apiCall } from '../../lib/api';
 import BadgeCard from '../../components/BadgeCard';
 import { Plus, Trash2, UserPlus, Search } from 'lucide-react';
@@ -19,14 +19,7 @@ export default function DebugBadges() {
     const [assignTarget, setAssignTarget] = useState(null); // badgeId to assign
     const [searchQuery, setSearchQuery] = useState('');
 
-    useEffect(() => {
-        setMounted(true);
-        loadBadges();
-        loadStudents();
-    }, []);
-
-    if (!mounted) return null;
-
+    // MOVED FUNCTIONS UP to avoid ReferenceError before early return
     const loadBadges = async () => {
         try {
             const data = await apiCall('/badges');
@@ -69,6 +62,14 @@ export default function DebugBadges() {
             setAssignTarget(null);
         } catch (err) { alert(err.message); }
     };
+
+    useEffect(() => {
+        setMounted(true);
+        loadBadges();
+        loadStudents();
+    }, []);
+
+    if (!mounted) return null; // Early return now safely after function declarations
 
     const filteredStudents = (students || []).filter(s =>
         s && ((s.firstName || '') + ' ' + (s.lastName || '')).toLowerCase().includes(searchQuery.toLowerCase())

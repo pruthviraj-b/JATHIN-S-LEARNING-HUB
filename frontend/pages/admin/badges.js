@@ -1,13 +1,13 @@
 import { useState, useEffect } from 'react';
 import AdminLayout from '../../components/AdminLayout';
-import ProtectedRoute from '../../components/ProtectedRoute'; // Security Wrapper
+import ProtectedRoute from '../../components/ProtectedRoute';
 import { apiCall } from '../../lib/api';
 import BadgeCard from '../../components/BadgeCard';
 import { Plus, Trash2, UserPlus, Search } from 'lucide-react';
 
 export default function AdminBadges() {
     const [badges, setBadges] = useState([]);
-    const [students, setStudents] = useState([]); // For assignment modal
+    const [students, setStudents] = useState([]);
     const [loading, setLoading] = useState(true);
     const [mounted, setMounted] = useState(false);
 
@@ -16,17 +16,10 @@ export default function AdminBadges() {
     const [newBadge, setNewBadge] = useState({ name: '', description: '', icon: '🏆', tier: 'BRONZE' });
 
     // Assign Modal
-    const [assignTarget, setAssignTarget] = useState(null); // badgeId to assign
+    const [assignTarget, setAssignTarget] = useState(null);
     const [searchQuery, setSearchQuery] = useState('');
 
-    useEffect(() => {
-        setMounted(true);
-        loadBadges();
-        loadStudents();
-    }, []);
-
-    if (!mounted) return null;
-
+    // MOVED FUNCTIONS UP to avoid ReferenceError before early return
     const loadBadges = async () => {
         try {
             const data = await apiCall('/badges');
@@ -36,7 +29,7 @@ export default function AdminBadges() {
 
     const loadStudents = async () => {
         try {
-            const data = await apiCall('/students?limit=1000'); // Get all for simplicity
+            const data = await apiCall('/students?limit=1000');
             setStudents(data?.students || []);
         } catch (err) { console.error(err); setStudents([]); }
     };
@@ -70,6 +63,14 @@ export default function AdminBadges() {
         } catch (err) { alert(err.message); }
     };
 
+    useEffect(() => {
+        setMounted(true);
+        loadBadges();
+        loadStudents();
+    }, []);
+
+    if (!mounted) return null; // Early return now safely after function declarations
+
     const filteredStudents = (students || []).filter(s =>
         s && ((s.firstName || '') + ' ' + (s.lastName || '')).toLowerCase().includes(searchQuery.toLowerCase())
     );
@@ -84,7 +85,7 @@ export default function AdminBadges() {
                     </button>
                 </div>
 
-                {/* Create Badge Form (Inline for simplicity) */}
+                {/* Create Badge Form */}
                 {showCreate && (
                     <div className="card" style={{ marginBottom: 24, padding: 20 }}>
                         <h3 style={{ marginBottom: 15, color: 'var(--text-main)' }}>Create New Badge</h3>
@@ -132,7 +133,7 @@ export default function AdminBadges() {
                     )}
                 </div>
 
-                {/* Assignment Modal Overhead (Simple Implementation) */}
+                {/* Assignment Modal */}
                 {assignTarget && (
                     <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.5)', backdropFilter: 'blur(4px)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 100 }}>
                         <div className="card" style={{ width: 400, maxHeight: '80vh', display: 'flex', flexDirection: 'column', background: 'var(--bg-card)' }}>
