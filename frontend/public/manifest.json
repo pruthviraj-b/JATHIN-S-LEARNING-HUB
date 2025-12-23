@@ -3,8 +3,8 @@
     "short_name": "JathinHub",
     "start_url": "/student",
     "display": "standalone",
-    "background_color": "#09090B",
-    "theme_color": "#09090B",
+    "background_color": "#F8F9FB",
+    "theme_color": "#F8F9FB",
     "description": "Student Portal for Jathin's Learning Hub",
     "icons": [
         {
